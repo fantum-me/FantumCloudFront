@@ -1,0 +1,17 @@
+@layer utilities {
+	.flex-start {
+		@apply flex items-center;
+	}
+
+	.flex-center {
+		@apply flex justify-center items-center;
+	}
+
+	.flex-end {
+		@apply flex justify-end items-center;
+	}
+
+	.flex-between {
+		@apply flex justify-between items-center;
+	}
+}

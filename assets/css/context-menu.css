@@ -1,0 +1,5 @@
+.context-menu {
+    button {
+        @apply button-surface rounded-none w-full gap-3 active:scale-105;
+    }
+}
