@@ -78,7 +78,7 @@ function isRoleDifferent(role: Role): boolean {
 			<div class="flex-grow overflow-y-scroll">
 				<RoleList :select-role="selectRole"/>
 			</div>
-			<hr class="mt-2 mb-3 border-outline"/>
+			<UDivider class="mt-2 mb-3"/>
 			<UButton icon="i-heroicons-plus" class="w-full" color="gray" variant="ghost" size="lg">
 				New Role
 			</UButton>

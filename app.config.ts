@@ -11,6 +11,11 @@ export default defineAppConfig({
         },
         card: {
             ring: "dark:ring-gray-700"
+        },
+        divider: {
+            border: {
+                base: "dark:border-gray-700"
+            }
         }
     }
 })

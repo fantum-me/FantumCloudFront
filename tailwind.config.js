@@ -41,31 +41,8 @@ export default {
 					800: "#141417",
 					900: "#111114",
 					950: "#0b0b0d",
-				},
-
-				secondary: 'var(--secondary-color)',
-				placeholder: 'var(--placeholder-color)',
-				outline: 'var(--outline-color)',
-				surface: {
-					DEFAULT: 'var(--surface-color)',
-					variant: 'var(--surface-variant-color)',
-					contrast: 'var(--surface-contrast-color)',
-				},
-				on: {
-					primary: {
-						DEFAULT: 'var(--on-primary-color)',
-						container: 'var(--on-primary-container-color)'
-					},
-					color: {
-						light: 'var(--on-color-light)',
-						DEFAULT: 'var(--on-color)',
-					},
-					surface: {
-						DEFAULT: 'var(--on-surface-color)',
-						variant: 'var(--on-surface-variant-color)',
-					},
-				},
-			},
-		},
+				}
+			}
+		}
 	}
 }

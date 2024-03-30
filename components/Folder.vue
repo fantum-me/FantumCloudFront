@@ -45,7 +45,7 @@ function onContextMenu(e: PointerEvent) {
 	<ModalNewFolder/>
 	<div class="w-full h-full" @contextmenu.prevent="onContextMenu" @click="unselectAll">
 		<ContextMenuFolder/>
-		<FileDropzone :folder="folder">
+		<FileDropzone>
 			<StorageItems :folders="folder.folders" :files="folder.files" :is-loading="isLoading">
 				<div class="-mt-2 -ml-4 mb-4 flex-start">
 					<div v-for="(parent, index) in folder.parents">

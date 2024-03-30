@@ -1,5 +1,13 @@
-.context-menu {
-    button {
-        @apply button-surface rounded-none w-full gap-3 active:scale-105;
+@layer components {
+    .context-menu {
+        button {
+            @apply flex items-center px-4 py-3 transition-all w-full gap-3 active:scale-105;
+
+            @apply bg-gray-50 text-black hover:bg-gray-100;
+            @apply dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600;
+
+            @apply text-opacity-80 hover:text-opacity-100;
+            @apply dark:text-opacity-80 dark:hover:text-opacity-100
+        }
     }
 }

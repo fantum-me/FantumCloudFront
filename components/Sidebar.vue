@@ -53,7 +53,7 @@ const workspace = useWorkspace()
 		<div class="pb-8" v-for="items in sidebarItems">
 			<div v-for="[key, title, DefaultIcon, ActiveIcon, permission = null] in items">
 				<div class="mb-3" v-if="!permission || workspace.access[permission]">
-					<NuxtLink :class="view === key ? 'button-primary static' : 'button hover:bg-secondary'"
+					<NuxtLink :class="'navigation-button' + (view === key ? ' active' : '')"
 					          :href="`/workspace/${workspace.id}/${key}`">
 						<component :is="view === key ? ActiveIcon : DefaultIcon" class="icon"/>
 						{{ title }}
@@ -61,9 +61,24 @@ const workspace = useWorkspace()
 				</div>
 			</div>
 		</div>
-		<a class="button hover:bg-secondary" href="/auth/logout">
+		<a class="navigation-button" href="/auth/logout">
 			<component :is="LogoutIcon" class="icon"/>
 			Sign Out
 		</a>
 	</UCard>
 </template>
+
+<style>
+.navigation-button {
+	@apply flex items-center gap-2 px-4 py-3 rounded transition-all active:scale-95;
+
+	@apply hover:bg-primary hover:bg-opacity-25;
+	&.active {
+		@apply bg-primary hover:bg-primary hover:bg-opacity-100;
+	}
+
+	.icon {
+		@apply h-5 w-5;
+	}
+}
+</style>
