@@ -54,17 +54,17 @@ const workspace = useWorkspace()
 			<div v-for="[key, title, DefaultIcon, ActiveIcon, permission = null] in items">
 				<div class="mb-3" v-if="!permission || workspace.access[permission]">
 					<NuxtLink :class="'navigation-button' + (view === key ? ' active' : '')"
-					          :href="`/workspace/${workspace.id}/${key}`">
+					          :to="`/workspace/${workspace.id}/${key}`">
 						<component :is="view === key ? ActiveIcon : DefaultIcon" class="icon"/>
 						{{ title }}
 					</NuxtLink>
 				</div>
 			</div>
 		</div>
-		<a class="navigation-button" href="/auth/logout">
+		<NuxtLink class="navigation-button" to="/auth/logout" no-prefetch>
 			<component :is="LogoutIcon" class="icon"/>
 			Sign Out
-		</a>
+		</NuxtLink>
 	</UCard>
 </template>
 
