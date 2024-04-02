@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import View from "~/lib/View";
 import type {FormError} from "#ui/types";
 import type {Ref} from "vue";
 import type Role from "~/types/api/Role";
 import {getDefaultPermissionObject} from "~/types/api/PermissionObject";
-import Permission from "~/lib/Permission";
+import View from "~/types/View";
+import type Permission from "~/types/Permission";
 
 const defaultRoleColor = useRuntimeConfig().public.defaultRoleColor
 useView().value = View.PERMISSIONS

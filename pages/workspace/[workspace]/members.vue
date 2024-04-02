@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import View from "~/lib/View";
 import type {Ref} from "vue";
 import type Member from "~/types/api/Member";
 import type Role from "~/types/api/Role";
+import View from "~/types/View";
 
 useView().value = View.MEMBERS
 const workspace = useWorkspace()

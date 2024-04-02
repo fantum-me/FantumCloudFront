@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import View from "~/lib/View";
+
+import View from "~/types/View";
 
 const session = useSession()
 useView().value = View.SETTINGS

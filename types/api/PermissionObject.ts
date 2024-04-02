@@ -1,4 +1,4 @@
-import Permission from "@/lib/Permission";
+import Permission from "@/types/Permission";
 
 export default interface PermissionObject {
     [Permission.READ]: boolean,

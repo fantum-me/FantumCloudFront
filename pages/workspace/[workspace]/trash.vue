@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import View from "~/lib/View";
 import type File from "~/types/api/File";
 import type Folder from "~/types/api/Folder";
 import type {Ref} from "vue";
+import View from "~/types/View";
 
 useView().value = View.TRASH
 const trash: Ref<{files: File[], folders: Folder[]} | undefined> = ref()

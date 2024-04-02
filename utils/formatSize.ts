@@ -1,5 +1,3 @@
-export const capitalize = (string: string) => string[0].toUpperCase() + string.slice(1);
-
 export const formatSize = (size: number): string => {
     if (size === 0) return "0"
     const suffixes = ["bytes", "kB", "MB", "GB", "TB"];

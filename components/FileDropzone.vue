@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Permission from "~/lib/Permission";
 import {FolderPlusIcon, XMarkIcon} from "@heroicons/vue/24/solid";
 import {useDropzone} from "vue3-dropzone";
+import Permission from "~/types/Permission";
 
 const folder = useFolder()
 

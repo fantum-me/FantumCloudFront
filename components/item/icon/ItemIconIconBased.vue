@@ -1,10 +1,4 @@
 <script setup lang="ts">
-type Props = {
-	class: string | undefined,
-	iconClass: string | undefined,
-	icon: any,
-	padding: boolean
-}
 const props = defineProps({
 	class: String,
 	iconClass: {

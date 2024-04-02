@@ -1,5 +1,5 @@
-import serverAuthenticate from "~/lib/serverAuthenticate";
-import serverFetchApi from "~/lib/serverFetchApi";
+import serverFetchApi from "~/server/utils/serverFetchApi";
+import serverAuthenticate from "~/server/utils/serverAuthenticate";
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

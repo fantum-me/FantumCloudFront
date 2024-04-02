@@ -3,7 +3,6 @@ import type StorageItem from "~/types/api/StorageItem";
 import moment from "moment/moment";
 import {DragSelectOption} from "@coleqiu/vue-drag-select";
 import type StorageItemSummary from "~/types/api/StorageItemSummary";
-import {StorageItemActions} from "~/lib/StorageItemActions";
 
 const {item} = defineProps<{
 	item: StorageItem,
@@ -52,7 +51,7 @@ function onDragEnd(e: MouseEvent) {
 					const targetId = target.getAttribute("id")
 					if (targetId) {
 						const items: StorageItemSummary[] = lastSelection.map(item => decodeSummary(item))
-						StorageItemActions.move(items, useFolder().value.id, targetId)
+						moveItems(items, useFolder().value.id, targetId)
 					}
 				}
 			}

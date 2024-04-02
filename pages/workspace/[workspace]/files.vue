@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import View from "~/lib/View";
+import View from "~/types/View";
 
 useView().value = View.FILES
 const workspace = useWorkspace()

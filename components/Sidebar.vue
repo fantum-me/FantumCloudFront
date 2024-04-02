@@ -20,8 +20,8 @@ import {
 	TrashIcon as TrashSolidIcon,
 	UsersIcon as UsersSolidIcon,
 } from "@heroicons/vue/24/solid";
-import Permission from "~/lib/Permission";
-import View from "~/lib/View";
+import Permission from "~/types/Permission";
+import View from "~/types/View";
 
 const sidebarItems = [
 	[

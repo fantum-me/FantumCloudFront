@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from "@vueuse/core";
 import type StorageItemSummary from "~/types/api/StorageItemSummary";
-import View from "~/lib/View";
-import Permission from "~/lib/Permission";
 import {ArrowDownTrayIcon, CloudArrowUpIcon, FolderOpenIcon, PencilIcon, TrashIcon} from "@heroicons/vue/24/solid";
-import {StorageItemActions} from "~/lib/StorageItemActions";
 import type {Ref} from "vue";
 import type PermissionObject from "~/types/api/PermissionObject";
+import Permission from "~/types/Permission";
+import View from "~/types/View";
 
 const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
@@ -56,7 +55,7 @@ function onContextMenu() {
 	if (permissions[Permission.READ] && items.length === 1 && items[0].type === "file") menu.value.push({
 		icon: ArrowDownTrayIcon,
 		name: "Download",
-		action: () => StorageItemActions.download(items[0])
+		action: () => downloadFile(items[0])
 	})
 	if (permissions[Permission.READ] && items.length === 1 && items[0].type === "folder") menu.value.push({
 		icon: FolderOpenIcon,
@@ -73,19 +72,19 @@ function onContextMenu() {
 		icon: TrashIcon,
 		name: "Move To Trash",
 		color: "error",
-		action: () => StorageItemActions.trash(items)
+		action: () => trashItems(items)
 	})
 	if (permissions[Permission.WRITE] && view.value === View.TRASH) menu.value.push({
 		icon: CloudArrowUpIcon,
 		name: "Restore",
 		color: "primary",
-		action: () => StorageItemActions.restore(items)
+		action: () => restoreItems(items)
 	})
 	if (permissions[Permission.DELETE] && view.value === View.TRASH) menu.value.push({
 		icon: TrashIcon,
 		name: "Delete",
 		color: "error",
-		action: () => StorageItemActions.delete(items)
+		action: () => deleteItems(items)
 	})
 
 	isOpen.value = true

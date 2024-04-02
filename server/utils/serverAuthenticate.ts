@@ -1,4 +1,4 @@
-import serverFetchApi from "~/lib/serverFetchApi";
+import serverFetchApi from "~/server/utils/serverFetchApi";
 import type {H3Event} from "h3";
 import type User from "~/types/api/User";
 
