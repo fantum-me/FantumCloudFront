@@ -19,6 +19,7 @@ async function fetchFolder() {
 		if (current_folder) {
 			folder.value.import_file = current_folder.import_file
 			folder.value.create_folder = current_folder.create_folder
+			folder.value.create_document = current_folder.create_document
 		}
 	} else console.log(res.status, await res.text());
 	isLoading.value = false
@@ -43,6 +44,7 @@ function onContextMenu(e: PointerEvent) {
 
 <template>
 	<ModalNewFolder/>
+	<ModalNewDocument/>
 	<div class="w-full h-full" @contextmenu.prevent="onContextMenu" @click="unselectAll">
 		<ContextMenuFolder/>
 		<FileDropzone>

@@ -40,9 +40,27 @@ contextMenu.value = {
 			<DocumentArrowDownIcon class="h-5 w-5"/>
 			Import File
 		</button>
-		<button  @click="folder.create_folder?.() && contextMenu.close()">
+		<button @click="folder.create_folder?.() && contextMenu.close()">
 			<FolderPlusIcon class="h-5 w-5"/>
 			Create Folder
+		</button>
+		<button @click="folder.create_document?.('text') & contextMenu.close()">
+			<span class="h-5 w-5">
+				<ItemIconTypeDoc/>
+			</span>
+			New Text Document
+		</button>
+		<button @click="folder.create_document?.('spreadsheet') & contextMenu.close()">
+			<span class="h-5 w-5">
+				<ItemIconTypeSpreadsheet/>
+			</span>
+			New Spreadsheet
+		</button>
+		<button @click="folder.create_document?.('presentation') & contextMenu.close()">
+			<span class="h-5 w-5">
+				<ItemIconTypePresentation/>
+			</span>
+			New Presentation
 		</button>
 	</UContextMenu>
 </template>

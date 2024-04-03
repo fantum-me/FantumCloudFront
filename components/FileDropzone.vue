@@ -10,7 +10,7 @@ async function processFile(file: File) {
 	formData.append('file', file);
 	formData.append('folder', folder.value.id);
 
-	const res = await useApiFetch("/files", {
+	const res = await useApiFetch("/files/upload", {
 		method: "POST",
 		body: formData,
 	})
