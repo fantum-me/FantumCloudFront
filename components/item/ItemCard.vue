@@ -24,6 +24,7 @@ const summary = {
 	name: item.name,
 	access: item.access
 } as StorageItemSummary
+if (isFile(item)) summary.mime = item.mime
 const encodedSummary = encodeSummary(summary)
 
 function onContextMenu() {

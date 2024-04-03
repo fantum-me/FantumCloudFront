@@ -4,20 +4,26 @@ export default async function serverFetchApi(
     event: H3Event,
     input: string,
     init: RequestInit | undefined = {},
-    basePath: string | undefined = ""
+    accessToken: string = ""
 ): Promise<Response> {
-    const cookies = parseCookies(event)
-    if (!cookies.accessToken) throw createError({statusCode: 401})
+    if (!accessToken) {
+        const cookies = parseCookies(event)
+        if (!cookies.accessToken) throw createError({statusCode: 401})
+        accessToken = cookies.accessToken
+    }
 
-    if (!basePath && !isAbsoluteUrl(input)) basePath = useRuntimeConfig().public.apiEndpoint
+    const basePath = isAbsoluteUrl(input) ? "" : useRuntimeConfig().public.apiEndpoint
 
     if (!("headers" in init)) init["headers"] = {};
     // @ts-ignore
-    init["headers"]["Authorization"] = "Bearer " + cookies.accessToken
+    init["headers"]["Authorization"] = "Bearer " + accessToken
 
     const res = await fetch(basePath + input, init)
     if (res.ok) return res
-    else throw createError({statusCode: res.status, statusText: res.statusText})
+    else {
+        console.log(accessToken, basePath + input, res.status, res.statusText)
+        throw createError({statusCode: res.status, statusText: res.statusText})
+    }
 }
 
 function isAbsoluteUrl(url: string) {

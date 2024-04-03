@@ -1,4 +1,13 @@
 import type StorageItem from "~/types/api/StorageItem";
+import type File from "~/types/api/File";
+import type Folder from "~/types/api/Folder";
+import type StorageItemSummary from "~/types/api/StorageItemSummary";
+
+export const isFile = (item: StorageItem | StorageItemSummary): item is File =>
+    ("type" in item && item.type === "file") || "ext" in item;
+
+export const isFolder = (item: StorageItem | StorageItemSummary): item is Folder =>
+    ("type" in item && item.type === "folder") || "is_root" in item;
 
 export const fileTypes = {
     "image": ["image/*"],
@@ -53,17 +62,23 @@ export const fileTypes = {
     ]
 }
 
-export const getStorageItemType = (item: StorageItem): string => {
+export const getStorageItemType = (item: StorageItem | StorageItemSummary): string => {
     if (isFolder(item)) return "folder"
     else if (isFile(item)) {
         for (const [type, formats] of Object.entries(fileTypes)) {
             for (const format of formats) {
                 const pattern = format.replace(/\*/g, '.*')
                 const regex = new RegExp(`^${pattern}$`);
-                if (regex.test(item.type)) return type
+                if (regex.test(item.mime)) return type
             }
         }
         return "file"
     }
     return "other"
 }
+
+export const isOfficeDocument = (item: StorageItem | StorageItemSummary): boolean => {
+    const type = getStorageItemType(item)
+    return ["word", "cell", "slide", "pdf"].includes(type)
+}
+

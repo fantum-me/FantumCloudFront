@@ -13,6 +13,8 @@
     "@coleqiu/vue-drag-select": "^2.0.6-beta.1",
     "@heroicons/vue": "^2.1.1",
     "@nuxt/ui": "^2.14.2",
+    "@onlyoffice/document-editor-vue": "^1.4.0",
+    "jose": "^5.2.3",
     "moment": "^2.30.1",
     "nuxt": "^3.11.1",
     "vue": "^3.4.21",

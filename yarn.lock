@@ -1119,6 +1119,11 @@
     tailwindcss "~3.4.1"
     ufo "^1.3.2"
 
+"@onlyoffice/document-editor-vue@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@onlyoffice/document-editor-vue/-/document-editor-vue-1.4.0.tgz#966486712510209455a276b2e73f18d3321288cf"
+  integrity sha512-Fg5gSc1zF6bmpRapUd7rMpm7kEDF7mQIHQKfcsfJcILdFX9bwIhnkXEucETEA9zdt92nWMS6qiAgVeT61TdCyw==
+
 "@parcel/watcher-android-arm64@2.4.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@parcel/watcher-android-arm64/-/watcher-android-arm64-2.4.1.tgz#c2c19a3c442313ff007d2d7a9c2c1dd3e1c9ca84"
@@ -3652,6 +3657,11 @@ jiti@^1.19.1, jiti@^1.21.0:
   version "1.21.0"
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.21.0.tgz#7c97f8fe045724e136a397f7340475244156105d"
   integrity sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==
+
+jose@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-5.2.3.tgz#071c87f9fe720cff741a403c8080b69bfe13164a"
+  integrity sha512-KUXdbctm1uHVL8BYhnyHkgp3zDX5KW8ZhAKVFEfUbU2P8Alpzjb+48hHvjOdQIyPshoblhzsuqOwEEAbtHVirA==
 
 js-tokens@^4.0.0:
   version "4.0.0"

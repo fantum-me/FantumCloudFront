@@ -10,8 +10,6 @@ import View from "~/types/View";
 const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
 
-const router = useRouter()
-
 const view = useView()
 const itemsSelection = useItemsSelection()
 const workspace = useWorkspace()
@@ -52,15 +50,19 @@ function onContextMenu() {
 
 	console.log(permissions[Permission.READ], items[0].type, items[0].type === "file")
 
+	if (permissions[Permission.READ] && items.length === 1)
+		if (items[0].type === "folder" || isOfficeDocument(items[0])) menu.value.push({
+			icon: FolderOpenIcon,
+			name: "Open",
+			action: () => {
+				if (isFolder(items[0])) navigateTo(`/workspace/${workspace.value.id}/folder/${items[0].id}`)
+				else if (isFile(items[0])) navigateTo(`/docs/${items[0].id}`, {open: {target: '_blank',}})
+			}
+		})
 	if (permissions[Permission.READ] && items.length === 1 && items[0].type === "file") menu.value.push({
 		icon: ArrowDownTrayIcon,
 		name: "Download",
 		action: () => downloadFile(items[0])
-	})
-	if (permissions[Permission.READ] && items.length === 1 && items[0].type === "folder") menu.value.push({
-		icon: FolderOpenIcon,
-		name: "Open",
-		action: () => router.push("/workspace/" + workspace.value.id + "/folder/" + items[0].id)
 	})
 	if (permissions[Permission.WRITE] && items.length === 1) menu.value.push({
 		icon: PencilIcon,

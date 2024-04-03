@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         baseUrl: '',
+        baseUrlForOnlyoffice: '',
         oauthEndpoint: '',
         logoutEndpoint: '',
         oauth: {
@@ -20,7 +21,10 @@ export default defineNuxtConfig({
             clientId: '',
             clientSecret: ''
         },
+        onlyofficeJwtSecret: '',
+        docsApiAccessKey: '',
         public: {
+            onlyofficeUrl: '',
             defaultRoleColor: '#555555',
             userinfoEndpoint: '',
             apiEndpoint: '',

@@ -41,7 +41,7 @@ export const deleteItems = (items: StorageItemSummary[], undoing = false) => mod
 )
 
 export const downloadFile = (file: StorageItemSummary) => {
-    if (file.type !== "file") return;
+    if (!isFile(file)) return;
     const link = document.createElement("a");
     link.setAttribute("href", `/api/files/${file.id}/download`);
     link.setAttribute("download", file.name + "." + file.ext);

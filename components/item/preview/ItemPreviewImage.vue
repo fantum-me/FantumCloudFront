@@ -9,7 +9,7 @@ const alt = "Preview of: " + item.name
 </script>
 
 <template>
-	<img v-if="item.type.startsWith('image')" :src="src" :alt="alt"
+	<img v-if="item.mime.startsWith('image')" :src="src" :alt="alt"
 	     class="w-full aspect-video object-center object-cover rounded pointer-events-none"/>
 	<img v-else :src="src" :alt="alt"
 	     class="w-full aspect-video object-top object-cover rounded-t bg-white pointer-events-none"/>

@@ -6,4 +6,5 @@ export default interface StorageItemSummary {
     ext: string,
     type: "folder" | "file",
     access: PermissionObject,
+    mime?: string
 }
