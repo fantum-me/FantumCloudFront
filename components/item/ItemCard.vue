@@ -66,7 +66,10 @@ const cardConfig = {
 	footer: {padding: 'py-2 sm:py-3 px-3 sm:px-4'}
 }
 
-const onDblClick = () => type === "folder" ? navigateTo(`/workspace/${useWorkspace().value.id}/folder/${item.id}`) : {}
+const onDblClick = () => {
+	if (type === "folder") navigateTo(`/workspace/${useWorkspace().value.id}/folder/${item.id}`)
+	else if (isOfficeDocument(item)) navigateTo(`/docs/${item.id}`, {open: {target: "_blank"}})
+}
 </script>
 
 <template>
