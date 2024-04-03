@@ -1,4 +1,5 @@
-import type DocumentType, {DocumentTypeType} from "~/types/DocumentType";
+import type DocumentType from "~/types/DocumentType";
+import type {DocumentTypeType} from "~/types/DocumentType";
 
 export const useNewDocumentType = () => useState<DocumentType>('new-document-type')
 
