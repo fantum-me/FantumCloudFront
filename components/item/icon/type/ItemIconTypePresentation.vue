@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {TvIcon} from "@heroicons/vue/24/solid";
+import {FilmIcon} from "@heroicons/vue/24/outline";
 </script>
 
 <template>
-	<ItemIconIconBased :icon="TvIcon" class="bg-amber-400" :padding="true"/>
+	<ItemIconIconBased :icon="FilmIcon" class="bg-amber-600" :padding="true"/>
 </template>
