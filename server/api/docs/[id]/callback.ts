@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     const jwt = await serverOnlyofficeAuthenticate(event)
 
     const payload: { key: string } = jwt.payload.payload as { key: string }
-    if (payload.key !== id) throw createError("invalid token")
+    if (payload.key.split(":")[0] !== id) throw createError("invalid token")
 
     const body = await readBody(event)
 

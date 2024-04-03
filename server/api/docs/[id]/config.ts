@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
         const config: IConfig = {
             document: {
                 fileType: file.ext,
-                key: file.id,
+                key: file.id + ":" + file.version,
                 title: file.name + "." + file.ext,
                 url: docsBasePath() + "/api/docs/" + file.id + "/document",
                 permissions: {
