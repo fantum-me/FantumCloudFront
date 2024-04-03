@@ -74,7 +74,7 @@ const workspace = useWorkspace()
 
 	@apply hover:bg-primary hover:bg-opacity-25;
 	&.active {
-		@apply bg-primary hover:bg-primary hover:bg-opacity-100;
+		@apply text-gray-50 font-medium bg-primary hover:bg-primary hover:bg-opacity-100;
 	}
 
 	.icon {
