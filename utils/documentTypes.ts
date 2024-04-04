@@ -5,22 +5,22 @@ export const documentTypes: DocumentType[] = [
     {
         type: "text",
         label: "Text document",
-        ext: "odt",
-        mime: "application/vnd.oasis.opendocument.text",
+        ext: "docx",
+        mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         icon: ItemIconTypeDoc
     },
     {
         type: "spreadsheet",
-        ext: "ods",
+        ext: "xlsx",
         label: "Spreadsheet",
-        mime: "application/vnd.oasis.opendocument.spreadsheet",
+        mime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         icon: ItemIconTypeSpreadsheet
     },
     {
         type: "presentation",
-        ext: "odp",
+        ext: "pptx",
         label: "Slides presentation",
-        mime: "application/vnd.oasis.opendocument.presentation",
+        mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
         icon: ItemIconTypePresentation
     },
 ]
