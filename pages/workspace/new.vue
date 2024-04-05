@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts">
 import type Workspace from "~/types/api/Workspace";
 
 const session = useSession()
