@@ -58,7 +58,7 @@ async function modifyItems(
     undoing: boolean
 ) {
     if (items.length === 0) return
-    useHiddenItems().value = items.map(item => item.id)
+    useLoadingItems().value = items.map(item => item.id)
     useItemsSelection().value = []
 
     try {
@@ -93,7 +93,7 @@ async function modifyItems(
     } catch (e) {
         useErrorToast(`Error while trying to ${action}: Processing error (please reload the page)`)
     }
-    useHiddenItems().value = []
+    useLoadingItems().value = []
 }
 
 function composeElementsName(files: any[], folders: any[]): string {

@@ -1,12 +1,17 @@
 <script setup lang="ts">
 const props = defineProps({
-	class: {
-		type: String,
-		default: "w-full h-full"
+	size: {
+		type: Number,
+		default: 24
+	},
+	thickness: {
+		type: Number,
+		default: 3
 	}
 })
 </script>
 
 <template>
-	<span :class="props.class + ' border-b-2 border-current rounded-full animate-spin'" />
+	<span class="block border-current border-e-transparent rounded-full animate-spin"
+	      :style="{width: props.size + 'px', height: props.size + 'px', borderWidth: props.thickness + 'px'}"/>
 </template>

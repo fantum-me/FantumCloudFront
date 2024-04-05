@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {XMarkIcon} from "@heroicons/vue/16/solid";
 import type {Ref} from "vue";
 import type Member from "~/types/api/Member";
 import type Role from "~/types/api/Role";
@@ -85,13 +86,13 @@ async function toggleRole(member: Member, role: Role) {
 				<template #roles-data="{ row: member }">
 					<div class="flex flex-wrap gap-2 text-gray-700 dark:text-gray-300">
 						<span v-for="role in member.roles.filter(r => !r.is_default)">
-							<span class="py-1 px-2 rounded flex-center gap-2 text-sm"
+							<span class="group py-1 px-2 rounded flex-center gap-2 text-sm"
 							      :style="{backgroundColor: ((role.color ?? defaultRoleColor) + '20')}">
-									<span class="h-3 w-3 flex-center rounded-full group cursor-pointer"
+									<span class="h-3 w-3 flex-center rounded-full cursor-pointer"
 									      :style="{backgroundColor: role.color ?? defaultRoleColor}"
 									      @click="toggleRole(member, role)">
-										<UIcon name="i-heroicons-x-mark"
-										       class="hidden group-hover:block m-px text-white"/>
+										<XMarkIcon class="hidden group-hover:block opacity-75 hover:opacity-100"
+										           :style="{color: getContrastColor(role.color ?? defaultRoleColor)}"/>
 									</span>
 									{{ role.name }}
 							</span>
@@ -109,7 +110,7 @@ async function toggleRole(member: Member, role: Role) {
 												      :style="{backgroundColor: role.color ?? defaultRoleColor}"/>
 											<span class="truncate">{{ role.name }}</span>
 										</div>
-										<Loader v-if="loadingRoleIds.includes(role.id)" class="h-3 w-3"/>
+										<Loader v-if="loadingRoleIds.includes(role.id)" :size="12" :thickness="2"/>
 										<UCheckbox v-else
 										           :model-value="!!member.roles.find(r => r.id === role.id)"/>
 									</UButton>

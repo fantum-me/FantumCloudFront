@@ -14,7 +14,7 @@ const type = isFile(item) ? "file" : "folder"
 
 const itemsSelection = useItemsSelection()
 const itemsDragging = useItemsDragging()
-const hiddenItems = useHiddenItems()
+const loadingItems = useLoadingItems()
 let lastSelection: Array<string> = []
 
 const summary = {
@@ -74,9 +74,9 @@ const onDblClick = () => {
 
 <template>
 	<drag-select-option :value="encodedSummary" @contextmenu.prevent="onContextMenu" @dblclick="onDblClick"
-	                    @dragstart.prevent="onDragStart" draggable="true" :id="item.id" :data-type="type"
-						v-if="!hiddenItems.includes(item.id)">
-		<UCard class="item-card flex flex-col dark:border border-gray-700 divide-none shadow-none" :ui="cardConfig">
+	                    @dragstart.prevent="onDragStart" draggable="true" :id="item.id" :data-type="type">
+		<UCard class="relative item-card flex flex-col dark:border border-gray-700 divide-none shadow-none"
+		       :ui="cardConfig">
 			<template #header>
 				<div class="flex-start" :title="item.name + (ext ? '.' + ext : '')">
 					<span class=" shrink-0 h-5 w-5 mr-3">
@@ -88,6 +88,12 @@ const onDblClick = () => {
 			<div>
 				<ItemPreview :crop="true" :item="item"/>
 			</div>
+
+			<div v-if="loadingItems.includes(item.id)"
+			     class="absolute w-full h-full top-0 left-0 bg-gray-200 dark:bg-gray-800 rounded-lg bg-opacity-65 dark:bg-opacity-65 flex-center">
+				<Loader :size="36" :thickness="4"/>
+			</div>
+
 			<template #footer>
 				<div class="flex-start gap-1.5 opacity-60 text-xs">
 					{{ formatSize(item.size) }}
