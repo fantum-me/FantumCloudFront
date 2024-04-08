@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
 	ArrowLeftStartOnRectangleIcon as LogoutIcon,
-	ChartPieIcon as StorageIcon,
 	CloudIcon,
 	Cog6ToothIcon as SettingsIcon,
 	CreditCardIcon,
@@ -11,7 +10,6 @@ import {
 	UsersIcon
 } from "@heroicons/vue/24/outline";
 import {
-	ChartPieIcon as StorageSolidIcon,
 	CloudIcon as CloudSolidIcon,
 	Cog6ToothIcon as SettingsSolidIcon,
 	CreditCardIcon as CreditCardSolidIcon,
@@ -23,7 +21,9 @@ import {
 import Permission from "~/types/Permission";
 import View from "~/types/View";
 
-const sidebarItems = [
+type sidebarItem = [view: View, label: string, icon: any, activeIcon: any, permission?: Permission]
+
+const sidebarItems: sidebarItem[][] = [
 	[
 		[View.FILES, "All Files", CloudIcon, CloudSolidIcon],
 		[View.FAVORITES, "Favorites", StarIcon, StarSolidIcon],
@@ -34,7 +34,6 @@ const sidebarItems = [
 		[View.PERMISSIONS, "Roles & Permissions", TagIcon, TagSolidIcon, Permission.EDIT_PERMISSIONS],
 	],
 	[
-		[View.STORAGE, "Storage", StorageIcon, StorageSolidIcon],
 		[View.BILLINGS, "Plans & Billing", CreditCardIcon, CreditCardSolidIcon],
 		[View.SETTINGS, "Settings", SettingsIcon, SettingsSolidIcon],
 	]
@@ -42,6 +41,23 @@ const sidebarItems = [
 
 const view = useView()
 const workspace = useWorkspace()
+
+const usage = ref(workspace.value.used_space / workspace.value.quota * 100)
+
+const usageColor = computed(() => {
+	switch (true) {
+		case usage.value < 10:
+			return 'green'
+		case usage.value < 70:
+			return 'primary'
+		case usage.value < 80:
+			return 'amber'
+		case usage.value < 95:
+			return 'orange'
+		default:
+			return 'red'
+	}
+})
 </script>
 
 <template>
@@ -65,6 +81,13 @@ const workspace = useWorkspace()
 			<component :is="LogoutIcon" class="icon"/>
 			Sign Out
 		</NuxtLink>
+
+		<template #footer>
+			<UProgress :color="usageColor" indicator size="md" :value="workspace.used_space" :max="workspace.quota"/>
+			<p class="text-sm opacity-50 mt-1">
+				{{ formatSize(workspace.used_space) }} used on {{ formatSize(workspace.quota) }}
+			</p>
+		</template>
 	</UCard>
 </template>
 
@@ -73,6 +96,7 @@ const workspace = useWorkspace()
 	@apply flex items-center gap-2 px-4 py-3 rounded transition-all active:scale-95;
 
 	@apply hover:bg-primary hover:bg-opacity-25;
+
 	&.active {
 		@apply text-gray-50 font-medium bg-primary hover:bg-primary hover:bg-opacity-100;
 	}

@@ -7,7 +7,6 @@ enum View {
     MEMBERS = "members",
     PERMISSIONS = "permissions",
 
-    STORAGE = "storage",
     BILLINGS = "billings",
     SETTINGS = "settings",
 }

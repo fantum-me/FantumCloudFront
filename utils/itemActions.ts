@@ -89,6 +89,7 @@ async function modifyItems(
             await useRefreshView().value()
             useSuccessToast(`${name} ${past} successfully`, successActions)
             useItemsSelection().value = []
+            await refreshWorkspace()
         } else useErrorToast(`Error while trying to ${action}: Network error`)
     } catch (e) {
         useErrorToast(`Error while trying to ${action}: Processing error (please reload the page)`)

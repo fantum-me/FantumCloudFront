@@ -8,5 +8,7 @@ export default interface Workspace {
     root: number,
     access: PermissionObject,
     member_count: number,
-    roles: Role[]
+    roles: Role[],
+    used_space: number,
+    quota: number
 }

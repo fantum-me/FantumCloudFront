@@ -3,7 +3,9 @@ import {FolderPlusIcon, XMarkIcon} from "@heroicons/vue/24/solid";
 import {useDropzone} from "vue3-dropzone";
 import Permission from "~/types/Permission";
 
+const workspace = useWorkspace()
 const folder = useFolder()
+const isQuotaModalOpen = ref(false)
 
 async function processFile(file: File) {
 	const formData = new FormData();
@@ -27,13 +29,23 @@ const {getRootProps, getInputProps, isDragActive, open} = useDropzone({
 			useErrorToast('You don\'t have permission to write in this folder!');
 			return;
 		}
+
 		fileRejections.forEach((file) => useErrorToast(`${file.file.type} is too large !\nMax: 100Mo`));
+
+		let totalSize = 0
+		acceptedFiles.forEach(file => totalSize += file.size)
+
+		if (workspace.value.used_space + totalSize > workspace.value.quota) {
+			isQuotaModalOpen.value = true
+			return
+		}
 
 		for (const file of acceptedFiles) {
 			await processFile(file)
 		}
 
 		await useRefreshView().value()
+		await refreshWorkspace()
 	}
 });
 useFolder().value.import_file = open
@@ -55,4 +67,14 @@ useFolder().value.import_file = open
 		</div>
 		<slot/>
 	</div>
+
+	<UModal v-model="isQuotaModalOpen">
+		<UAlert
+			icon="i-heroicons-exclamation-circle" color="red" variant="soft" title="Workspace quota exceeded !"
+			description="The storage quota associated with your workspace will be exceeded if you upload these files.
+				Please update your subscription or contact your administrator."
+			:close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'red', variant: 'link', padded: false }"
+			@close="isQuotaModalOpen = false"
+		/>
+	</UModal>
 </template>
