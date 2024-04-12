@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type StorageItem from "~/types/api/StorageItem";
-import type File from "~/types/api/File";
 
 const {item, icon} = defineProps<{
 	item: StorageItem,

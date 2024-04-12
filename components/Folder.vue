@@ -34,7 +34,7 @@ function getParentFolderPath(parent: ParentFolder) {
 			: path + '/folder/' + parent.id
 }
 
-function onContextMenu(e: PointerEvent) {
+function onContextMenu(e: MouseEvent) {
 	if (e.target && asHtmlElement(e.target)) {
 		if (!e.target.closest(".item-card")) useFolderContextMenu().value.open()
 	}
@@ -48,7 +48,7 @@ function onContextMenu(e: PointerEvent) {
 	<div class="w-full h-full" @contextmenu.prevent="onContextMenu" @click="unselectAll">
 		<ContextMenuFolder/>
 		<FileDropzone>
-			<StorageItems :folders="folder.folders" :files="folder.files" :is-loading="isLoading">
+			<StorageItems :folders="folder.folders ?? []" :files="folder.files ?? []" :is-loading="isLoading">
 				<div class="-mt-2 -ml-4 mb-4 flex-start">
 					<div v-for="(parent, index) in folder.parents">
 						<div :key="index" class="flex-center" data-type="folder" :id="parent.id">

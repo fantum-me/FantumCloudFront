@@ -3,7 +3,6 @@ import {
 	ArrowLeftStartOnRectangleIcon as LogoutIcon,
 	CloudIcon,
 	Cog6ToothIcon as SettingsIcon,
-	CreditCardIcon,
 	StarIcon,
 	TagIcon,
 	TrashIcon,
@@ -12,7 +11,6 @@ import {
 import {
 	CloudIcon as CloudSolidIcon,
 	Cog6ToothIcon as SettingsSolidIcon,
-	CreditCardIcon as CreditCardSolidIcon,
 	StarIcon as StarSolidIcon,
 	TagIcon as TagSolidIcon,
 	TrashIcon as TrashSolidIcon,
@@ -32,9 +30,6 @@ const sidebarItems: sidebarItem[][] = [
 	[
 		[View.MEMBERS, "Members", UsersIcon, UsersSolidIcon],
 		[View.PERMISSIONS, "Roles & Permissions", TagIcon, TagSolidIcon, Permission.EDIT_PERMISSIONS],
-	],
-	[
-		[View.BILLINGS, "Plans & Billing", CreditCardIcon, CreditCardSolidIcon],
 		[View.SETTINGS, "Settings", SettingsIcon, SettingsSolidIcon],
 	]
 ]

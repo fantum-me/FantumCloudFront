@@ -1,13 +1,12 @@
 enum View {
+    FOLDER = "folder",
+
     FILES = "files",
     FAVORITES = "favorites",
-    FOLDER = "folder",
     TRASH = "trash",
 
     MEMBERS = "members",
     PERMISSIONS = "permissions",
-
-    BILLINGS = "billings",
     SETTINGS = "settings",
 }
 
