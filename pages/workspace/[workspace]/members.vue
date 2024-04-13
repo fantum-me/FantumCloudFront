@@ -4,6 +4,7 @@ import type {Ref} from "vue";
 import type Member from "~/types/api/Member";
 import type Role from "~/types/api/Role";
 import View from "~/types/View";
+import Permission from "~/types/Permission";
 
 useView().value = View.MEMBERS
 const workspace = useWorkspace()
@@ -21,10 +22,10 @@ const columns = [{
 }]
 
 const members: Ref<Member[]> = ref([])
+const selected: Ref<Member[]> = ref([])
 
 const isLoading: Ref<boolean> = ref(true)
 const loadingRoleIds: Ref<string[]> = ref([])
-const selected = ref([])
 
 onMounted(async () => {
 	const res = await useApiFetch("/workspaces/" + workspace.value.id + "/members")
@@ -97,7 +98,7 @@ async function toggleRole(member: Member, role: Role) {
 									{{ role.name }}
 							</span>
 						</span>
-						<div> <!-- This fix the popover display bug -->
+						<div v-if="workspace.access[Permission.EDIT_PERMISSIONS]">
 							<UPopover>
 								<UButton color="white" icon="i-heroicons-plus"/>
 

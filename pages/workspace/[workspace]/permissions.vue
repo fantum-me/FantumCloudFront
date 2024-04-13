@@ -15,6 +15,8 @@ useRefreshView().value = async () => workspace.value = await fetchWorkspace(work
 const selectedRole: Ref<Role | undefined> = ref()
 const isSubmitting: Ref<boolean> = ref(false)
 
+const isCreatingNewRole: Ref<boolean> = ref(false)
+
 const state = reactive({
 	name: "",
 	color: "",
@@ -38,6 +40,19 @@ const validate = (state: any): FormError[] => {
 	if (state.name.length > 63) errors.push({path: 'name', message: 'Must not exceed 63 characters'})
 	if (!state.color) errors.push({path: 'color', message: 'Required'})
 	return errors
+}
+
+async function createNewRole() {
+	isCreatingNewRole.value = true
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/roles`, {
+		method: "POST",
+		body: JSON.stringify({name: "New Role"})
+	})
+	if (res.ok) {
+		await useRefreshView().value()
+		useSuccessToast("New role created successfully !")
+	} else useErrorToast("Failed to create a new role")
+	isCreatingNewRole.value = false
 }
 
 async function onSubmit() {
@@ -79,7 +94,8 @@ function isRoleDifferent(role: Role): boolean {
 				<RoleList :select-role="selectRole"/>
 			</div>
 			<UDivider class="mt-2 mb-3"/>
-			<UButton icon="i-heroicons-plus" class="w-full" color="gray" variant="ghost" size="lg">
+			<UButton icon="i-heroicons-plus" class="w-full" color="gray" variant="ghost" size="lg"
+			         :loading="isCreatingNewRole" @click="createNewRole">
 				New Role
 			</UButton>
 		</UCard>
@@ -93,24 +109,32 @@ function isRoleDifferent(role: Role): boolean {
 						<UInput type="color" v-model="state.color" variant="none" :padded="false"/>
 					</UFormGroup>
 
-					<UFormGroup class="w-full" label="Can Read" name="read" description="Allow user to read files">
-						<UToggle v-model="state.permissions.read"/>
-					</UFormGroup>
-					<UFormGroup class="w-full" label="Can Write" name="write" description="Allow user to write files">
-						<UToggle v-model="state.permissions.write"/>
-					</UFormGroup>
-					<UFormGroup class="w-full" label="Can Trash" name="trash"
-					            description="Allow user to move files to trash">
-						<UToggle v-model="state.permissions.trash"/>
-					</UFormGroup>
-					<UFormGroup class="w-full" label="Can Delete" name="delete"
-					            description="Allow user to delete trashed files">
-						<UToggle v-model="state.permissions.delete"/>
-					</UFormGroup>
-					<UFormGroup class="w-full" label="Can Edit Permissions" name="edit_permissions"
-					            description="Allow user to edit files permissions">
-						<UToggle v-model="state.permissions.edit_permissions"/>
-					</UFormGroup>
+					<div class="space-y-5 *:cursor-pointer">
+						<UFormGroup class="w-full" label="Can Read" name="read" description="Allow user to read files"
+						            @click.prevent="state.permissions.read = !state.permissions.read">
+							<UToggle :model-value="state.permissions.read"/>
+						</UFormGroup>
+						<UFormGroup class="w-full" label="Can Write" name="write"
+						            description="Allow user to write files"
+						            @click.prevent="state.permissions.write = !state.permissions.write">
+							<UToggle :model-value="state.permissions.write"/>
+						</UFormGroup>
+						<UFormGroup class="w-full" label="Can Trash" name="trash"
+						            description="Allow user to move files to trash"
+						            @click.prevent="state.permissions.trash = !state.permissions.trash">
+							<UToggle :model-value="state.permissions.trash"/>
+						</UFormGroup>
+						<UFormGroup class="w-full" label="Can Delete" name="delete"
+						            description="Allow user to delete trashed files"
+						            @click.prevent="state.permissions.delete = !state.permissions.delete">
+							<UToggle :model-value="state.permissions.delete"/>
+						</UFormGroup>
+						<UFormGroup class="w-full" label="Can Edit Permissions" name="edit_permissions"
+						            description="Allow user to edit files permissions"
+						            @click.prevent="state.permissions.edit_permissions = !state.permissions.edit_permissions">
+							<UToggle :model-value="state.permissions.edit_permissions"/>
+						</UFormGroup>
+					</div>
 				</div>
 
 				<UCard class="fixed mb-3.5 bottom-0 left-1/2 -translate-x-1/2"
