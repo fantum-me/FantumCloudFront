@@ -4,21 +4,26 @@ import type {Ref} from "vue";
 import type Member from "~/types/api/Member";
 import type Role from "~/types/api/Role";
 import View from "~/types/View";
+import type InviteCode from "~/types/api/InviteCode";
 import Permission from "~/types/Permission";
 
 useView().value = View.MEMBERS
+const runtimeConfig = useRuntimeConfig()
 const workspace = useWorkspace()
-const defaultRoleColor = useRuntimeConfig().public.defaultRoleColor
+const defaultRoleColor = runtimeConfig.public.defaultRoleColor
 
 const columns = [{
 	key: 'name',
 	label: 'Name'
 }, {
-	key: 'email',
+	key: 'user.email',
 	label: 'Email'
 }, {
 	key: 'roles',
 	label: 'Roles'
+}, {
+	key: 'actions',
+	label: 'Actions'
 }]
 
 const members: Ref<Member[]> = ref([])
@@ -26,6 +31,12 @@ const selected: Ref<Member[]> = ref([])
 
 const isLoading: Ref<boolean> = ref(true)
 const loadingRoleIds: Ref<string[]> = ref([])
+
+const isCreatingInviteCode: Ref<boolean> = ref(false)
+const inviteCode: Ref<InviteCode | undefined> = ref()
+
+const isTransferringOwnership: Ref<boolean> = ref(false)
+const ownershipTransferTarget: Ref<Member | undefined> = ref()
 
 onMounted(async () => {
 	const res = await useApiFetch("/workspaces/" + workspace.value.id + "/members")
@@ -53,7 +64,7 @@ async function toggleRole(member: Member, role: Role) {
 	}
 
 	const res = await useApiFetch(`/workspaces/${workspace.value.id}/members/${member.id}`, {
-		method: "POST",
+		method: "PATCH",
 		body: JSON.stringify({
 			roles: member.roles.map(r => r.id)
 		})
@@ -65,62 +76,118 @@ async function toggleRole(member: Member, role: Role) {
 	}
 	loadingRoleIds.value = loadingRoleIds.value.filter(id => id !== role.id)
 }
+
+async function createInviteCode() {
+	if (isCreatingInviteCode.value) return
+	if (inviteCode.value) {
+		await copyCode()
+		return
+	}
+
+	isCreatingInviteCode.value = true
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/invites`, {
+		method: "POST"
+	})
+	if (res.ok) {
+		inviteCode.value = await res.json()
+		await copyCode()
+	} else useErrorToast("Failed to create an invite code")
+	isCreatingInviteCode.value = false
+}
+
+async function copyCode() {
+	if (inviteCode.value) {
+		await navigator.clipboard.writeText(runtimeConfig.public.baseUrl + "/i/" + inviteCode.value.code)
+		useSuccessToast("Invite code copied !")
+	}
+}
+
+async function openTransferOwnershipModal(target: Member) {
+	isTransferringOwnership.value = true
+	ownershipTransferTarget.value = target
+}
 </script>
 
 <template>
-	<div class="p-6 w-full">
-		<UCard class="w-full">
-			<UTable v-model="selected" :columns="columns" :rows="members" :loading="isLoading">
-				<template #loading-state>
-					<div class="flex-center h-32">
-						<p>Loading...</p>
-					</div>
-				</template>
+	<ModalWorkspaceOwnershipTransfer v-model="isTransferringOwnership" :target="ownershipTransferTarget"
+	                                 v-if="ownershipTransferTarget"/>
+	<NuxtLayout name="workspace">
+		<div class="py-6 px-8 space-y-4 w-full">
+			<div class="flex-between">
+				<h1 class="font-bold text-xl">Members</h1>
+				<UButton icon="i-heroicons-plus" @click="createInviteCode" :loading="isCreatingInviteCode">
+					Invite a Member
+				</UButton>
+			</div>
+			<UCard class="w-full">
+				<UTable v-model="selected" :columns="columns" :rows="members" :loading="isLoading">
+					<template #loading-state>
+						<div class="flex-center h-32">
+							<Loader :size="28"/>
+						</div>
+					</template>
 
-				<template #name-data="{ row: member }">
-					<div :class="[selected.find(m => m.id === member.id) && 'font-bold', 'flex-start gap-2']">
-						{{ member.name }}
-						<IconOwner class="h-4"/>
-					</div>
-				</template>
+					<template #name-data="{ row: member }">
+						<div :class="[selected.find(m => m.id === member.id) && 'font-bold', 'flex-start gap-2']">
+							{{ member.user.name }}
+							<IconOwner class="h-4" v-if="member.is_owner"/>
+						</div>
+					</template>
 
-				<template #roles-data="{ row: member }">
-					<div class="flex flex-wrap gap-2 text-gray-700 dark:text-gray-300">
-						<span v-for="role in member.roles.filter(r => !r.is_default)">
-							<span class="group py-1 px-2 rounded flex-center gap-2 text-sm"
-							      :style="{backgroundColor: ((role.color ?? defaultRoleColor) + '20')}">
-									<span class="h-3 w-3 flex-center rounded-full cursor-pointer"
-									      :style="{backgroundColor: role.color ?? defaultRoleColor}"
-									      @click="toggleRole(member, role)">
-										<XMarkIcon class="hidden group-hover:block opacity-75 hover:opacity-100"
-										           :style="{color: getContrastColor(role.color ?? defaultRoleColor)}"/>
-									</span>
-									{{ role.name }}
+					<template #roles-data="{ row: member }">
+						<div class="flex flex-wrap gap-2 text-gray-700 dark:text-gray-300">
+							<span v-for="role in member.roles.filter((r: Role) => !r.is_default)">
+								<span class="group py-1 px-2 rounded flex-center gap-2 text-sm"
+								      :style="{backgroundColor: ((role.color ?? defaultRoleColor) + '20')}">
+										<span class="h-3 w-3 flex-center rounded-full cursor-pointer"
+										      :style="{backgroundColor: role.color ?? defaultRoleColor}"
+										      @click="toggleRole(member, role)">
+											<XMarkIcon class="hidden group-hover:block opacity-75 hover:opacity-100"
+											           v-if="workspace.access[Permission.EDIT_PERMISSIONS]"
+											           :style="{color: getContrastColor(role.color ?? defaultRoleColor)}"/>
+										</span>
+										{{ role.name }}
+								</span>
 							</span>
-						</span>
-						<div v-if="workspace.access[Permission.EDIT_PERMISSIONS]">
-							<UPopover>
-								<UButton color="white" icon="i-heroicons-plus"/>
+							<div v-if="workspace.access[Permission.EDIT_PERMISSIONS]">
+								<UPopover>
+									<UButton color="white" icon="i-heroicons-plus"/>
 
-								<template #panel>
-									<UButton v-for="role in workspace.roles.filter(r => !r.is_default)"
-									         color="gray" variant="ghost" @click="toggleRole(member, role)"
-									         class="w-full flex-between gap-5 rounded-none cursor-pointer">
-										<div class="flex-center gap-2">
+									<template #panel>
+										<UButton v-for="role in workspace.roles.filter(r => !r.is_default)"
+										         color="gray" variant="ghost" @click="toggleRole(member, role)"
+										         class="w-full flex-between gap-5 rounded-none cursor-pointer">
+											<div class="flex-center gap-2">
 												<span class="h-3 w-3 rounded-full"
 												      :style="{backgroundColor: role.color ?? defaultRoleColor}"/>
-											<span class="truncate">{{ role.name }}</span>
-										</div>
-										<Loader v-if="loadingRoleIds.includes(role.id)" :size="12" :thickness="2"/>
-										<UCheckbox v-else
-										           :model-value="!!member.roles.find(r => r.id === role.id)"/>
+												<span class="truncate">{{ role.name }}</span>
+											</div>
+											<Loader v-if="loadingRoleIds.includes(role.id)" :size="12" :thickness="2"/>
+											<UCheckbox v-else
+											           :model-value="!!member.roles.find((r: Role) => r.id === role.id)"/>
+										</UButton>
+									</template>
+								</UPopover>
+							</div>
+						</div>
+					</template>
+
+					<template #actions-data="{ row: member }">
+						<div v-if="workspace.owner && workspace.owner_id !== member.id">
+							<UPopover>
+								<UButton color="white" icon="i-heroicons-ellipsis-vertical"/>
+
+								<template #panel>
+									<UButton v-if="workspace.owner" color="red" variant="soft" icon="i-heroicons-key" size="sm"
+									         @click="openTransferOwnershipModal(member)">
+										Transfer ownership
 									</UButton>
 								</template>
 							</UPopover>
 						</div>
-					</div>
-				</template>
-			</UTable>
-		</UCard>
-	</div>
+					</template>
+				</UTable>
+			</UCard>
+		</div>
+	</NuxtLayout>
 </template>

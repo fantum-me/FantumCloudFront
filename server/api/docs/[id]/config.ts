@@ -37,8 +37,8 @@ export default defineEventHandler(async (event) => {
                 callbackUrl: docsBasePath() + "/api/docs/" + file.id + "/callback",
                 customization: {
                     logo: {
-                        image: docsBasePath() + "/logo/black.png",
-                        imageDark: docsBasePath() + "/logo/white.png",
+                        image: runtimeConfig.public.baseUrl + "/logo/black.png",
+                        imageDark: runtimeConfig.public.baseUrl + "/logo/white.png",
                         url: docsBasePath()
                     },
                     goback: {

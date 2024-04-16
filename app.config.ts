@@ -16,6 +16,11 @@ export default defineAppConfig({
             border: {
                 base: "dark:border-gray-700"
             }
+        },
+        button: {
+            variant: {
+                solid: "dark:text-gray-100"
+            }
         }
     }
 })

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 const isSidebarOpen = useSidebarOpen();
-useWorkspace().value = await fetchWorkspace(useRoute().params.workspace as string)
+const workspaceId = useRoute().params.workspace
+const workspace = useWorkspace()
+if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = await fetchWorkspace(workspaceId as string)
 </script>
 
 <template>
-	<div class="flex">
+	<div class="flex" v-if="workspace">
 		<div>
 			<USlideover class="md:hidden w-80" v-model="isSidebarOpen" side="left">
 				<Sidebar/>

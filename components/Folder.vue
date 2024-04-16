@@ -10,6 +10,9 @@ const folder = useFolder();
 const workspace = useWorkspace()
 const path = "/workspace/" + workspace.value.id
 
+await fetchFolder()
+useRefreshView().value = fetchFolder
+
 async function fetchFolder() {
 	const res = await useApiFetch('/folders/' + id);
 	isLoading.value = true
@@ -24,9 +27,6 @@ async function fetchFolder() {
 	} else console.log(res.status, await res.text());
 	isLoading.value = false
 }
-
-await fetchFolder()
-useRefreshView().value = fetchFolder
 
 function getParentFolderPath(parent: ParentFolder) {
 	return parent.is_root ? path + '/files'

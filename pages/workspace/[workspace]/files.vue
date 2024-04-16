@@ -6,5 +6,7 @@ const workspace = useWorkspace()
 </script>
 
 <template>
-	<Folder :id="workspace.root"/>
+	<NuxtLayout name="workspace">
+		<Folder :id="workspace.root"/>
+	</NuxtLayout>
 </template>

@@ -4,8 +4,9 @@ import type PermissionObject from "~/types/api/PermissionObject";
 export default interface Workspace {
     id: string,
     name: string,
-    owner: number,
-    root: number,
+    owner: boolean,
+    owner_id: string,
+    root: string,
     access: PermissionObject,
     member_count: number,
     roles: Role[],

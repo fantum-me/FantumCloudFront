@@ -14,9 +14,9 @@ if (fileRes.ok) {
 	const file: File = await fileRes.json()
 	if (isOfficeDocument(file)) {
 		if (!["doc", "ppt"].includes(file.ext)) {
-			const res = await useFetch(`/api/docs/${id}/config`)
-			if (res.status.value === "success") {
-				config.value = res.data.value?.config
+			const res = await fetch(`/api/docs/${id}/config`)
+			if (res.ok) {
+				config.value = (await res.json()).config
 				loadAllowed.value = true
 			}
 			else error.value = "Failed to load document editor"

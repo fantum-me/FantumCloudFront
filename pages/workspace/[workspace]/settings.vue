@@ -7,11 +7,13 @@ useView().value = View.SETTINGS
 
 
 <template>
-	<div class="p-5">
-		<p>
-			Dark Mode
-			<UToggle color="primary" on-icon="i-heroicons-moon" off-icon="i-heroicons-sun"
-			         :model-value="session.scheme === 'dark'" @click="switchScheme()"/>
-		</p>
-	</div>
+	<NuxtLayout name="workspace">
+		<div class="p-5">
+			<p>
+				Dark Mode
+				<UToggle color="primary" on-icon="i-heroicons-moon" off-icon="i-heroicons-sun"
+				         :model-value="session.scheme === 'dark'" @click="switchScheme()"/>
+			</p>
+		</div>
+	</NuxtLayout>
 </template>

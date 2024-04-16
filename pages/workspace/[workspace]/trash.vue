@@ -13,13 +13,17 @@ const fetchTrash = async () => {
 	else navigateTo(useRoute().fullPath + "?error=Error while trying to fetch Trash")
 }
 
-await fetchTrash()
-useRefreshView().value = fetchTrash
+onMounted(async () => {
+	await fetchTrash()
+	useRefreshView().value = fetchTrash
+})
 </script>
 
 
 <template>
-	<StorageItems :files="trash?.files" :folders="trash?.folders">
-		<h1 class="text-2xl font-bold mb-6">Trash</h1>
-	</StorageItems>
+	<NuxtLayout name="workspace">
+		<StorageItems v-if="trash" :files="trash?.files" :folders="trash?.folders">
+			<h1 class="text-2xl font-bold mb-6">Trash</h1>
+		</StorageItems>
+	</NuxtLayout>
 </template>

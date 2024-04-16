@@ -1,8 +1,9 @@
-export default async function refreshWorkspace() {
+export default async function refreshWorkspace(scopes: string[] = []) {
     const workspace = useWorkspace()
-    const res = await useApiFetch("/workspaces/" + workspace.value.id + "?scopes=")
+    const scopeParameter: string = scopes.length ? "scope=" + scopes.join(",") : "scope="
+    const res = await useApiFetch("/workspaces/" + workspace.value.id + "?" + scopeParameter)
     if (res.ok) {
         const newWorkspace = await res.json()
-        Object.assign(workspace.value, newWorkspace);
+        workspace.value = {...workspace.value, ...newWorkspace}
     }
 }

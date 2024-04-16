@@ -6,5 +6,7 @@ useView().value = View.FOLDER
 
 
 <template>
-	<Folder :id="useRoute().params.folder"/>
+	<NuxtLayout name="workspace">
+		<Folder :id="useRoute().params.folder as string"/>
+	</NuxtLayout>
 </template>
