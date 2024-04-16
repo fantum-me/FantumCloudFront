@@ -57,7 +57,7 @@ useFolder().value.import_file = open
 		     class="fixed w-screen h-screen top-0 left-0 bg-black bg-opacity-50 z-50 flex-center flex-col text-white">
 			<template v-if="folder.access[Permission.WRITE]">
 				<UIcon name="i-heroicons-folder-plus" class="h-32 w-32"/>
-				<p class="text-2xl font-bold">Drag'n Drop</p>
+				<p class="text-2xl font-bold">Drop your files here</p>
 			</template>
 			<template v-else>
 				<UIcon name="i-heroicons-x-mark" class="h-32 w-32"/>
