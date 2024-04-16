@@ -18,6 +18,9 @@ const itemsDragging = useItemsDragging()
 </script>
 
 <template>
+	<ContextMenuItems/>
+	<ModalRenameItem/>
+
 	<drag-select v-model="itemsSelection" class="w-full h-full" :draggable-on-option="false">
 		<slot/>
 		<div v-if="!isLoading" class="pb-28 items-grid">
@@ -40,7 +43,6 @@ const itemsDragging = useItemsDragging()
 			<span :hidden="itemsSelection.length < 2" class="opacity-75 text-sm">+{{ itemsSelection.length - 1 }}</span>
 		</div>
 	</UCard>
-	<ContextMenuItems/>
 </template>
 
 <style>

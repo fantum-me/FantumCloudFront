@@ -64,8 +64,7 @@ function onContextMenu() {
 	if (permissions[Permission.WRITE] && items.length === 1) menu.value.push({
 		icon: "i-heroicons-pencil",
 		name: "Rename",
-		action: () => {
-		} // rename(selectedElements[0])
+		action: () => useRenameItemsModal().value(items[0])
 	})
 	if (permissions[Permission.TRASH] && view.value !== View.TRASH) menu.value.push({
 		icon: "i-heroicons-trash",
