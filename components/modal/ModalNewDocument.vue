@@ -40,7 +40,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 			parent_id: folder.value.id
 		})
 	})
-	console.log(res.status, res.statusText)
+
 	if (res.ok) {
 		await useRefreshView().value()
 		useSuccessToast(`Document ${event.data.name}.${selectedType.value.ext} created successfully !`)

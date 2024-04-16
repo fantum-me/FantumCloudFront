@@ -47,8 +47,6 @@ function onContextMenu() {
 
 	menu.value = []
 
-	console.log(permissions[Permission.READ], items[0].type, items[0].type === "file")
-
 	if (permissions[Permission.READ] && items.length === 1)
 		if (items[0].type === "folder" || isOfficeDocument(items[0])) menu.value.push({
 			icon: isFile(items[0]) ? "i-heroicons-document" : "i-heroicons-folder-open",
