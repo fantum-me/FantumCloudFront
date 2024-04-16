@@ -28,7 +28,9 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
+	if (isLoading.value) return
 	isLoading.value = true
+
 	const res = await useApiFetch("/files", {
 		method: "POST",
 		body: JSON.stringify({
@@ -43,6 +45,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 		await useRefreshView().value()
 		useSuccessToast(`Document ${event.data.name}.${selectedType.value.ext} created successfully !`)
 	} else useErrorToast(`Failed to create document ${event.data.name}.${selectedType.value.ext}`)
+
 	isOpen.value = false
 	isLoading.value = false
 }
