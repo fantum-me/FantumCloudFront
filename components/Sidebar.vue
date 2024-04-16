@@ -1,36 +1,19 @@
 <script setup lang="ts">
-import {
-	ArrowLeftStartOnRectangleIcon as LogoutIcon,
-	CloudIcon,
-	Cog6ToothIcon as SettingsIcon,
-	StarIcon,
-	TagIcon,
-	TrashIcon,
-	UsersIcon
-} from "@heroicons/vue/24/outline";
-import {
-	CloudIcon as CloudSolidIcon,
-	Cog6ToothIcon as SettingsSolidIcon,
-	StarIcon as StarSolidIcon,
-	TagIcon as TagSolidIcon,
-	TrashIcon as TrashSolidIcon,
-	UsersIcon as UsersSolidIcon,
-} from "@heroicons/vue/24/solid";
 import Permission from "~/types/Permission";
 import View from "~/types/View";
 
-type sidebarItem = [view: View, label: string, icon: any, activeIcon: any, permission?: Permission]
+type sidebarItem = [view: View, label: string, icon: string, activeIcon: string, permission?: Permission]
 
 const sidebarItems: sidebarItem[][] = [
 	[
-		[View.FILES, "All Files", CloudIcon, CloudSolidIcon],
-		[View.FAVORITES, "Favorites", StarIcon, StarSolidIcon],
-		[View.TRASH, "Trash", TrashIcon, TrashSolidIcon],
+		[View.FILES, "All Files", "i-heroicons-cloud", "i-heroicons-cloud-solid"],
+		[View.FAVORITES, "Favorites", "i-heroicons-star", "i-heroicons-star-solid"],
+		[View.TRASH, "Trash", "i-heroicons-trash", "i-heroicons-trash-solid"],
 	],
 	[
-		[View.MEMBERS, "Members", UsersIcon, UsersSolidIcon],
-		[View.PERMISSIONS, "Roles & Permissions", TagIcon, TagSolidIcon, Permission.EDIT_PERMISSIONS],
-		[View.SETTINGS, "Settings", SettingsIcon, SettingsSolidIcon],
+		[View.MEMBERS, "Members", "i-heroicons-users", "i-heroicons-users-solid"],
+		[View.PERMISSIONS, "Roles & Permissions", "i-heroicons-tag", "i-heroicons-tag-solid", Permission.EDIT_PERMISSIONS],
+		[View.SETTINGS, "Settings", "i-heroicons-cog-6-tooth", "i-heroicons-cog-6-tooth-solid"],
 	]
 ]
 
@@ -62,18 +45,19 @@ const usageColor = computed(() => {
 			<WorkspaceDropdown/>
 		</template>
 		<div class="pb-8" v-for="items in sidebarItems">
-			<div v-for="[key, title, DefaultIcon, ActiveIcon, permission = null] in items">
+			<div v-for="[key, title, icon, activeIcon, permission = null] in items">
 				<div class="mb-3" v-if="!permission || workspace.access[permission]">
 					<NuxtLink :class="'navigation-button' + (view === key ? ' active' : '')"
 					          :to="`/workspace/${workspace.id}/${key}`">
-						<component :is="view === key ? ActiveIcon : DefaultIcon" class="icon"/>
+						<UIcon v-if="view === key" :name="activeIcon" class="icon"/>
+						<UIcon v-else :name="icon" class="icon"/>
 						{{ title }}
 					</NuxtLink>
 				</div>
 			</div>
 		</div>
 		<NuxtLink class="navigation-button" to="/auth/logout" no-prefetch>
-			<component :is="LogoutIcon" class="icon"/>
+			<UIcon name="i-heroicons-arrow-left-start-on-rectangle" class="icon"/>
 			Sign Out
 		</NuxtLink>
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from "@vueuse/core";
 import type StorageItemSummary from "~/types/api/StorageItemSummary";
-import {ArrowDownTrayIcon, CloudArrowUpIcon, FolderOpenIcon, PencilIcon, TrashIcon} from "@heroicons/vue/24/solid";
 import type {Ref} from "vue";
 import type PermissionObject from "~/types/api/PermissionObject";
 import Permission from "~/types/Permission";
@@ -52,7 +51,7 @@ function onContextMenu() {
 
 	if (permissions[Permission.READ] && items.length === 1)
 		if (items[0].type === "folder" || isOfficeDocument(items[0])) menu.value.push({
-			icon: FolderOpenIcon,
+			icon: isFile(items[0]) ? "i-heroicons-document" : "i-heroicons-folder-open",
 			name: "Open",
 			action: () => {
 				if (isFolder(items[0])) navigateTo(`/workspace/${workspace.value.id}/folder/${items[0].id}`)
@@ -60,30 +59,30 @@ function onContextMenu() {
 			}
 		})
 	if (permissions[Permission.READ] && items.length === 1 && items[0].type === "file") menu.value.push({
-		icon: ArrowDownTrayIcon,
+		icon: "i-heroicons-arrow-down-tray",
 		name: "Download",
 		action: () => downloadFile(items[0])
 	})
 	if (permissions[Permission.WRITE] && items.length === 1) menu.value.push({
-		icon: PencilIcon,
+		icon: "i-heroicons-pencil",
 		name: "Rename",
 		action: () => {
 		} // rename(selectedElements[0])
 	})
 	if (permissions[Permission.TRASH] && view.value !== View.TRASH) menu.value.push({
-		icon: TrashIcon,
+		icon: "i-heroicons-trash",
 		name: "Move To Trash",
 		color: "error",
 		action: () => trashItems(items)
 	})
 	if (permissions[Permission.WRITE] && view.value === View.TRASH) menu.value.push({
-		icon: CloudArrowUpIcon,
+		icon: "i-heroicons-cloud-arrow-up",
 		name: "Restore",
 		color: "primary",
 		action: () => restoreItems(items)
 	})
 	if (permissions[Permission.DELETE] && view.value === View.TRASH) menu.value.push({
-		icon: TrashIcon,
+		icon: "i-heroicons-x-mark",
 		name: "Delete",
 		color: "error",
 		action: () => deleteItems(items)
@@ -105,7 +104,7 @@ contextMenu.value = {
 <template>
 	<UContextMenu v-model="isOpen" :virtual-element="virtualElement">
 		<button v-for="item in menu" @click="item.action() && contextMenu.close()">
-			<component :is="item.icon" class="h-5 w-5"/>
+			<UIcon :name="item.icon"  class="h-5 w-5"/>
 			{{ item.name }}
 		</button>
 	</UContextMenu>

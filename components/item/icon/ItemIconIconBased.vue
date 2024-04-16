@@ -1,16 +1,14 @@
 <script setup lang="ts">
-const props = defineProps({
-	class: String,
-	iconClass: {
-		type: String
-	},
-	icon: {},
-	padding: Boolean
-})
+const props = defineProps<{
+	class?: string,
+	icon: string,
+	iconClass?: string,
+	padding?: boolean
+}>()
 </script>
 
 <template>
 	<ItemIcon :class="props.class ?? ''" :padding="padding">
-		<component :is="icon" :class="(props.iconClass ?? 'text-white') + ' h-full w-full'" />
+		<UIcon :name="props.icon" :class="(props.iconClass ?? 'text-white') + ' h-full w-full'"/>
 	</ItemIcon>
 </template>

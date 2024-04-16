@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {ChevronRightIcon} from "@heroicons/vue/24/solid";
 import type ParentFolder from "~/types/api/ParentFolder";
 import type Folder from "~/types/api/Folder";
 
@@ -57,7 +56,7 @@ function onContextMenu(e: MouseEvent) {
 								:to="getParentFolderPath(parent)">
 								{{ parent.is_root ? workspace.name : parent.name }}
 							</NuxtLink>
-							<ChevronRightIcon class="mx-1.5 h-4 w-4"/>
+							<UIcon name="i-heroicons-chevron-right-20-solid" class="mr-1 h-8 w-8"/>
 						</div>
 					</div>
 					<button @click="fetchFolder"

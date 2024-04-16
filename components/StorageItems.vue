@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {DocumentIcon, FolderIcon} from "@heroicons/vue/24/solid";
 import type Folder from "~/types/api/Folder";
 import type File from "~/types/api/File";
 import {DragSelect} from "@coleqiu/vue-drag-select";
@@ -33,8 +32,8 @@ const itemsDragging = useItemsDragging()
 		<div class="flex-between gap-5">
 			<div class="flex-start space-x-1.5">
 				<span class="h-5 w-5">
-					<DocumentIcon v-if="decodeSummary(itemsSelection[0]).type === 'file'" class="h-full w-full"/>
-					<FolderIcon v-else class="h-full w-full"/>
+					<UIcon v-if="decodeSummary(itemsSelection[0]).type === 'file'" name="i-heroicons-document-solid" class="h-full w-full"/>
+					<UIcon v-else name="i-heroicons-folder-solid" class="h-full w-full"/>
 				</span>
 				<span class="font-medium">{{ decodeSummary(itemsSelection[0]).name }}</span>
 			</div>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {XMarkIcon} from "@heroicons/vue/16/solid";
 import type {Ref} from "vue";
 import type Member from "~/types/api/Member";
 import type Role from "~/types/api/Role";
@@ -142,9 +141,10 @@ async function openTransferOwnershipModal(target: Member) {
 										<span class="h-3 w-3 flex-center rounded-full cursor-pointer"
 										      :style="{backgroundColor: role.color ?? defaultRoleColor}"
 										      @click="toggleRole(member, role)">
-											<XMarkIcon class="hidden group-hover:block opacity-75 hover:opacity-100"
-											           v-if="workspace.access[Permission.EDIT_PERMISSIONS]"
-											           :style="{color: getContrastColor(role.color ?? defaultRoleColor)}"/>
+											<UIcon name="i-heroicons-x-mark-16-solid"
+											       class="hidden group-hover:block opacity-75 hover:opacity-100"
+											       v-if="workspace.access[Permission.EDIT_PERMISSIONS]"
+											       :style="{color: getContrastColor(role.color ?? defaultRoleColor)}"/>
 										</span>
 										{{ role.name }}
 								</span>
@@ -178,7 +178,8 @@ async function openTransferOwnershipModal(target: Member) {
 								<UButton color="white" icon="i-heroicons-ellipsis-vertical"/>
 
 								<template #panel>
-									<UButton v-if="workspace.owner" color="red" variant="soft" icon="i-heroicons-key" size="sm"
+									<UButton v-if="workspace.owner" color="red" variant="soft" icon="i-heroicons-key"
+									         size="sm"
 									         @click="openTransferOwnershipModal(member)">
 										Transfer ownership
 									</UButton>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {FolderPlusIcon, XMarkIcon} from "@heroicons/vue/24/solid";
 import {useDropzone} from "vue3-dropzone";
 import Permission from "~/types/Permission";
 
@@ -57,11 +56,11 @@ useFolder().value.import_file = open
 		<div v-if="isDragActive"
 		     class="fixed w-screen h-screen top-0 left-0 bg-black bg-opacity-50 z-50 flex-center flex-col text-white">
 			<template v-if="folder.access[Permission.WRITE]">
-				<FolderPlusIcon class="h-32 w-32"/>
+				<UIcon name="i-heroicons-folder-plus" class="h-32 w-32"/>
 				<p class="text-2xl font-bold">Drag'n Drop</p>
 			</template>
 			<template v-else>
-				<XMarkIcon class="h-32 w-32"/>
+				<UIcon name="i-heroicons-x-mark" class="h-32 w-32"/>
 				<p class="text-2xl font-bold">Can't upload here</p>
 			</template>
 		</div>

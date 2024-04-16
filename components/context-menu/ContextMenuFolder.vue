@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {DocumentArrowDownIcon, FolderPlusIcon} from "@heroicons/vue/24/solid";
 import {useMouse, useWindowScroll} from "@vueuse/core";
 
 const {x, y} = useMouse()
@@ -37,11 +36,11 @@ contextMenu.value = {
 <template>
 	<UContextMenu v-model="isOpen" :virtual-element="virtualElement">
 		<button @click="folder.import_file?.() && contextMenu.close()">
-			<DocumentArrowDownIcon class="h-5 w-5"/>
+			<UIcon name="i-heroicons-document-arrow-down-solid" class="h-5 w-5"/>
 			Import File
 		</button>
 		<button @click="folder.create_folder?.() && contextMenu.close()">
-			<FolderPlusIcon class="h-5 w-5"/>
+			<UIcon name="i-heroicons-folder-plus-solid" class="h-5 w-5"/>
 			Create Folder
 		</button>
 		<button @click="folder.create_document?.('text') & contextMenu.close()">
