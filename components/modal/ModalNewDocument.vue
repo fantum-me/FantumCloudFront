@@ -16,7 +16,7 @@ folder.value.create_document = (type) => {
 }
 
 const state = reactive({
-	name: undefined,
+	name: "",
 })
 
 const validate = (state: any): FormError[] => {
@@ -46,16 +46,22 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	isOpen.value = false
 	isLoading.value = false
 }
+
+async function close() {
+	isOpen.value = false
+	await useWait(200) // wait for modal transition
+	state.name = ""
+}
 </script>
 
 <template>
-	<UModal v-model="isOpen" :prevent-close="isLoading">
+	<UModal v-model="isOpen" :prevent-close="isLoading" @close="close">
 		<UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
 			<template #header>
 				<div class="flex items-center justify-between font-semibold">
 					Create new document
-					<UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"
-					         class="-my-1" @click="!isLoading ? isOpen = false : null"/>
+					<UButton :v-if="!isLoading" color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"
+					         class="-my-1" @click="close"/>
 				</div>
 			</template>
 
@@ -86,7 +92,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 				</UFormGroup>
 
 				<div class="flex justify-end items-center gap-4 pt-2">
-					<UButton color="gray" variant="ghost" @click="!isLoading ? isOpen = false : null">
+					<UButton v-if="!isLoading" color="gray" variant="ghost" @click="close">
 						Cancel
 					</UButton>
 					<UButton type="submit" :loading="isLoading">
