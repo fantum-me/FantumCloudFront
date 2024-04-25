@@ -57,6 +57,8 @@ async function modifyItems(
     undo: Function | null,
     undoing: boolean
 ) {
+    const workspace = useWorkspace()
+
     if (items.length === 0) return
     useLoadingItems().value = items.map(item => item.id)
     useItemsSelection().value = []
@@ -80,7 +82,7 @@ async function modifyItems(
             })
         }
 
-        const res = await useApiFetch("/storage-items", {
+        const res = await useApiFetch(`/workspaces/${workspace.value.id}/items`, {
             method: method,
             body: JSON.stringify(body)
         })
