@@ -7,7 +7,6 @@ type sidebarItem = [view: View, label: string, icon: string, activeIcon: string,
 const sidebarItems: sidebarItem[][] = [
 	[
 		[View.FILES, "All Files", "i-heroicons-cloud", "i-heroicons-cloud-solid"],
-		[View.FAVORITES, "Favorites", "i-heroicons-star", "i-heroicons-star-solid"],
 		[View.TRASH, "Trash", "i-heroicons-trash", "i-heroicons-trash-solid"],
 	],
 	[
