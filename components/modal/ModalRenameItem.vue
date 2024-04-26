@@ -3,7 +3,6 @@ import type {FormError, FormSubmitEvent} from '#ui/types'
 import type StorageItemSummary from "~/types/api/StorageItemSummary";
 import type {Ref} from "vue";
 
-const folder = useFolder()
 const item: Ref<StorageItemSummary | undefined> = ref()
 const isOpen = ref(false)
 const isLoading = ref(false)
