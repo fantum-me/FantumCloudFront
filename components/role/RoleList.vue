@@ -3,6 +3,7 @@ import type Role from "~/types/api/Role";
 
 const {selectRole} = defineProps<{
 	selectRole: (role: Role) => any
+	selectedId: string|undefined
 }>()
 
 const workspace = useWorkspace()
@@ -59,14 +60,14 @@ const handleDrop = async (targetRole: Role) => {
 			<p class="-mt-32">Loading...</p>
 		</div>
 		<div class="space-y-2">
-			<h1 class="font-bold text-xl ml-2">Roles</h1>
-			<div>
+			<h1 class="font-bold text-xl ml-2 mb-2">Roles</h1>
+			<div class="space-y-1">
 				<div v-for="role in workspace.roles" :key="role.position" class="relative">
 					<span v-if="dropIndex === role.position" class="absolute z-50 h-1 w-full bg-primary"></span>
 					<UButton color="gray" variant="ghost" class="w-full p-0" size="lg"
 					         draggable="true" @dragstart="handleDragStart($event, role)" @dragend="handleDragEnd"
 					         @dragover="handleDragOver($event, role.position)" @drop="handleDrop(role)">
-						<p class="p-3 w-full text-start flex-start gap-3 rounded select-none"
+						<p :class="(role.id === selectedId ? 'bg-gray-200 dark:bg-gray-700 ' : '') + 'px-3 py-2.5 w-full text-start flex-start gap-3 rounded select-none'"
 						   @click="selectRole(role)">
 							<span class="h-3 w-3 rounded-full" :style="{ backgroundColor: role.color ?? '#555' }"/>
 							{{ role.name }}

@@ -30,10 +30,7 @@ const state = reactive({
 const selectRole = (role: Role) => {
 	state.name = role.name
 	state.color = role.color ?? defaultRoleColor
-
-	for (const key of Object.keys(role.permissions)) {
-		state.permissions[key as Permission] = role.permissions[key as Permission]
-	}
+	Object.assign(state.permissions, role.permissions)
 
 	selectedRole.value = role
 }
@@ -96,7 +93,7 @@ function isRoleDifferent(role: Role): boolean {
 		<div class="w-full h-full p-6 flex gap-6">
 			<UCard class="h-full w-80">
 				<div class="flex-grow overflow-y-scroll">
-					<RoleList :select-role="selectRole"/>
+					<RoleList :select-role="selectRole" :selected-id="selectedRole?.id"/>
 				</div>
 				<UDivider class="mt-2 mb-3"/>
 				<UButton icon="i-heroicons-plus" class="w-full" color="gray" variant="ghost" size="lg"
