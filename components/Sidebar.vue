@@ -55,10 +55,6 @@ const usageColor = computed(() => {
 				</div>
 			</div>
 		</div>
-		<NuxtLink class="navigation-button" to="/auth/logout" no-prefetch>
-			<UIcon name="i-heroicons-arrow-left-start-on-rectangle" class="icon"/>
-			Sign Out
-		</NuxtLink>
 
 		<template #footer>
 			<UProgress :color="usageColor" indicator size="md" :value="workspace.used_space" :max="workspace.quota"/>

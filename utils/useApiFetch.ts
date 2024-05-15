@@ -16,7 +16,7 @@ export const useApiFetch = async (
     const res = await fetch(basePath + input, init)
     if (res.status === 401) {
         useCookie("auth-redirect").value = useRoute().fullPath
-        window.location.href = "/auth/retry";
+        navigateTo("/auth/retry", {external: true})
     }
     return res
 }
