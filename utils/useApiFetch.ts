@@ -14,7 +14,10 @@ export const useApiFetch = async (
     init["headers"]["Authorization"] = "Bearer " + getAccessToken()
 
     const res = await fetch(basePath + input, init)
-    if (res.status === 401) window.location.href = "/auth/retry";
+    if (res.status === 401) {
+        useCookie("auth-redirect").value = useRoute().fullPath
+        window.location.href = "/auth/retry";
+    }
     return res
 }
 

@@ -24,5 +24,8 @@ export default defineEventHandler(async (event) => {
             sameSite: "strict"
         })
     }
-    await sendRedirect(event, "/")
+
+    const redirect = getCookie(event, "auth-redirect")
+    if (redirect) deleteCookie(event, "auth-required")
+    await sendRedirect(event, redirect ?? "/")
 })
