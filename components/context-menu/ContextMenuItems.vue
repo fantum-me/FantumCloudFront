@@ -84,6 +84,11 @@ function onContextMenu() {
 		color: "error",
 		action: () => deleteItems(items)
 	})
+	if (permissions[Permission.EDIT_PERMISSIONS] && items.length === 1) menu.value.push({
+		icon: "i-heroicons-users",
+		name: "Manage Access",
+		action: () => useAccessControlsModal().value(items[0])
+	})
 
 	isOpen.value = true
 }

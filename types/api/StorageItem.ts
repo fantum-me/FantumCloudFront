@@ -11,7 +11,7 @@ export default interface StorageItem {
     in_trash: boolean,
     owner: Member,
     access: PermissionObject,
-    accessControls: AccessControl[],
+    access_controls: AccessControl[],
     workspace_id: string,
     size: number
 }

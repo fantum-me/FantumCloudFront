@@ -22,8 +22,8 @@ export default defineEventHandler(async (event) => {
                 title: file.name + "." + file.ext,
                 url: docsBasePath() + "/api/docs/" + file.id + "/document",
                 permissions: {
-                    edit: file.access["write"],
-                    protect: file.access["edit_permissions"]
+                    edit: !!file.access.write,
+                    protect: !!file.access.edit_permissions
                 }
             },
             documentType: documentType,

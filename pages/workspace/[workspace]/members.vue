@@ -138,12 +138,11 @@ async function openTransferOwnershipModal(target: Member) {
 							<span v-for="role in member.roles.filter((r: Role) => !r.is_default)">
 								<span class="group py-1 px-2 rounded flex-center gap-2 text-sm"
 								      :style="{backgroundColor: ((role.color ?? defaultRoleColor) + '20')}">
-										<span class="h-3 w-3 flex-center rounded-full cursor-pointer"
-										      :style="{backgroundColor: role.color ?? defaultRoleColor}"
-										      @click="toggleRole(member, role)">
-											<UIcon name="i-heroicons-x-mark-16-solid"
-											       class="hidden group-hover:block opacity-75 hover:opacity-100"
-											       v-if="workspace.access[Permission.EDIT_PERMISSIONS]"
+										<span class="h-3 w-3 flex-center rounded-full"
+										      :style="{backgroundColor: role.color ?? defaultRoleColor}">
+											<UIcon name="i-heroicons-x-mark-16-solid" @click="toggleRole(member, role)"
+											       class="hidden group-hover:block opacity-75 hover:opacity-100 cursor-pointer"
+											       v-if="role.editable && workspace.access[Permission.EDIT_PERMISSIONS]"
 											       :style="{color: getContrastColor(role.color ?? defaultRoleColor)}"/>
 										</span>
 										{{ role.name }}
@@ -154,7 +153,7 @@ async function openTransferOwnershipModal(target: Member) {
 									<UButton color="white" icon="i-heroicons-plus"/>
 
 									<template #panel>
-										<UButton v-for="role in workspace.roles.filter(r => !r.is_default)"
+										<UButton v-for="role in workspace.roles.filter(r => !r.is_default && r.editable)"
 										         color="gray" variant="ghost" @click="toggleRole(member, role)"
 										         class="w-full flex-between gap-5 rounded-none cursor-pointer">
 											<div class="flex-center gap-2">

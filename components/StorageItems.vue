@@ -20,6 +20,7 @@ const itemsDragging = useItemsDragging()
 <template>
 	<ContextMenuItems/>
 	<ModalRenameItem/>
+	<ModalAccessControls/>
 
 	<drag-select v-model="itemsSelection" class="w-full h-full" :draggable-on-option="false">
 		<slot/>

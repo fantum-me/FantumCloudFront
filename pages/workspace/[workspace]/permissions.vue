@@ -111,47 +111,11 @@ function isRoleDifferent(role: Role): boolean {
 							<UInput type="color" v-model="state.color" variant="none" :padded="false"/>
 						</UFormGroup>
 
-						<div class="space-y-5 *:cursor-pointer">
-							<UFormGroup class="w-full" label="Can Read" name="read"
-							            description="Allow user to read files"
-							            @click.prevent="state.permissions.read = !state.permissions.read">
-								<UToggle :model-value="state.permissions.read"/>
-							</UFormGroup>
-							<UFormGroup class="w-full" label="Can Write" name="write"
-							            description="Allow user to write files"
-							            @click.prevent="state.permissions.write = !state.permissions.write">
-								<UToggle :model-value="state.permissions.write"/>
-							</UFormGroup>
-							<UFormGroup class="w-full" label="Can Trash" name="trash"
-							            description="Allow user to move files to trash"
-							            @click.prevent="state.permissions.trash = !state.permissions.trash">
-								<UToggle :model-value="state.permissions.trash"/>
-							</UFormGroup>
-							<UFormGroup class="w-full" label="Can Delete" name="delete"
-							            description="Allow user to delete trashed files"
-							            @click.prevent="state.permissions.delete = !state.permissions.delete">
-								<UToggle :model-value="state.permissions.delete"/>
-							</UFormGroup>
-							<UFormGroup class="w-full" label="Can Edit Permissions" name="edit_permissions"
-							            description="Allow user to edit files permissions"
-							            @click.prevent="state.permissions.edit_permissions = !state.permissions.edit_permissions">
-								<UToggle :model-value="state.permissions.edit_permissions"/>
-							</UFormGroup>
-						</div>
+						<PermissionManager type="boolean" :permissions="state.permissions"/>
 					</div>
 
-					<UCard class="fixed mb-3.5 bottom-0 left-1/2 -translate-x-1/2"
-					       v-if="isRoleDifferent(selectedRole)">
-						<div class="flex-center gap-2">
-							<UButton color="gray" variant="link" size="lg" type="button"
-							         @click="selectRole(selectedRole)">
-								Reset Changes
-							</UButton>
-							<UButton type="submit" size="lg" :loading="isSubmitting">
-								Save Changes
-							</UButton>
-						</div>
-					</UCard>
+					<SaveChangesPopup v-if="isRoleDifferent(selectedRole)" :is-loading="isSubmitting"
+					                  :reset="() => selectRole(selectedRole as Role)"/>
 				</UForm>
 			</UCard>
 		</div>

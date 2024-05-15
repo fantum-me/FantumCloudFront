@@ -13,24 +13,16 @@ export default defineEventHandler(async (event) => {
 
     try {
         if (body.url) {
-            console.log(body.url)
-
             const fileRes = await fetch(body.url)
-
-            console.log(fileRes.status, fileRes.statusText)
 
             const fileBlob = await fileRes.blob();
             const formData = new FormData();
             formData.append('file', fileBlob);
 
-            console.log("fetched !")
-
             const res = await serverFetchApi(event, `/documents/${id}`, {
                 method: 'POST',
                 body: formData
             }, runtimeConfig.docsApiAccessKey);
-
-            console.log("updated !")
 
             if (!res.ok) return {error: 1}
         }

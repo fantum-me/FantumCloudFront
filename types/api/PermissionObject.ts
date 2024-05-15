@@ -1,14 +1,14 @@
 import Permission from "@/types/Permission";
 
 export default interface PermissionObject {
-    [Permission.READ]: boolean,
-    [Permission.WRITE]: boolean,
-    [Permission.TRASH]: boolean,
-    [Permission.DELETE]: boolean,
-    [Permission.EDIT_PERMISSIONS]: boolean,
+    [Permission.READ]: true | false | null,
+    [Permission.WRITE]: true | false | null,
+    [Permission.TRASH]: true | false | null,
+    [Permission.DELETE]: true | false | null,
+    [Permission.EDIT_PERMISSIONS]: true | false | null,
 }
 
-export function getDefaultPermissionObject(value = false): PermissionObject {
+export function getDefaultPermissionObject(value: true | false | null = null): PermissionObject {
     return <PermissionObject>{
         [Permission.READ]: value,
         [Permission.WRITE]: value,

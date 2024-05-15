@@ -22,7 +22,8 @@ const summary = {
 	type: type,
 	ext: ext,
 	name: item.name,
-	access: item.access
+	access: item.access,
+	access_controls: item.access_controls,
 } as StorageItemSummary
 if (isFile(item)) summary.mime = item.mime
 const encodedSummary = encodeSummary(summary)
