@@ -5,5 +5,6 @@ export default interface Member {
     id: string,
     user: User,
     is_owner: boolean,
-    roles: Role[]
+    roles: Role[],
+    position: number
 }

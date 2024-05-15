@@ -30,6 +30,12 @@ const toggles = [
 		description: "Allow user to edit files permissions",
 		permission: Permission.EDIT_PERMISSIONS
 	},
+	{
+		title: "Can Manage Members",
+		description: "Allow user to list and kick workspace members",
+		permission: Permission.MANAGE_MEMBERS,
+		hidden: type !== "boolean"
+	},
 ]
 
 const workspace = useWorkspace()
@@ -37,7 +43,7 @@ const workspace = useWorkspace()
 
 <template>
 	<div :class="'space-y-5 text-left ' + (type === 'boolean' ? '*:cursor-pointer' : '*:cursor-default')">
-		<div v-for="{title, description, permission} in toggles"
+		<div v-for="{title, description, permission} in toggles.filter(t => !t.hidden)"
 		     :class="(inline ? 'flex-between gap-4' : '') + ' ' + (workspace.access[permission] ? '' : 'opacity-50')"
 		     @click.prevent="type === 'boolean' && workspace.access[permission] ?
 		     permissions[permission] = !permissions[permission] : null">

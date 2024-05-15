@@ -6,6 +6,7 @@ export default interface PermissionObject {
     [Permission.TRASH]: true | false | null,
     [Permission.DELETE]: true | false | null,
     [Permission.EDIT_PERMISSIONS]: true | false | null,
+    [Permission.MANAGE_MEMBERS]?: true | false | null,
 }
 
 export function getDefaultPermissionObject(value: true | false | null = null): PermissionObject {
@@ -15,5 +16,6 @@ export function getDefaultPermissionObject(value: true | false | null = null): P
         [Permission.TRASH]: value,
         [Permission.DELETE]: value,
         [Permission.EDIT_PERMISSIONS]: value,
+        [Permission.MANAGE_MEMBERS]: value,
     }
 }

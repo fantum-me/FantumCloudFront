@@ -10,7 +10,7 @@ const sidebarItems: sidebarItem[][] = [
 		[View.TRASH, "Trash", "i-heroicons-trash", "i-heroicons-trash-solid"],
 	],
 	[
-		[View.MEMBERS, "Members", "i-heroicons-users", "i-heroicons-users-solid"],
+		[View.MEMBERS, "Members", "i-heroicons-users", "i-heroicons-users-solid", Permission.MANAGE_MEMBERS ],
 		[View.PERMISSIONS, "Roles & Permissions", "i-heroicons-tag", "i-heroicons-tag-solid", Permission.EDIT_PERMISSIONS],
 		[View.SETTINGS, "Settings", "i-heroicons-cog-6-tooth", "i-heroicons-cog-6-tooth-solid"],
 	]
