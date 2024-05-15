@@ -14,6 +14,12 @@ const props = defineProps<{
 
 const itemsSelection = useItemsSelection()
 const itemsDragging = useItemsDragging()
+
+function unfocusInputs() {
+	document.querySelectorAll('input:focus').forEach((element) => {
+		if (element instanceof HTMLInputElement) element.blur();
+	});
+}
 </script>
 
 <template>
@@ -21,7 +27,7 @@ const itemsDragging = useItemsDragging()
 	<ModalRenameItem/>
 	<ModalAccessControls/>
 
-	<drag-select v-model="itemsSelection" class="w-full h-full" :draggable-on-option="false">
+	<drag-select v-model="itemsSelection" class="w-full h-full" :draggable-on-option="false" @click="unfocusInputs">
 		<slot/>
 		<div class="pb-28 items-grid">
 			<ItemCard v-for="folder in props.folders" :item="folder"/>
@@ -35,7 +41,8 @@ const itemsDragging = useItemsDragging()
 		<div class="flex-between gap-5">
 			<div class="flex-start space-x-1.5">
 				<span class="h-5 w-5">
-					<UIcon v-if="decodeSummary(itemsSelection[0]).type === 'file'" name="i-heroicons-document-solid" class="h-full w-full"/>
+					<UIcon v-if="decodeSummary(itemsSelection[0]).type === 'file'"
+					       name="i-heroicons-document-solid" class="h-full w-full"/>
 					<UIcon v-else name="i-heroicons-folder-solid" class="h-full w-full"/>
 				</span>
 				<span class="font-medium">{{ decodeSummary(itemsSelection[0]).name }}</span>

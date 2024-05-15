@@ -54,7 +54,7 @@ function onContextMenu(e: MouseEvent) {
 	<div v-else-if="status == 'failed'" class="w-full h-full flex-center">
 		<p>Failed to access folder. Please ty again later...</p>
 	</div>
-	<div v-else-if="status == 'loaded'" class="appear-0.1">
+	<div v-else-if="status == 'loaded'" class="w-full h-full appear-0.1">
 		<ModalNewFolder/>
 		<ModalNewDocument/>
 		<div class="w-full h-full" @contextmenu.prevent="onContextMenu" @click="unselectAll">
