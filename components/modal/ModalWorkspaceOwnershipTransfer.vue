@@ -20,8 +20,8 @@ async function transferOwnership() {
 
 	if (res.ok) {
 		await refreshWorkspace(["access"])
-		useSuccessToast(`Successfully transferred workspace ownership to ${target.name} !`)
-	} else useErrorToast(`Failed to transfer ownership to ${target.name}`)
+		useSuccessToast(`Successfully transferred workspace ownership to ${target.user.name} !`)
+	} else useErrorToast(`Failed to transfer ownership to ${target.user.name}`)
 
 	isLoading.value = false
 	isOpen.value = false
@@ -40,14 +40,14 @@ async function transferOwnership() {
 			</template>
 
 			<div class="space-y-8">
-				<h1 class="text-center">Transfer <b>{{ workspace.name }}</b> ownership to <b>{{ target.name }}</b></h1>
+				<h1 class="text-center">Transfer <b>{{ workspace.name }}</b> ownership to <b>{{ target.user.name }}</b></h1>
 
 				<div class="flex-center gap-6">
 					<div class="text-center">
 						<UAvatar :src="useSession().value.avatar" size="3xl"/>
 					</div>
 					<icon name="i-heroicons-arrow-right" class="w-8 h-8"/>
-					<UAvatar :src="target.avatar" size="3xl"/>
+					<UAvatar :src="target.user.avatar" size="3xl"/>
 				</div>
 
 				<UAlert color="red" variant="soft" title="Warning"
