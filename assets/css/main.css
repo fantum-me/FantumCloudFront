@@ -4,6 +4,7 @@
 
 /* Utilities */
 @import "flexbox.css";
+@import "animation.css";
 
 @tailwind base;
 @tailwind components;

@@ -19,7 +19,7 @@ if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = aw
 		<div class="w-full min-h-screen flex flex-col">
 			<Topbar/>
 			<ClientOnly>
-				<div class="flex-grow">
+				<div class="flex-grow appear-0.25">
 					<slot/>
 				</div>
 			</ClientOnly>

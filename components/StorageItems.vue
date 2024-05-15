@@ -8,9 +8,8 @@ const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
 
 const props = defineProps<{
-	isLoading: boolean,
 	folders: Folder[],
-	files: File[],
+	files: File[]
 }>()
 
 const itemsSelection = useItemsSelection()
@@ -24,7 +23,7 @@ const itemsDragging = useItemsDragging()
 
 	<drag-select v-model="itemsSelection" class="w-full h-full" :draggable-on-option="false">
 		<slot/>
-		<div v-if="!isLoading" class="pb-28 items-grid">
+		<div class="pb-28 items-grid">
 			<ItemCard v-for="folder in props.folders" :item="folder"/>
 			<ItemCard v-for="file in props.files" :item="file"/>
 		</div>
