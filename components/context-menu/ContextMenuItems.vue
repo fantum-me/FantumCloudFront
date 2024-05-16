@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from "@vueuse/core";
-import type StorageItemSummary from "~/types/api/StorageItemSummary";
 import type {Ref} from "vue";
 import type PermissionObject from "~/types/api/PermissionObject";
 import Permission from "~/types/Permission";
 import View from "~/types/View";
+import type StorageItem from "~/types/api/StorageItem";
+
+type MenuItem = {
+	name: string
+	icon: any
+	color?: string
+	action: () => any
+}
 
 const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
@@ -16,12 +23,7 @@ const workspace = useWorkspace()
 const isOpen = ref(false)
 const virtualElement = ref({getBoundingClientRect: () => ({})})
 
-const menu: Ref<Array<{
-	name: string
-	icon: any
-	color?: string
-	action: () => any
-}>> = ref([])
+const menu: Ref<MenuItem[]> = ref([])
 
 function onContextMenu() {
 	const top = unref(y) - unref(windowY)
@@ -29,7 +31,7 @@ function onContextMenu() {
 
 	virtualElement.value.getBoundingClientRect = () => ({width: 0, height: 0, top, left})
 
-	let items: StorageItemSummary[] = itemsSelection.value.map(item => decodeSummary(item) as StorageItemSummary)
+	let items: StorageItem[] = itemsSelection.value.map(id => useItem(id).value)
 
 	let permissions: PermissionObject = {
 		[Permission.READ]: true,
@@ -48,7 +50,7 @@ function onContextMenu() {
 	menu.value = []
 
 	if (permissions[Permission.READ] && items.length === 1)
-		if (items[0].type === "folder" || isOfficeDocument(items[0])) menu.value.push({
+		if (isFolder(items[0]) || isOfficeDocument(items[0])) menu.value.push({
 			icon: isFile(items[0]) ? "i-heroicons-document" : "i-heroicons-folder-open",
 			name: "Open",
 			action: () => {
@@ -56,7 +58,7 @@ function onContextMenu() {
 				else if (isFile(items[0])) navigateTo(`/docs/${items[0].id}`, {open: {target: '_blank',}})
 			}
 		})
-	if (permissions[Permission.READ] && items.length === 1 && items[0].type === "file") menu.value.push({
+	if (permissions[Permission.READ] && items.length === 1 && isFile(items[0])) menu.value.push({
 		icon: "i-heroicons-arrow-down-tray",
 		name: "Download",
 		action: () => downloadFile(items[0])

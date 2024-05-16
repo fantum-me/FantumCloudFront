@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type {FormError, FormSubmitEvent} from '#ui/types'
-import type StorageItemSummary from "~/types/api/StorageItemSummary";
 import type {Ref} from "vue";
+import type StorageItem from "~/types/api/StorageItem";
 
-const item: Ref<StorageItemSummary | undefined> = ref()
+const item: Ref<StorageItem | undefined> = ref()
 const isOpen = ref(false)
 const isLoading = ref(false)
 
-useRenameItemsModal().value = (targetItem: StorageItemSummary) => {
+useRenameItemsModal().value = (targetItem: StorageItem) => {
 	item.value = targetItem
 	state.name = targetItem.name
 	isOpen.value = true

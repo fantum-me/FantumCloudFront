@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type StorageItemSummary from "~/types/api/StorageItemSummary";
 import type {Ref} from "vue";
 import type AccessControl from "~/types/api/AccessControl";
 import type Role from "~/types/api/Role";
@@ -8,13 +7,13 @@ import type StorageItem from "~/types/api/StorageItem";
 
 const workspace = useWorkspace()
 const {defaultRoleColor} = useRuntimeConfig().public
-const item: Ref<StorageItemSummary | undefined> = ref()
+const item: Ref<StorageItem | undefined> = ref()
 const accessControls: Ref<AccessControl[] | undefined> = ref()
 const selectedAccessControl: Ref<AccessControl | undefined> = ref()
 const isOpen = ref(false)
 const isSubmitting = ref(false)
 
-useAccessControlsModal().value = (targetItem: StorageItemSummary) => {
+useAccessControlsModal().value = (targetItem: StorageItem) => {
 	reorder(targetItem.access_controls)
 	item.value = targetItem
 	accessControls.value = JSON.parse(JSON.stringify(targetItem.access_controls))

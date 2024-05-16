@@ -19,6 +19,10 @@ if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = aw
 		<div class="w-full min-h-screen flex flex-col">
 			<Topbar/>
 			<ClientOnly>
+				<ContextMenuItems/>
+				<ModalRenameItem/>
+				<ModalAccessControls/>
+
 				<div class="flex-grow appear-0.25">
 					<slot/>
 				</div>

@@ -23,10 +23,6 @@ function unfocusInputs() {
 </script>
 
 <template>
-	<ContextMenuItems/>
-	<ModalRenameItem/>
-	<ModalAccessControls/>
-
 	<drag-select v-model="itemsSelection" class="w-full h-full" :draggable-on-option="false" @click="unfocusInputs">
 		<slot/>
 		<div class="pb-28 items-grid">
@@ -41,11 +37,11 @@ function unfocusInputs() {
 		<div class="flex-between gap-5">
 			<div class="flex-start space-x-1.5">
 				<span class="h-5 w-5">
-					<UIcon v-if="decodeSummary(itemsSelection[0]).type === 'file'"
+					<UIcon v-if="isFile(useItem(itemsSelection[0]).value)"
 					       name="i-heroicons-document-solid" class="h-full w-full"/>
 					<UIcon v-else name="i-heroicons-folder-solid" class="h-full w-full"/>
 				</span>
-				<span class="font-medium">{{ decodeSummary(itemsSelection[0]).name }}</span>
+				<span class="font-medium">{{ useItem(itemsSelection[0]).value.name }}</span>
 			</div>
 			<span :hidden="itemsSelection.length < 2" class="opacity-75 text-sm">+{{ itemsSelection.length - 1 }}</span>
 		</div>

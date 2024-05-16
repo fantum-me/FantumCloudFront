@@ -1,6 +1,6 @@
-import type StorageItemSummary from "~/types/api/StorageItemSummary";
+import type StorageItem from "~/types/api/StorageItem";
 
-export const moveItems = (items: Array<StorageItemSummary>, currentFolderId: string, targetFolderId: string, undoing = false) => {
+export const moveItems = (items: Array<StorageItem>, currentFolderId: string, targetFolderId: string, undoing = false) => {
     if (currentFolderId === targetFolderId) return;
     for (const item of items) {
         if (item.id === targetFolderId || item.id === currentFolderId) return
@@ -15,7 +15,7 @@ export const moveItems = (items: Array<StorageItemSummary>, currentFolderId: str
     )
 }
 
-export const trashItems = (items: StorageItemSummary[], undoing = false) => modifyItems(
+export const trashItems = (items: StorageItem[], undoing = false) => modifyItems(
     items,
     ["trash", "trashed"],
     "PATCH",
@@ -23,7 +23,7 @@ export const trashItems = (items: StorageItemSummary[], undoing = false) => modi
     () => restoreItems(items, true),
     undoing
 )
-export const restoreItems = (items: StorageItemSummary[], undoing = false) => modifyItems(
+export const restoreItems = (items: StorageItem[], undoing = false) => modifyItems(
     items,
     ["restore", "restored"],
     "PATCH",
@@ -31,7 +31,7 @@ export const restoreItems = (items: StorageItemSummary[], undoing = false) => mo
     () => trashItems(items, true),
     undoing
 )
-export const deleteItems = (items: StorageItemSummary[], undoing = false) => modifyItems(
+export const deleteItems = (items: StorageItem[], undoing = false) => modifyItems(
     items,
     ["delete", "deleted"],
     "DELETE",
@@ -40,7 +40,7 @@ export const deleteItems = (items: StorageItemSummary[], undoing = false) => mod
     undoing
 )
 
-export const downloadFile = (file: StorageItemSummary) => {
+export const downloadFile = (file: StorageItem) => {
     if (!isFile(file)) return;
     const link = document.createElement("a");
     link.setAttribute("href", `/api/files/${file.id}/download`);
@@ -50,7 +50,7 @@ export const downloadFile = (file: StorageItemSummary) => {
 }
 
 async function modifyItems(
-    items: StorageItemSummary[],
+    items: StorageItem[],
     [action, past]: Array<string>,
     method: string,
     body: any,
@@ -67,7 +67,7 @@ async function modifyItems(
         const fileIds: string[] = []
         const folderIds: string[] = []
         items.forEach(item => {
-            item.type === "file" ? fileIds.push(item.id) : folderIds.push(item.id)
+            isFile(item) ? fileIds.push(item.id) : folderIds.push(item.id)
         })
 
         body.files = fileIds

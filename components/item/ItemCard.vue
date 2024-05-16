@@ -2,39 +2,30 @@
 import type StorageItem from "~/types/api/StorageItem";
 import moment from "moment/moment";
 import {DragSelectOption} from "@coleqiu/vue-drag-select";
-import type StorageItemSummary from "~/types/api/StorageItemSummary";
+import type {Ref} from "vue";
 
-const {item} = defineProps<{
+const props = defineProps<{
 	item: StorageItem,
 }>()
 
-const ext = isFile(item) ? item.ext : ""
-const icon = getStorageItemIcon(item)
-const type = isFile(item) ? "file" : "folder"
+const item: Ref<StorageItem> = useItem(props.item.id, props.item)
+
+const ext = isFile(item.value) ? item.value.ext : ""
+const icon = getStorageItemIcon(item.value)
+const type = isFile(item.value) ? "file" : "folder"
 
 const itemsSelection = useItemsSelection()
 const itemsDragging = useItemsDragging()
 const loadingItems = useLoadingItems()
 let lastSelection: Array<string> = []
 
-const summary = {
-	id: item.id,
-	type: type,
-	ext: ext,
-	name: item.name,
-	access: item.access,
-	access_controls: item.access_controls,
-} as StorageItemSummary
-if (isFile(item)) summary.mime = item.mime
-const encodedSummary = encodeSummary(summary)
-
 function onContextMenu() {
-	if (!itemsSelection.value.includes(encodedSummary)) itemsSelection.value = [encodedSummary]
+	if (!itemsSelection.value.includes(item.value.id)) itemsSelection.value = [item.value.id]
 	useItemsContextMenu().value.open()
 }
 
 function onDragStart() {
-	if (!itemsSelection.value.includes(encodedSummary)) itemsSelection.value = [encodedSummary]
+	if (!itemsSelection.value.includes(item.value.id)) itemsSelection.value = [item.value.id]
 	lastSelection = itemsSelection.value
 	itemsDragging.value = true
 	window.addEventListener("mouseup", onDragEnd)
@@ -52,7 +43,7 @@ function onDragEnd(e: MouseEvent) {
 				if (target) {
 					const targetId = target.getAttribute("id")
 					if (targetId) {
-						const items: StorageItemSummary[] = lastSelection.map(item => decodeSummary(item))
+						const items: StorageItem[] = lastSelection.map(id => useItem(id).value)
 						moveItems(items, useFolder().value.id, targetId)
 					}
 				}
@@ -68,13 +59,13 @@ const cardConfig = {
 }
 
 const onDblClick = () => {
-	if (type === "folder") navigateTo(`/workspace/${useWorkspace().value.id}/folder/${item.id}`)
-	else if (isOfficeDocument(item)) navigateTo(`/docs/${item.id}`, {open: {target: "_blank"}})
+	if (type === "folder") navigateTo(`/workspace/${useWorkspace().value.id}/folder/${item.value.id}`)
+	else if (isOfficeDocument(item.value)) navigateTo(`/docs/${item.value.id}`, {open: {target: "_blank"}})
 }
 </script>
 
 <template>
-	<drag-select-option :value="encodedSummary" @contextmenu.prevent="onContextMenu" @dblclick="onDblClick"
+	<drag-select-option :value="item.id" @contextmenu.prevent="onContextMenu" @dblclick="onDblClick"
 	                    @dragstart.prevent="onDragStart" draggable="true" :id="item.id" :data-type="type">
 		<UCard class="relative item-card flex flex-col dark:border border-gray-700 divide-none shadow-none"
 		       :ui="cardConfig">
