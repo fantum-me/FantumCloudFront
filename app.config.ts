@@ -20,6 +20,11 @@ export default defineAppConfig({
         button: {
             variant: {
                 solid: "dark:text-gray-100"
+            },
+            color: {
+                gray: {
+                    active: "bg-gray-100 text-black dark:bg-gray-700 dark:text-white"
+                }
             }
         }
     }

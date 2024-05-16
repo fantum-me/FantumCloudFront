@@ -19,8 +19,8 @@ function toggle() {
 </script>
 
 <template>
-	<UPopover disabled :open="isOpen" class="w-full h-20">
-		<UButton class="w-full h-20 px-6 flex-between" color="white" variant="ghost" :label="currentWorkspace.name"
+	<UPopover disabled :open="isOpen" class="w-full h-16">
+		<UButton class="w-full h-16 px-6 flex-between" color="white" variant="ghost" :label="currentWorkspace.name"
 		         trailing-icon="i-heroicons-chevron-down-20-solid" @click.prevent="toggle"/>
 
 		<template #panel>
@@ -29,7 +29,7 @@ function toggle() {
 					<div v-for="workspace in workspaces">
 						<UButton :to="'/workspace/' + workspace.id" class="w-full" size="lg"
 						         :ui="{ rounded: 'rounded-none' }"  color="gray" variant="ghost"
-						         :icon="currentWorkspace.id === workspace.id ? 'i-heroicons-check': null" trailing>
+						         :icon="currentWorkspace.id === workspace.id ? 'i-heroicons-check': undefined" trailing>
 							<div class="w-full flex-between">
 								<div>
 									<p>{{ workspace.name }}</p>

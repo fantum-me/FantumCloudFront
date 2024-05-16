@@ -31,7 +31,7 @@ export default {
 				},
 				'gray-color': { // see app.config.ts
 					50: "#f5f5f5",
-					100: "#EBEBEC",
+					100: "#f0f0f0",
 					200: "#dcdcde",
 					300: "#AFB0B3",
 					400: "#74757B",

@@ -8,10 +8,10 @@ if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = aw
 <template>
 	<div class="flex" v-if="workspace">
 		<div>
-			<USlideover class="md:hidden w-80" v-model="isSidebarOpen" side="left">
+			<USlideover class="md:hidden w-64" v-model="isSidebarOpen" side="left">
 				<Sidebar/>
 			</USlideover>
-			<div class="max-md:hidden sticky top-0 left-0 w-80 shrink-0 z-30">
+			<div class="max-md:hidden sticky top-0 left-0 w-64 shrink-0 z-30">
 				<Sidebar/>
 			</div>
 		</div>

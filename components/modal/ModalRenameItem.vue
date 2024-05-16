@@ -29,7 +29,9 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	if (!item.value || isLoading.value) return
 	isLoading.value = true
 
-	const res = await useApiFetch(`/${item.value.type}s/${item.value.id}`, {
+	const type = isFolder(item.value) ? "folder" : "file"
+
+	const res = await useApiFetch(`/${type}s/${item.value.id}`, {
 		method: "PATCH",
 		body: JSON.stringify({
 			name: event.data.name,
@@ -38,8 +40,8 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 
 	if (res.ok) {
 		await useRefreshView().value()
-		useSuccessToast(`${capitalize(item.value.type)} renamed successfully !`)
-	} else useErrorToast(`Failed to rename ${item.value.type}`)
+		useSuccessToast(`${capitalize(type)} renamed successfully !`)
+	} else useErrorToast(`Failed to rename ${type}`)
 
 	isOpen.value = false
 	isLoading.value = false
@@ -53,13 +55,15 @@ async function close() {
 </script>
 
 <template>
-	<UModal v-if="item" v-model="isOpen" :prevent-close="isLoading"  @close="close">
+	<UModal v-if="item" v-model="isOpen" :prevent-close="isLoading" @close="close">
 		<UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
 			<template #header>
 				<div class="flex items-center justify-between font-semibold">
 					<span>
 						Rename
-						<span class="font-bold px-2 py-1 bg-gray-200 dark:bg-gray-600 rounded">{{ item.name }}{{ item.ext ? "." + item.ext : "" }}</span>
+						<span class="font-bold px-2 py-1 bg-gray-200 dark:bg-gray-600 rounded">
+							{{ item.name }}{{ isFile(item) ? "." + item.ext : "" }}
+						</span>
 					</span>
 					<UButton v-if="!isLoading" color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"
 					         class="-my-1" @click="close"/>
@@ -67,16 +71,14 @@ async function close() {
 			</template>
 
 			<UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
-				<UFormGroup label="Name" name="name">
-					<UInput v-model="state.name" :loading="isLoading" :placeholder="capitalize(item.type) + ' name'"
-					        size="xl" color="gray" variant="outline" autofocus>
-						<template #trailing>
+				<UInput v-model="state.name" :loading="isLoading" placeholder="Name" name="name"
+				        size="xl" color="gray" variant="outline" autofocus>
+					<template #trailing v-if="isFile(item)">
 							<span class="text-gray-500 dark:text-gray-400 text-xs">
 								.{{ item.ext.toUpperCase() }}
 							</span>
-						</template>
-					</UInput>
-				</UFormGroup>
+					</template>
+				</UInput>
 
 				<div class="flex justify-end items-center gap-4 pt-2">
 					<UButton v-if="!isLoading" color="gray" variant="ghost" @click="close">

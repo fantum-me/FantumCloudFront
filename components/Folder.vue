@@ -21,6 +21,7 @@ async function fetchFolder() {
 	const current_folder = folder.value
 	if (res.ok) {
 		folder.value = await res.json() as Folder;
+		useItem(folder.value.id).value = folder.value
 		if (current_folder) {
 			folder.value.import_file = current_folder.import_file
 			folder.value.create_folder = current_folder.create_folder
