@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {FormError, FormSubmitEvent} from '#ui/types'
+import type Folder from "~/types/api/Folder";
 
 const folder = useFolder()
 const isOpen = ref(false)
@@ -32,7 +33,9 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	})
 
 	if (res.ok) {
-		await useRefreshView().value()
+		const item: Folder = await res.json()
+		useItem(item.id).value = item
+		if (folder.value.folders) folder.value.folders.push(item)
 		useSuccessToast(`Folder ${event.data.name} created successfully !`)
 	} else useErrorToast(`Failed to create folder ${event.data.name}`)
 

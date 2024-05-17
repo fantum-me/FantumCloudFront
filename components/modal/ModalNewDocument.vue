@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {FormError, FormSubmitEvent} from '#ui/types'
+import type File from "~/types/api/File"
 import type {Ref} from "vue";
 
 const folder = useFolder()
@@ -42,7 +43,9 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	})
 
 	if (res.ok) {
-		await useRefreshView().value()
+		const item: File = await res.json()
+		useItem(item.id).value = item
+		if (folder.value.files) folder.value.files.push(item)
 		useSuccessToast(`Document ${event.data.name}.${selectedType.value.ext} created successfully !`)
 	} else useErrorToast(`Failed to create document ${event.data.name}.${selectedType.value.ext}`)
 

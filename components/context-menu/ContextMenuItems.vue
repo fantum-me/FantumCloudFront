@@ -53,10 +53,7 @@ function onContextMenu() {
 		if (isFolder(items[0]) || isOfficeDocument(items[0])) menu.value.push({
 			icon: isFile(items[0]) ? "i-heroicons-document" : "i-heroicons-folder-open",
 			name: "Open",
-			action: () => {
-				if (isFolder(items[0])) navigateTo(`/workspace/${workspace.value.id}/folder/${items[0].id}`)
-				else if (isFile(items[0])) navigateTo(`/docs/${items[0].id}`, {open: {target: '_blank',}})
-			}
+			action: () => openItem(items[0])
 		})
 	if (permissions[Permission.READ] && items.length === 1 && isFile(items[0])) menu.value.push({
 		icon: "i-heroicons-arrow-down-tray",
@@ -106,7 +103,7 @@ contextMenu.value = {
 </script>
 
 <template>
-	<UContextMenu v-model="isOpen" :virtual-element="virtualElement">
+	<UContextMenu v-model="isOpen" :virtual-element="virtualElement" class="z-[35]">
 		<button v-for="item in menu" @click="item.action() && contextMenu.close()">
 			<UIcon :name="item.icon"  class="h-5 w-5"/>
 			{{ item.name }}

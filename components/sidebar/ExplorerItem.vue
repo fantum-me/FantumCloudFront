@@ -4,7 +4,6 @@ import type {Ref} from "vue";
 
 type FolderStatus = "open" | "hasBeenOpen" | "isOpening" | "closed"
 
-const workspace = useWorkspace()
 const currentFolder = useFolder()
 const props = defineProps<{ item: StorageItem }>()
 
@@ -13,6 +12,9 @@ const folderStatus: Ref<FolderStatus> = isFolder(item.value) ? useState(
 	`sidebar-explorer-folder-status-${item.value.id}`,
 	() => isFolder(item.value) && item.value.files && item.value.folders ? "open" : "closed"
 ) : ref("closed")
+
+const itemsSelection = useItemsSelection()
+const isSelected = () => itemsSelection.value.includes(item.value.id)
 
 async function openFolder() {
 	if (folderStatus.value === "hasBeenOpen") folderStatus.value = "open"
@@ -43,11 +45,12 @@ async function toggleFolder() {
 	}
 }
 
-async function click() {
-	if (isFolder(item.value)) {
-		const link = item.value.is_root ? "/files" : "/folder/" + item.value.id
-		navigateTo("/workspace/" + workspace.value.id + link)
-	} else if (isOfficeDocument(item.value)) navigateTo(`/docs/${item.value.id}`, {open: {target: "_blank"}})
+function onClick(e: MouseEvent) {
+	if (isFolder(item.value) && item.value.is_root) return
+	if (e.ctrlKey || e.shiftKey) {
+		if (isSelected()) itemsSelection.value = itemsSelection.value.filter(id => id !== item.value.id)
+		else itemsSelection.value.push(item.value.id)
+	} else itemsSelection.value = [item.value.id]
 }
 
 const FileIcon = isFile(item.value) ? getStorageItemIcon(item.value) : null
@@ -62,25 +65,40 @@ function getFolderIcon() {
 </script>
 
 <template>
-	<UButton color="gray" variant="ghost" block class="justify-start group" @click="click" @contextmenu="click">
-		<template #leading>
-			<div class="h-5 w-5 rounded group-hover:p-[2px] hover:bg-gray-200 dark:hover:bg-gray-700"
-			     v-if="isFolder(item)" @click.stop="toggleFolder">
-				<UIcon :name="getFolderIcon()" class="w-full h-full group-hover:hidden"/>
-				<UIcon
-					:class="(folderStatus === 'open' ? 'rotate-90 ' : '') + 'w-full h-full hidden group-hover:block transition-transform'"
-					name="i-heroicons-chevron-right"/>
-			</div>
-			<div v-else-if="isFile(item)" class="h-5 w-5">
-				<FileIcon :id="item.id" :ext="item.ext" class="w-full h-full"/>
-			</div>
-		</template>
-		<p :class="currentFolder?.id === item.id ? 'font-semibold' : ''">
-			{{ isFolder(item) && item.is_root ? "Files" : item.name }}
-		</p>
-	</UButton>
-	<div v-if="isFolder(item) && folderStatus === 'open'" class="w-full pl-3 space-y-2">
-		<SidebarExplorerItem v-for="folder in item.folders" :item="folder"/>
-		<SidebarExplorerItem v-for="file in item.files" :item="file"/>
+	<div v-show="!item.in_trash">
+		<ItemWrapper :item="item" @click="onClick">
+			<UButton color="gray" variant="ghost" block
+			         :class="(isSelected() ? 'explorer-item-selected ' : '') + 'justify-start group'">
+				<template #leading>
+					<div class="h-5 w-5 rounded group-hover:p-[2px] hover:bg-gray-200 dark:hover:bg-gray-700"
+					     v-if="isFolder(item)" @click.stop="toggleFolder">
+						<UIcon :name="getFolderIcon()" class="w-full h-full group-hover:hidden"/>
+						<UIcon
+							:class="(folderStatus === 'open' ? 'rotate-90 ' : '') + 'w-full h-full hidden group-hover:block transition-transform'"
+							name="i-heroicons-chevron-right"/>
+					</div>
+					<div v-else-if="isFile(item)" class="h-5 w-5">
+						<FileIcon :id="item.id" :ext="item.ext" class="w-full h-full"/>
+					</div>
+				</template>
+				<p :class="currentFolder?.id === item.id ? 'font-semibold' : ''">
+					{{ isFolder(item) && item.is_root ? "Files" : item.name }}
+				</p>
+			</UButton>
+		</ItemWrapper>
+		<div v-if="isFolder(item) && folderStatus === 'open'" class="w-full pl-3 mt-2 space-y-2">
+			<SidebarExplorerItem v-for="folder in item.folders" :item="folder" :key="folder.id"/>
+			<SidebarExplorerItem v-for="file in item.files" :item="file" :key="file.id"/>
+		</div>
 	</div>
 </template>
+
+<style>
+.explorer-item-selected {
+	@apply bg-primary-100 dark:bg-primary-500 dark:bg-opacity-20;
+
+	&:hover {
+		@apply bg-primary-100 bg-opacity-80 dark:bg-primary-500 dark:bg-opacity-25;
+	}
+}
+</style>

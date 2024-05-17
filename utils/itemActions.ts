@@ -1,16 +1,39 @@
 import type StorageItem from "~/types/api/StorageItem";
+import type Folder from "~/types/api/Folder";
+import type {Ref} from "vue";
 
-export const moveItems = (items: Array<StorageItem>, currentFolderId: string, targetFolderId: string, undoing = false) => {
-    if (currentFolderId === targetFolderId) return;
-    for (const item of items) {
-        if (item.id === targetFolderId || item.id === currentFolderId) return
-    }
+export const openItem = (item: StorageItem) => {
+    if (isFolder(item)) {
+        const link = item.is_root ? "/files" : "/folder/" + item.id
+        navigateTo("/workspace/" + useWorkspace().value.id + link)
+    } else if (isOfficeDocument(item)) navigateTo(`/docs/${item.id}`, {open: {target: "_blank"}})
+}
+
+export const moveItems = (items: StorageItem[], targetId: string, undoing = false) => {
+    const target = useItem(targetId) as Ref<Folder>;
+    if (!target.value) return;
+
+    items = items.filter(item => item.parent_id && targetId !== item.parent_id)
+    for (const item of items) if (item.id === targetId) return
+
+    const parentIds: string[] = []
+    items.forEach(item => parentIds.includes(item.parent_id) ? null : parentIds.push(item.parent_id))
+
     modifyItems(
         items,
         ["move", "moved"],
         "PATCH",
-        {parent_id: targetFolderId},
-        () => moveItems(items, targetFolderId, currentFolderId, true),
+        {parent_id: targetId},
+        (item: StorageItem) => {
+            const parent = useItem(item.parent_id) as Ref<Folder>
+            const field = isFile(item) ? "files" : "folders"
+            // @ts-ignore
+            if (parent.value[field]) parent.value[field] = parent.value[field].filter(f => f.id !== item.id)
+            // @ts-ignore
+            if (target.value[field]) target.value[field].push(item)
+            item.parent_id = target.value.id
+        },
+        parentIds.length === 1 ? () => moveItems(items, parentIds[0], true): null,
         undoing
     )
 }
@@ -20,6 +43,7 @@ export const trashItems = (items: StorageItem[], undoing = false) => modifyItems
     ["trash", "trashed"],
     "PATCH",
     {in_trash: true},
+    (item: StorageItem) => item.in_trash = true,
     () => restoreItems(items, true),
     undoing
 )
@@ -28,6 +52,7 @@ export const restoreItems = (items: StorageItem[], undoing = false) => modifyIte
     ["restore", "restored"],
     "PATCH",
     {in_trash: false},
+    (item: StorageItem) => item.in_trash = false,
     () => trashItems(items, true),
     undoing
 )
@@ -36,6 +61,8 @@ export const deleteItems = (items: StorageItem[], undoing = false) => modifyItem
     ["delete", "deleted"],
     "DELETE",
     {},
+    (item: StorageItem) => {
+    },
     null,
     undoing
 )
@@ -54,6 +81,7 @@ async function modifyItems(
     [action, past]: Array<string>,
     method: string,
     body: any,
+    itemFunction: (item: StorageItem) => any,
     undo: Function | null,
     undoing: boolean
 ) {
@@ -88,7 +116,8 @@ async function modifyItems(
         })
 
         if (res.ok) {
-            await useRefreshView().value()
+            items.forEach(itemFunction)
+            useRefreshView().value()
             useSuccessToast(`${name} ${past} successfully`, successActions)
             useItemsSelection().value = []
         } else {

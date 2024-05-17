@@ -39,7 +39,8 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	})
 
 	if (res.ok) {
-		await useRefreshView().value()
+		const newItem: StorageItem = await res.json()
+		item.value.name = newItem.name
 		useSuccessToast(`${capitalize(type)} renamed successfully !`)
 	} else useErrorToast(`Failed to rename ${type}`)
 

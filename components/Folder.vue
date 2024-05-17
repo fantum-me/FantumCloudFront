@@ -64,7 +64,7 @@ function onContextMenu(e: MouseEvent) {
 				<StorageItems :folders="folder.folders ?? []" :files="folder.files ?? []">
 					<div class="-mt-2 -ml-4 mb-4 flex-start">
 						<div v-for="(parent, index) in folder.parents">
-							<div :key="index" class="flex-center" data-type="folder" :id="parent.id">
+							<div :key="index" class="flex-center" data-type="folder" :data-item-id="parent.id">
 								<NuxtLink
 									class="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-2xl font-bold"
 									:to="getParentFolderPath(parent)">

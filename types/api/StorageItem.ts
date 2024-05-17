@@ -13,5 +13,6 @@ export default interface StorageItem {
     access: PermissionObject,
     access_controls: AccessControl[],
     workspace_id: string,
+    parent_id: string,
     size: number
 }
