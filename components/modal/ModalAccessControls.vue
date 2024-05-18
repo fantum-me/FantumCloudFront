@@ -24,7 +24,7 @@ async function save() {
 	if (!isOpen.value || !item.value || !accessControls.value || isSubmitting.value) return
 	isSubmitting.value = true
 
-	const res = await useApiFetch(`/workspace/${workspace.value.id}/items/${item.value.id}/access-controls`, {
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/items/${item.value.id}/access-controls`, {
 		method: "PATCH",
 		body: JSON.stringify({
 			access_controls: accessControls.value
