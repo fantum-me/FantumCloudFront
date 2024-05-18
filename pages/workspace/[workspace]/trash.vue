@@ -22,7 +22,7 @@ onMounted(async () => {
 
 <template>
 	<NuxtLayout name="workspace">
-		<StorageItems v-if="trash" :files="trash?.files" :folders="trash?.folders">
+		<StorageItems v-if="trash" :files="trash?.files" :folders="trash?.folders" @contextmenu.prevent>
 			<h1 class="text-2xl font-bold mb-6">Trash</h1>
 		</StorageItems>
 	</NuxtLayout>
