@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import View from "~/types/View";
 
-export type SidebarItem = {view: View, label: string, icon: string, activeIcon: string, hidden?: boolean}
+export type SidebarItem = { view: View, label: string, icon: string, activeIcon: string, hidden?: boolean }
 
 const workspace = useWorkspace()
 
-const sidebarItems: {before: SidebarItem[], after: SidebarItem[]} = {
+const sidebarItems: { before: SidebarItem[], after: SidebarItem[] } = {
 	before: [
 		{
 			view: View.FILES,
@@ -64,17 +64,19 @@ const usageColor = computed(() => {
 
 <template>
 	<UCard class="h-screen flex flex-col rounded-none divide-gray-100"
-	       :ui="{body:{base:'flex-1', padding: 'px-3 py-2 sm:px-3 sm:py-2'}, header:{base: 'h-16', padding: 'p-0 sm:p-0'}}">
+	       :ui="{body:{base:'flex-1 overflow-hidden', padding: 'px-3 py-2 sm:px-3 sm:py-2'}, header:{base: 'h-16', padding: 'p-0 sm:p-0'}}">
 		<template #header>
 			<SidebarWorkspaceDropdown/>
 		</template>
 
-		<div class="space-y-2">
+		<div class="h-full flex flex-col gap-2">
 			<SidebarLink v-for="item in sidebarItems.before" :item="item"/>
-			<div class="py-5 space-y-1">
+
+			<div class="flex-1 py-5 space-y-1 overflow-y-scroll overflow-x-hidden">
 				<p class="text-xs opacity-75 ml-2">Cloud</p>
 				<SidebarExplorer/>
 			</div>
+
 			<SidebarLink v-for="item in sidebarItems.after" :item="item"/>
 		</div>
 
