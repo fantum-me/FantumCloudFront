@@ -88,19 +88,3 @@ const usageColor = computed(() => {
 		</template>
 	</UCard>
 </template>
-
-<style>
-.navigation-button {
-	@apply flex items-center gap-2 px-4 py-3 rounded transition-all active:scale-95;
-
-	@apply hover:bg-primary hover:bg-opacity-25;
-
-	&.active {
-		@apply text-gray-50 font-medium bg-primary hover:bg-primary hover:bg-opacity-100;
-	}
-
-	.icon {
-		@apply h-5 w-5;
-	}
-}
-</style>
