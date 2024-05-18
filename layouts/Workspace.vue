@@ -25,6 +25,7 @@ if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = aw
 				<ModalNewFolder/>
 				<ModalNewDocument/>
 				<DraggingItems/>
+				<ImageViewer/>
 
 				<div class="flex-grow appear-0.25">
 					<slot/>

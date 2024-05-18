@@ -1,4 +1,5 @@
 import type StorageItem from "~/types/api/StorageItem";
+import type File from "~/types/api/File";
 import type Folder from "~/types/api/Folder";
 import type {Ref} from "vue";
 
@@ -7,6 +8,7 @@ export const openItem = (item: StorageItem) => {
         const link = item.is_root ? "/files" : "/folder/" + item.id
         navigateTo("/workspace/" + useWorkspace().value.id + link)
     } else if (isOfficeDocument(item)) navigateTo(`/docs/${item.id}`, {open: {target: "_blank"}})
+    else if (getStorageItemType(item) === "image") useImageViewer().value(item as File)
 }
 
 export const moveItems = (items: StorageItem[], targetId: string, undoing = false) => {
@@ -56,15 +58,14 @@ export const restoreItems = (items: StorageItem[], undoing = false) => modifyIte
     () => trashItems(items, true),
     undoing
 )
-export const deleteItems = (items: StorageItem[], undoing = false) => modifyItems(
+export const deleteItems = (items: StorageItem[]) => modifyItems(
     items,
     ["delete", "deleted"],
     "DELETE",
     {},
-    (item: StorageItem) => {
-    },
+    () => {},
     null,
-    undoing
+    false
 )
 
 export const downloadFile = (file: StorageItem) => {

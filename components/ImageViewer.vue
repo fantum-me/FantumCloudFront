@@ -1,0 +1,121 @@
+<script setup lang="ts">
+import type {Ref} from "vue";
+import type File from "~/types/api/File";
+import type Folder from "~/types/api/Folder";
+
+const item: Ref<File | undefined> = ref()
+const isOpen: Ref<boolean> = ref(false)
+const loaded = ref(false)
+const opacity = ref(0)
+
+useImageViewer().value = open
+
+onMounted(() => {
+	window.addEventListener("keydown", (e: KeyboardEvent) => {
+		if (isOpen.value && item.value) {
+			if (e.key === "ArrowLeft") previous()
+			else if (e.key === "ArrowRight") next()
+			else if (e.key === "Escape") close()
+		}
+	})
+	window.addEventListener("resize", () => {
+		if (isOpen.value && item.value) refreshRatio()
+	})
+})
+
+function open(target: File) {
+	if (getStorageItemType(target) !== "image") return
+	loaded.value = false
+	item.value = target
+	isOpen.value = true
+	refreshRatio()
+	useWait(1).then(() => opacity.value = 1)
+}
+
+function close() {
+	opacity.value = 0
+	useWait(300).then(() => isOpen.value = false)
+}
+
+function previous() {
+	if (!item.value) return
+	const parent = useItem(item.value.parent_id).value as Folder
+	if (parent && parent.files) {
+		const images = parent.files.filter(file => getStorageItemType(file) === "image")
+		const index = images.indexOf(item.value)
+		if (index !== 0) open(images[index - 1])
+	}
+}
+
+function next() {
+	if (!item.value) return
+	const parent = useItem(item.value.parent_id).value as Folder
+	if (parent && parent.files) {
+		const images = parent.files.filter(file => getStorageItemType(file) === "image")
+		const index = images.indexOf(item.value)
+		if (index + 1 !== images.length) open(images[index + 1])
+	}
+}
+
+function load() {
+	refreshRatio()
+	loaded.value = true
+}
+
+function refreshRatio() {
+	if (!item.value || !item.value.width || !item.value.height) return
+	const container = document.querySelector(".image-viewer") as HTMLElement|null
+	if (!container) return
+	const image = container.querySelector("img") as HTMLImageElement
+
+	const imageRatio = item.value.width / item.value.height
+	const ratio = window.innerWidth / window.innerHeight
+
+	if (imageRatio > ratio) image.className = "w-full h-auto"
+	else image.className = "w-auto h-full"
+}
+</script>
+
+<template>
+	<div class="bg-gray-800 bg-opacity-90 text-gray-100 fixed left-0 top-0 w-screen h-screen z-50 transition-opacity duration-300"
+	     v-if="item && isOpen" @click="close" :style="{opacity: opacity}">
+		<div class="p-3 flex-between">
+			<div class="flex-center gap-2 font-medium" @click.stop>
+				<span class="h-6 w-6">
+					<component :is="getStorageItemIcon(item)" :id="item.id" :ext="item.ext"/>
+				</span>
+				{{ item.name + "." + item.ext }}
+			</div>
+			<div class="flex-center gap-2">
+				<UButton icon="i-heroicons-arrow-down-tray-20-solid" color="white" variant="soft" size="xl"
+				         @click.stop="downloadFile(item)"/>
+				<UButton icon="i-heroicons-pencil-solid" color="white" variant="soft" size="xl"
+				         @click="useRenameItemsModal().value(item)"/>
+			</div>
+		</div>
+
+		<div class="image-viewer">
+			<img :src="`/api/files/${item.id}/${loaded ? 'download' : 'preview'}`" :alt="item.name"
+			     @load="load" @click.stop/>
+		</div>
+
+		<UButton color="white" variant="soft" class="-mt-8 p-3 absolute left-2 top-1/2 -translate-y-1/2"
+		         @click.stop="previous">
+			<UIcon name="i-heroicons-chevron-left" class="h-12 w-12 md:h-16 md:w-16"/>
+		</UButton>
+		<UButton color="white" variant="soft" class="-mt-8 p-3 absolute right-2 top-1/2 -translate-y-1/2"
+		         @click.stop="next">
+			<UIcon name="i-heroicons-chevron-right" class="h-12 w-12 md:h-16 md:w-16"/>
+		</UButton>
+	</div>
+</template>
+
+<style>
+.image-viewer {
+	@apply h-4/5 w-4/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex-center;
+
+	img {
+		@apply max-w-full max-h-full object-contain;
+	}
+}
+</style>
