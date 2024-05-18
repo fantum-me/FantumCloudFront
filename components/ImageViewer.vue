@@ -95,8 +95,8 @@ function refreshRatio() {
 		</div>
 
 		<div class="image-viewer">
-			<img :src="`/api/files/${item.id}/${loaded ? 'download' : 'preview'}`" :alt="item.name"
-			     @load="load" @click.stop/>
+			<img :src="`/api/files/${item.id}/${loaded && !item.mime.startsWith('image/svg')  ? 'download' : 'preview'}`"
+			     :alt="item.name" @load="load" @click.stop/>
 		</div>
 
 		<UButton color="white" variant="soft" class="-mt-8 p-3 absolute left-2 top-1/2 -translate-y-1/2"
