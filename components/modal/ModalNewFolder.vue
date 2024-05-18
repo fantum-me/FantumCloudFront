@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import type {FormError, FormSubmitEvent} from '#ui/types'
 import type Folder from "~/types/api/Folder";
+import type {Ref} from "vue";
 
-const folder = useFolder()
+const folder: Ref<Folder | undefined> = ref()
 const isOpen = ref(false)
 const isLoading = ref(false)
 
-folder.value.create_folder = () => isOpen.value = true
+useNewFolderModal().value = (target: Folder) => {
+	folder.value = target
+	isOpen.value = true
+}
 
 const state = reactive({
 	name: "",
@@ -21,7 +25,7 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-	if (isLoading.value) return
+	if (!folder.value || isLoading.value) return
 	isLoading.value = true
 
 	const res = await useApiFetch("/folders", {

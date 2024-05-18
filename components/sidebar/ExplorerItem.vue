@@ -46,11 +46,16 @@ async function toggleFolder() {
 }
 
 function onClick(e: MouseEvent) {
-	if (isFolder(item.value) && item.value.is_root) return
+	const isRoot = isFolder(item.value) && item.value.is_root
 	if (e.ctrlKey || e.shiftKey) {
+		if (isRoot) return
 		if (isSelected()) itemsSelection.value = itemsSelection.value.filter(id => id !== item.value.id)
 		else itemsSelection.value.push(item.value.id)
-	} else itemsSelection.value = [item.value.id]
+	} else {
+		if (isRoot) itemsSelection.value = []
+		else itemsSelection.value = [item.value.id]
+		if (isFolder(item.value)) openItem(item.value)
+	}
 }
 
 const FileIcon = isFile(item.value) ? getStorageItemIcon(item.value) : null
@@ -66,9 +71,9 @@ function getFolderIcon() {
 
 <template>
 	<div v-show="!item.in_trash">
-		<ItemWrapper :item="item" @click="onClick">
+		<ItemWrapper :id="item.id" @click="onClick" type="sidebar">
 			<UButton color="gray" variant="ghost" block
-			         :class="(isSelected() ? 'explorer-item-selected ' : '') + 'justify-start group'">
+			         :class="(isSelected() ? 'explorer-item-selected ' : '') + 'transition-colors justify-start group'">
 				<template #leading>
 					<div class="h-5 w-5 rounded group-hover:p-[2px] hover:bg-gray-200 dark:hover:bg-gray-700"
 					     v-if="isFolder(item)" @click.stop="toggleFolder">
@@ -81,9 +86,16 @@ function getFolderIcon() {
 						<FileIcon :id="item.id" :ext="item.ext" class="w-full h-full"/>
 					</div>
 				</template>
-				<p :class="currentFolder?.id === item.id ? 'font-semibold' : ''">
+				<p :class="(currentFolder?.id === item.id ? 'font-semibold ' : '') + 'flex-grow text-start'">
 					{{ isFolder(item) && item.is_root ? "Files" : item.name }}
 				</p>
+				<template #trailing v-if="isFolder(item)">
+					<div class="h-5 w-5 rounded group-hover:p-[2px] hover:bg-gray-200 dark:hover:bg-gray-700"
+					     @click.stop="useFolderContextMenu().value.open(item)">
+						<UIcon class="(w-full h-full hidden group-hover:block transition-transform"
+						       name="i-heroicons-plus"/>
+					</div>
+				</template>
 			</UButton>
 		</ItemWrapper>
 		<div v-if="isFolder(item) && folderStatus === 'open'" class="w-full pl-3 mt-2 space-y-2">

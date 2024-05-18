@@ -24,7 +24,7 @@ const cardConfig = {
 </script>
 
 <template>
-	<ItemWrapper :item="item">
+	<ItemWrapper :id="item.id" type="card">
 		<drag-select-option :value="item.id">
 			<UCard class="relative item-card flex flex-col dark:border border-gray-700 divide-none shadow-none"
 			       :ui="cardConfig">

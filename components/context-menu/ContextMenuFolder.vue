@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from "@vueuse/core";
+import type Folder from "~/types/api/Folder";
+import type {Ref} from "vue";
 
 const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
 
-const folder = useFolder()
+const currentFolder = useFolder()
+const folder: Ref<Folder | undefined> = ref()
 const isOpen = ref(false)
 const virtualElement = ref({getBoundingClientRect: () => ({})})
 
@@ -22,9 +25,14 @@ function onContextMenu() {
 	isOpen.value = true
 }
 
+const newFolder = useNewFolderModal()
+const newDocument = useNewDocumentModal()
+
 const contextMenu = useFolderContextMenu()
 contextMenu.value = {
-	open: () => {
+	open: (target: Folder) => {
+		console.log(target)
+		folder.value = target
 		onContextMenu()
 		useItemsContextMenu().value.close()
 		useItemsSelection().value = []
@@ -34,28 +42,29 @@ contextMenu.value = {
 </script>
 
 <template>
-	<UContextMenu v-model="isOpen" :virtual-element="virtualElement">
-		<button @click="folder.import_file?.() && contextMenu.close()">
+	<UContextMenu v-if="folder" v-model="isOpen" :virtual-element="virtualElement" class="z-[35]">
+		<button v-if="currentFolder.id === folder.id && folder.access.write"
+		        @click="currentFolder.import_file?.() && contextMenu.close()">
 			<UIcon name="i-heroicons-document-arrow-down-solid" class="h-5 w-5"/>
 			Import File
 		</button>
-		<button @click="folder.create_folder?.() && contextMenu.close()">
+		<button @click="newFolder(folder) & contextMenu.close()">
 			<UIcon name="i-heroicons-folder-plus-solid" class="h-5 w-5"/>
 			Create Folder
 		</button>
-		<button @click="folder.create_document?.('text') & contextMenu.close()">
+		<button @click="newDocument(folder, 'text') & contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypeDoc/>
 			</span>
 			New Text Document
 		</button>
-		<button @click="folder.create_document?.('spreadsheet') & contextMenu.close()">
+		<button @click="newDocument(folder, 'spreadsheet') & contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypeSpreadsheet/>
 			</span>
 			New Spreadsheet
 		</button>
-		<button @click="folder.create_document?.('presentation') & contextMenu.close()">
+		<button @click="newDocument(folder, 'presentation') & contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypePresentation/>
 			</span>

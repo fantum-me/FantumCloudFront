@@ -22,6 +22,8 @@ if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = aw
 				<ContextMenuItems/>
 				<ModalRenameItem/>
 				<ModalAccessControls/>
+				<ModalNewFolder/>
+				<ModalNewDocument/>
 				<DraggingItems/>
 
 				<div class="flex-grow appear-0.25">

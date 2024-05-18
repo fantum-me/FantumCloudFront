@@ -22,11 +22,7 @@ async function fetchFolder() {
 	if (res.ok) {
 		folder.value = await res.json() as Folder;
 		useItem(folder.value.id).value = folder.value
-		if (current_folder) {
-			folder.value.import_file = current_folder.import_file
-			folder.value.create_folder = current_folder.create_folder
-			folder.value.create_document = current_folder.create_document
-		}
+		if (current_folder) folder.value.import_file = current_folder.import_file
 		status.value = "loaded"
 	} else {
 		console.log(res.status, await res.text());
@@ -42,7 +38,7 @@ function getParentFolderPath(parent: ParentFolder) {
 
 function onContextMenu(e: MouseEvent) {
 	if (e.target && asHtmlElement(e.target)) {
-		if (!e.target.closest(".item-card")) useFolderContextMenu().value.open()
+		if (!e.target.closest(".item-card")) useFolderContextMenu().value.open(folder.value)
 	}
 }
 </script>
@@ -56,9 +52,8 @@ function onContextMenu(e: MouseEvent) {
 		<p>Failed to access folder. Please ty again later...</p>
 	</div>
 	<div v-else-if="status == 'loaded'" class="w-full h-full appear-0.1">
-		<ModalNewFolder/>
-		<ModalNewDocument/>
-		<div class="w-full h-full" @contextmenu.prevent="onContextMenu" @click="unselectAll">
+		<ItemWrapper :id="folder.id" type="main" class="w-full h-full"
+		             @contextmenu.prevent="onContextMenu" @click="unselectAll">
 			<ContextMenuFolder/>
 			<FileDropzone>
 				<StorageItems :folders="folder.folders ?? []" :files="folder.files ?? []">
@@ -80,6 +75,6 @@ function onContextMenu(e: MouseEvent) {
 					</div>
 				</StorageItems>
 			</FileDropzone>
-		</div>
+		</ItemWrapper>
 	</div>
 </template>

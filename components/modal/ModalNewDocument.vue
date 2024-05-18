@@ -2,15 +2,17 @@
 import type {FormError, FormSubmitEvent} from '#ui/types'
 import type File from "~/types/api/File"
 import type {Ref} from "vue";
+import type Folder from "~/types/api/Folder";
 
-const folder = useFolder()
+const folder: Ref<Folder | undefined> = ref()
 const selectedType = useNewDocumentType()
 const isOpen: Ref<boolean> = ref(false)
 const isLoading: Ref<boolean> = ref(false)
 
-folder.value.create_document = (type) => {
+useNewDocumentModal().value = (target: Folder, type: string) => {
 	const documentType = documentTypes.find(d => d.type === type)
 	if (documentType) {
+		folder.value = target
 		selectedType.value = documentType
 		isOpen.value = true
 	}
@@ -29,7 +31,7 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-	if (isLoading.value) return
+	if (!folder.value || isLoading.value) return
 	isLoading.value = true
 
 	const res = await useApiFetch("/files", {
