@@ -3,8 +3,11 @@ import type {Ref} from "vue";
 import type File from "~/types/api/File";
 import type Folder from "~/types/api/Folder";
 
+const currentFolder = useFolder()
+
 const item: Ref<File | undefined> = ref()
 const isOpen: Ref<boolean> = ref(false)
+const enableMove: Ref<boolean> = ref(false)
 const loaded = ref(false)
 const opacity = ref(0)
 
@@ -13,8 +16,8 @@ useImageViewer().value = open
 onMounted(() => {
 	window.addEventListener("keydown", (e: KeyboardEvent) => {
 		if (isOpen.value && item.value) {
-			if (e.key === "ArrowLeft") previous()
-			else if (e.key === "ArrowRight") next()
+			if (e.key === "ArrowLeft" && enableMove.value) previous()
+			else if (e.key === "ArrowRight" && enableMove.value) next()
 			else if (e.key === "Escape") close()
 		}
 	})
@@ -23,9 +26,10 @@ onMounted(() => {
 	})
 })
 
-function open(target: File) {
+function open(target: File, arrows = true) {
 	if (getStorageItemType(target) !== "image") return
 	loaded.value = false
+	enableMove.value = arrows
 	item.value = target
 	isOpen.value = true
 	refreshRatio()
@@ -38,7 +42,7 @@ function close() {
 }
 
 function previous() {
-	if (!item.value) return
+	if (!item.value || !enableMove.value) return
 	const parent = useItem(item.value.parent_id).value as Folder
 	if (parent && parent.files) {
 		const images = parent.files.filter(file => getStorageItemType(file) === "image")
@@ -48,7 +52,7 @@ function previous() {
 }
 
 function next() {
-	if (!item.value) return
+	if (!item.value || !enableMove.value) return
 	const parent = useItem(item.value.parent_id).value as Folder
 	if (parent && parent.files) {
 		const images = parent.files.filter(file => getStorageItemType(file) === "image")
@@ -87,6 +91,9 @@ function refreshRatio() {
 				{{ item.name + "." + item.ext }}
 			</div>
 			<div class="flex-center gap-2">
+				<UButton icon="i-heroicons-folder-open" color="white" variant="soft" size="xl"
+				         @click.stop="openItem(useItem(item.parent_id).value); useItemsSelection().value = [item.id]"
+				         v-if="item.parent_id && currentFolder?.id !== item.parent_id"/>
 				<UButton icon="i-heroicons-arrow-down-tray-20-solid" color="white" variant="soft" size="xl"
 				         @click.stop="downloadFile(item)"/>
 				<UButton icon="i-heroicons-pencil-solid" color="white" variant="soft" size="xl"
@@ -100,11 +107,11 @@ function refreshRatio() {
 		</div>
 
 		<UButton color="white" variant="soft" class="-mt-8 p-3 absolute left-2 top-1/2 -translate-y-1/2"
-		         @click.stop="previous">
+		         @click.stop="previous" v-if="enableMove">
 			<UIcon name="i-heroicons-chevron-left" class="h-12 w-12 md:h-16 md:w-16"/>
 		</UButton>
 		<UButton color="white" variant="soft" class="-mt-8 p-3 absolute right-2 top-1/2 -translate-y-1/2"
-		         @click.stop="next">
+		         @click.stop="next" v-if="enableMove">
 			<UIcon name="i-heroicons-chevron-right" class="h-12 w-12 md:h-16 md:w-16"/>
 		</UButton>
 	</div>
