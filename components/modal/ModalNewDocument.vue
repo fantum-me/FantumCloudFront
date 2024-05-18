@@ -3,9 +3,10 @@ import type {FormError, FormSubmitEvent} from '#ui/types'
 import type File from "~/types/api/File"
 import type {Ref} from "vue";
 import type Folder from "~/types/api/Folder";
+import type DocumentType from "~/types/DocumentType";
 
 const folder: Ref<Folder | undefined> = ref()
-const selectedType = useNewDocumentType()
+const selectedType: Ref<DocumentType | undefined> = ref()
 const isOpen: Ref<boolean> = ref(false)
 const isLoading: Ref<boolean> = ref(false)
 
@@ -31,7 +32,7 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-	if (!folder.value || isLoading.value) return
+	if (!folder.value || !selectedType.value || isLoading.value) return
 	isLoading.value = true
 
 	const res = await useApiFetch("/files", {
@@ -63,7 +64,7 @@ async function close() {
 </script>
 
 <template>
-	<UModal v-model="isOpen" :prevent-close="isLoading" @close="close">
+	<UModal v-if="folder && selectedType" v-model="isOpen" :prevent-close="isLoading" @close="close">
 		<UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
 			<template #header>
 				<div class="flex items-center justify-between font-semibold">
