@@ -6,7 +6,7 @@ if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = aw
 </script>
 
 <template>
-	<div class="flex" v-if="workspace">
+	<div class="w-screen min-h-screen overflow-y-auto overflow-x-hidden flex" v-if="workspace">
 		<div>
 			<USlideover class="md:hidden w-64" v-model="isSidebarOpen" side="left">
 				<Sidebar/>
@@ -16,7 +16,7 @@ if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = aw
 			</div>
 		</div>
 
-		<div class="w-full min-h-screen flex flex-col">
+		<div class="flex-1 flex flex-col overflow-x-hidden">
 			<Topbar/>
 			<ClientOnly>
 				<ContextMenuItems/>
