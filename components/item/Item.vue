@@ -18,6 +18,7 @@ const icon = getStorageItemIcon(item.value)
 
 const loadingItems = useLoadingItems()
 const itemsSelection = useItemsSelection()
+const itemsContextMenu = useItemsContextMenu()
 
 function click(e: MouseEvent) {
 	if (e.ctrlKey || e.shiftKey) {
@@ -40,11 +41,15 @@ const cardConfig = {
 			<UCard :class="(itemsSelection.includes(item.id) ? 'selected' : '') + ' item ' + display"
 			       :ui="cardConfig" @click.stop="click">
 				<template #header>
-					<div class="flex-start" :title="item.name + (ext ? '.' + ext : '')">
-					<span class=" shrink-0 h-5 w-5 mr-3">
-						<icon :id="item.id" :ext="ext"/>
-					</span>
-						<span class="font-medium text-sm truncate">{{ item.name }}{{ ext ? '.' + ext : '' }}</span>
+					<div class="flex-between gap-3">
+						<div class="flex-start gap-3 min-w-0" :title="item.name + (ext ? '.' + ext : '')">
+							<span class=" shrink-0 h-5 w-5">
+								<icon :id="item.id" :ext="ext"/>
+							</span>
+							<span class="font-medium text-sm truncate">{{ item.name }}{{ ext ? '.' + ext : '' }}</span>
+						</div>
+						<UButton v-if="display === 'card'" icon="i-heroicons-ellipsis-vertical" color="gray"
+						         variant="ghost" @click="itemsSelection = [item.id]; itemsContextMenu.open()"/>
 					</div>
 				</template>
 
@@ -59,10 +64,15 @@ const cardConfig = {
 
 				<template #footer>
 					<div class="flex-start gap-1.5 opacity-60 text-xs">
-						<UIcon name="i-heroicons-trash" class="h-4 w-4 mr-2" v-if="item.in_trash"/>
-						{{ formatSize(item.size) }}
+						<UIcon v-if="item.in_trash" name="i-heroicons-trash"
+						       :class="(display === 'card' ? 'order-1 ' : '') + 'h-4 w-4 mr-2'"/>
+						<span>{{ formatSize(item.size) }}</span>
 						<span class="dot"/>
 						<span>{{ moment.unix(item.updated_at).fromNow() }}</span>
+						<div class="relative flex-center w-5 ml-3" v-if="display === 'line'">
+							<UButton icon="i-heroicons-ellipsis-vertical" color="gray" class="absolute"
+							         variant="ghost" @click="itemsSelection = [item.id]; itemsContextMenu.open()"/>
+						</div>
 					</div>
 				</template>
 			</UCard>
@@ -73,14 +83,18 @@ const cardConfig = {
 <style>
 .item {
 	@apply relative divide-none shadow-none;
+
 	&.card {
-		@apply flex flex-col dark:border border-gray-700;
+		@apply flex flex-col dark:border border-gray-700 transition-transform;
+
 		&.selected {
-			@apply ring-2 ring-primary -translate-y-1 transition-transform shadow-lg;
+			@apply ring-2 ring-primary -translate-y-1 shadow-lg;
 		}
 	}
+
 	&.line {
-		@apply flex-between gap-2.5 ring-1 ring-gray-200 dark:ring-gray-700 rounded;
+		@apply flex-between gap-2.5 ring-1 ring-gray-200 dark:ring-gray-700 rounded transition-colors;
+
 		&.selected {
 			@apply bg-primary-100 dark:bg-primary-500 dark:bg-opacity-30;
 		}
