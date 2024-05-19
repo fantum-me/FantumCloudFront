@@ -1,4 +1,6 @@
 enum View {
+    HOME = "home",
+
     FOLDER = "folder",
 
     FILES = "files",

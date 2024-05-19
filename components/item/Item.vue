@@ -4,8 +4,11 @@ import moment from "moment/moment";
 import {DragSelectOption} from "@coleqiu/vue-drag-select";
 import type {Ref} from "vue";
 
+export type ItemDisplay = "card" | "line"
+
 const props = defineProps<{
 	item: StorageItem,
+	display: ItemDisplay
 }>()
 
 const item: Ref<StorageItem> = useItem(props.item.id, props.item)
@@ -14,6 +17,14 @@ const ext = isFile(item.value) ? item.value.ext : ""
 const icon = getStorageItemIcon(item.value)
 
 const loadingItems = useLoadingItems()
+const itemsSelection = useItemsSelection()
+
+function click(e: MouseEvent) {
+	if (e.ctrlKey || e.shiftKey) {
+		if (itemsSelection.value.includes(item.value.id)) itemsSelection.value = itemsSelection.value.filter(id => item.value.id !== id)
+		else itemsSelection.value.push(item.value.id)
+	} else itemsSelection.value = [item.value.id]
+}
 
 const cardConfig = {
 	divide: "",
@@ -24,10 +35,10 @@ const cardConfig = {
 </script>
 
 <template>
-	<ItemWrapper :id="item.id" type="card">
+	<ItemWrapper :id="item.id" :type="display">
 		<drag-select-option :value="item.id">
-			<UCard class="relative item-card flex flex-col dark:border border-gray-700 divide-none shadow-none"
-			       :ui="cardConfig">
+			<UCard :class="(itemsSelection.includes(item.id) ? 'selected' : '') + ' item ' + display"
+			       :ui="cardConfig" @click.stop="click">
 				<template #header>
 					<div class="flex-start" :title="item.name + (ext ? '.' + ext : '')">
 					<span class=" shrink-0 h-5 w-5 mr-3">
@@ -36,7 +47,8 @@ const cardConfig = {
 						<span class="font-medium text-sm truncate">{{ item.name }}{{ ext ? '.' + ext : '' }}</span>
 					</div>
 				</template>
-				<div>
+
+				<div v-if="display === 'card'">
 					<ItemPreview :crop="true" :item="item"/>
 				</div>
 
@@ -47,8 +59,9 @@ const cardConfig = {
 
 				<template #footer>
 					<div class="flex-start gap-1.5 opacity-60 text-xs">
+						<UIcon name="i-heroicons-trash" class="h-4 w-4 mr-2" v-if="item.in_trash"/>
 						{{ formatSize(item.size) }}
-						<span class="rounded-full w-[3px] aspect-square shrink-0 bg-current opacity-90 mt-0.5"/>
+						<span class="dot"/>
 						<span>{{ moment.unix(item.updated_at).fromNow() }}</span>
 					</div>
 				</template>
@@ -58,7 +71,20 @@ const cardConfig = {
 </template>
 
 <style>
-.drag-select-option--selected > .item-card {
-	@apply ring-2 ring-primary -translate-y-1 transition-transform shadow-lg;
+.item {
+	@apply relative divide-none shadow-none;
+	&.card {
+		@apply flex flex-col dark:border border-gray-700;
+		&.selected {
+			@apply ring-2 ring-primary -translate-y-1 transition-transform shadow-lg;
+		}
+	}
+	&.line {
+		@apply flex-between gap-2.5 ring-1 ring-gray-200 dark:ring-gray-700 rounded;
+		&.selected {
+			@apply bg-primary-100 dark:bg-primary-500 dark:bg-opacity-30;
+		}
+	}
+
 }
 </style>

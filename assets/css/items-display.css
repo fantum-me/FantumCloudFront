@@ -17,4 +17,8 @@
             grid-template-columns: repeat(5, minmax(0, 1fr));
         }
     }
+
+    .items-list {
+        @apply w-full flex flex-col gap-2;
+    }
 }

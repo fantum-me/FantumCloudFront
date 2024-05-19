@@ -1,5 +1,5 @@
 /* Components */
-@import "items-grid.css";
+@import "items-display.css";
 @import "context-menu.css";
 
 /* Utilities */
@@ -9,3 +9,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .dot {
+        @apply rounded-full w-[3px] aspect-square shrink-0 bg-current opacity-90 mt-0.5;
+    }
+}

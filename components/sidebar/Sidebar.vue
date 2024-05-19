@@ -8,7 +8,7 @@ const workspace = useWorkspace()
 const sidebarItems: { before: SidebarItem[], after: SidebarItem[] } = {
 	before: [
 		{
-			view: View.FILES,
+			view: View.HOME,
 			label: "Home",
 			icon: "i-heroicons-home",
 			activeIcon: "i-heroicons-home-solid"

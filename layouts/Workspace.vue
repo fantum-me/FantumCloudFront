@@ -1,8 +1,14 @@
 <script setup lang="ts">
+import View from "~/types/View";
+import type Folder from "~/types/api/Folder";
+
 const isSidebarOpen = useSidebarOpen();
 const workspaceId = useRoute().params.workspace
 const workspace = useWorkspace()
+const view = useView()
+
 if (!workspace.value || workspaceId !== workspace.value.id) workspace.value = await fetchWorkspace(workspaceId as string)
+if (view.value !== View.FILES && view.value !== View.FOLDER && view.value !== View.TRASH) useFolder().value = {} as Folder
 </script>
 
 <template>

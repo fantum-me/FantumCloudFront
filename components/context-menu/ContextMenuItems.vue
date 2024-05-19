@@ -3,7 +3,6 @@ import {useMouse, useWindowScroll} from "@vueuse/core";
 import type {Ref} from "vue";
 import type PermissionObject from "~/types/api/PermissionObject";
 import Permission from "~/types/Permission";
-import View from "~/types/View";
 import type StorageItem from "~/types/api/StorageItem";
 
 type MenuItem = {
@@ -16,9 +15,7 @@ type MenuItem = {
 const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
 
-const view = useView()
 const itemsSelection = useItemsSelection()
-const workspace = useWorkspace()
 
 const isOpen = ref(false)
 const virtualElement = ref({getBoundingClientRect: () => ({})})
@@ -41,7 +38,11 @@ function onContextMenu() {
 		[Permission.EDIT_PERMISSIONS]: true
 	}
 
+	let in_trash: boolean | null | undefined = undefined;
+
 	items.forEach(item => {
+		if (in_trash === undefined) in_trash = item.in_trash
+		else if (in_trash !== null && in_trash !== item.in_trash) in_trash = null
 		Object.keys(permissions).forEach(key => {
 			if (!item.access[key as Permission]) permissions[key as Permission] = false
 		})
@@ -65,19 +66,19 @@ function onContextMenu() {
 		name: "Rename",
 		action: () => useRenameItemsModal().value(items[0])
 	})
-	if (permissions[Permission.TRASH] && view.value !== View.TRASH) menu.value.push({
+	if (permissions[Permission.TRASH] && in_trash === false) menu.value.push({
 		icon: "i-heroicons-trash",
 		name: "Move To Trash",
 		color: "error",
 		action: () => trashItems(items)
 	})
-	if (permissions[Permission.WRITE] && view.value === View.TRASH) menu.value.push({
+	if (permissions[Permission.WRITE] && in_trash === true) menu.value.push({
 		icon: "i-heroicons-cloud-arrow-up",
 		name: "Restore",
 		color: "primary",
 		action: () => restoreItems(items)
 	})
-	if (permissions[Permission.DELETE] && view.value === View.TRASH) menu.value.push({
+	if (permissions[Permission.DELETE] && in_trash === true) menu.value.push({
 		icon: "i-heroicons-x-mark",
 		name: "Delete",
 		color: "error",
@@ -96,7 +97,7 @@ const contextMenu = useItemsContextMenu()
 contextMenu.value = {
 	open: () => {
 		onContextMenu()
-		useFolderContextMenu().value.close()
+		useFolderContextMenu().value?.close()
 	},
 	close: () => isOpen.value = false
 }
