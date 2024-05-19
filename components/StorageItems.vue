@@ -36,7 +36,7 @@ function unfocusInputs() {
 			<UButton v-if="display === 'card'" color="gray" variant="ghost" icon="i-heroicons-list-bullet" @click="setDisplay('line')"/>
 			<UButton v-else color="gray" variant="ghost" icon="i-heroicons-squares-2x2" @click="setDisplay('card')"/>
 		</div>
-		<div :class="'pb-28 ' + (display === 'card' ? 'items-grid' : 'items-list')">
+		<div :class="'pb-28 transition-[gap] ' + (display === 'card' ? 'items-grid' : 'items-list')">
 			<Item :display="display" v-for="folder in props.folders" :item="folder" :key="folder.id"/>
 			<Item :display="display" v-for="file in props.files" :item="file" :key="file.id"/>
 		</div>
