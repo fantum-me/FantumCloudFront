@@ -39,7 +39,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	if (res.ok) {
 		const item: Folder = await res.json()
 		useItem(item.id).value = item
-		if (folder.value.folders) folder.value.folders.push(item)
+		if (folder.value.items) folder.value.items.push(item)
 		useSuccessToast(`Folder ${event.data.name} created successfully !`)
 	} else useErrorToast(`Failed to create folder ${event.data.name}`)
 

@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import type Folder from "~/types/api/Folder";
-import type File from "~/types/api/File";
 import {DragSelect} from "@coleqiu/vue-drag-select";
 import type {ItemDisplay} from "~/components/item/Item.vue";
 import type {Ref} from "vue";
+import type StorageItem from "~/types/api/StorageItem";
 
 
 const props = defineProps<{
-	folders: Folder[],
-	files: File[]
+	items: StorageItem[],
 }>()
 
 const itemsSelection = useItemsSelection()
@@ -37,8 +35,8 @@ function unfocusInputs() {
 			<UButton v-else color="gray" variant="ghost" icon="i-heroicons-squares-2x2" @click="setDisplay('card')"/>
 		</div>
 		<div :class="'pb-28 transition-[gap] ' + (display === 'card' ? 'items-grid' : 'items-list')">
-			<Item :display="display" v-for="folder in props.folders" :item="folder" :key="folder.id"/>
-			<Item :display="display" v-for="file in props.files" :item="file" :key="file.id"/>
+			<Item :display="display" v-for="f in props.items.filter(i => isFolder(i))" :item="f" :key="f.id"/>
+			<Item :display="display" v-for="f in props.items.filter(i => isFile(i))" :item="f" :key="f.id"/>
 		</div>
 	</drag-select>
 </template>

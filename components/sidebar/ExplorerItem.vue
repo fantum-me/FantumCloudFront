@@ -82,7 +82,7 @@ function getFolderIcon() {
 							:class="(folderStatus === 'open' ? 'rotate-90 ' : '') + 'w-full h-full hidden group-hover:block transition-transform'"
 							name="i-heroicons-chevron-right"/>
 					</div>
-					<div v-else-if="isFile(item)" class="h-5 w-5">
+					<div v-else-if="isFile(item)" class="h-5 w-5 shrink-0">
 						<FileIcon :id="item.id" :ext="item.ext" class="w-full h-full"/>
 					</div>
 				</template>
@@ -98,9 +98,9 @@ function getFolderIcon() {
 				</template>
 			</UButton>
 		</ItemWrapper>
-		<div v-if="isFolder(item) && folderStatus === 'open'" class="w-full pl-3 mt-2 space-y-2">
-			<SidebarExplorerItem v-for="folder in item.folders" :item="folder" :key="folder.id"/>
-			<SidebarExplorerItem v-for="file in item.files" :item="file" :key="file.id"/>
+		<div v-if="isFolder(item) && item.items && folderStatus === 'open'" class="w-full pl-3 mt-2 space-y-2">
+			<SidebarExplorerItem v-for="f in item.items.filter(i => isFolder(i))" :item="f" :key="f.id"/>
+			<SidebarExplorerItem v-for="f in item.items.filter(i => isFile(i))" :item="f" :key="f.id"/>
 		</div>
 	</div>
 </template>

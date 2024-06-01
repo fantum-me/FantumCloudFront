@@ -48,7 +48,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	if (res.ok) {
 		const item: File = await res.json()
 		useItem(item.id).value = item
-		if (folder.value.files) folder.value.files.push(item)
+		if (folder.value.items) folder.value.items.push(item)
 		useSuccessToast(`Document ${event.data.name}.${selectedType.value.ext} created successfully !`)
 	} else useErrorToast(`Failed to create document ${event.data.name}.${selectedType.value.ext}`)
 

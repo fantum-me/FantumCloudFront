@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type StorageItem from "~/types/api/StorageItem";
 import type {ItemDisplay} from "~/components/item/Item.vue";
 
 const {id, type} = defineProps<{
@@ -16,7 +15,7 @@ const editable = type !== 'main' && !(isFolder(item.value) && item.value.is_root
 
 function getDroppableClass(): string {
 	if (isFolder(item.value) && !itemsSelection.value.includes(item.value.id)) {
-		const childrenIds = (item.value.files as StorageItem[] ?? []).concat(item.value.folders ?? []).map(i => i.id);
+		const childrenIds = item.value.items?.map(i => i.id) ?? [];
 		const p = itemsSelection.value.map(i => childrenIds.includes(i))
 		if (p.includes(false)) return "droppable-item"
 	}

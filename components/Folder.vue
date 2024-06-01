@@ -56,7 +56,7 @@ function onContextMenu(e: MouseEvent) {
 		             @contextmenu.prevent="onContextMenu" @click="unselectAll">
 			<ContextMenuFolder/>
 			<FileDropzone>
-				<StorageItems :folders="folder.folders ?? []" :files="folder.files ?? []">
+				<StorageItems :items="folder.items ?? []">
 					<div class="-mt-2 -ml-4 mb-4 flex-start">
 						<div v-for="(parent, index) in folder.parents">
 							<div :key="index" class="flex-center" data-type="folder" :data-item-id="parent.id">

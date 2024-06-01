@@ -28,11 +28,8 @@ export const moveItems = (items: StorageItem[], targetId: string, undoing = fals
         {parent_id: targetId},
         (item: StorageItem) => {
             const parent = useItem(item.parent_id) as Ref<Folder>
-            const field = isFile(item) ? "files" : "folders"
-            // @ts-ignore
-            if (parent.value[field]) parent.value[field] = parent.value[field].filter(f => f.id !== item.id)
-            // @ts-ignore
-            if (target.value[field]) target.value[field].push(item)
+            if (parent.value.items) parent.value.items = parent.value.items.filter(f => f.id !== item.id)
+            if (target.value.items) target.value.items.push(item)
             item.parent_id = target.value.id
         },
         parentIds.length === 1 ? () => moveItems(items, parentIds[0], true): null,
