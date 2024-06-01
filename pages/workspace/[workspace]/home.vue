@@ -9,11 +9,16 @@ const workspace = useWorkspace()
 const recentFiles: Ref<File[]> = ref([])
 
 onMounted(async () => {
+	await fetchRecentFiles()
+	useRefreshView().value = fetchRecentFiles
+})
+
+async function fetchRecentFiles() {
 	const res = await useApiFetch(`/workspaces/${workspace.value.id}/files/recent`)
 	if (res.ok) {
 		recentFiles.value = await res.json() as File[]
 	}
-})
+}
 </script>
 
 <template>
@@ -26,7 +31,7 @@ onMounted(async () => {
 					Recent updates
 				</p>
 				<div class="items-list">
-					<Item v-for="file in recentFiles" :item="file" display="line"/>
+					<Item v-for="file in recentFiles" :item="file" display="line" :key="file.id"/>
 				</div>
 			</div>
 		</div>
