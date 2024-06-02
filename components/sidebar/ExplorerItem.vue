@@ -87,7 +87,7 @@ function getFolderIcon() {
 						<FileIcon :id="item.id" :ext="item.ext" class="w-full h-full"/>
 					</div>
 				</template>
-				<p :class="(currentFolder?.id === item.id ? 'font-semibold ' : '') + 'flex-grow text-start'">
+				<p :class="(currentFolder?.id === item.id ? 'font-semibold ' : '') + 'flex-grow text-start truncate'">
 					{{ isFolder(item) && item.is_root ? "Files" : item.name }}
 				</p>
 				<template #trailing v-if="isFolder(item)">
