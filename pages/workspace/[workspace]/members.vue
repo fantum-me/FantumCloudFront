@@ -8,7 +8,6 @@ import Permission from "~/types/Permission";
 
 useView().value = View.MEMBERS
 const runtimeConfig = useRuntimeConfig()
-const modal = useModal()
 const workspace = useWorkspace()
 const defaultRoleColor = runtimeConfig.public.defaultRoleColor
 
