@@ -4,13 +4,14 @@ import type {Ref} from "vue";
 
 type FolderStatus = "open" | "hasBeenOpen" | "isOpening" | "closed"
 
+const workspace = useWorkspace()
 const currentFolder = useFolder()
 const props = defineProps<{ item: StorageItem }>()
 
 const item = useItem(props.item.id, props.item)
 const folderStatus: Ref<FolderStatus> = isFolder(item.value) ? useState(
 	`sidebar-explorer-folder-status-${item.value.id}`,
-	() => isFolder(item.value) && item.value.files && item.value.folders ? "open" : "closed"
+	() => isFolder(item.value) && item.value.items ? "open" : "closed"
 ) : ref("closed")
 
 const itemsSelection = useItemsSelection()
@@ -20,7 +21,7 @@ async function openFolder() {
 	if (folderStatus.value === "hasBeenOpen") folderStatus.value = "open"
 	else if (folderStatus.value === "closed") {
 		folderStatus.value = "isOpening"
-		const res = await useApiFetch(`/folders/${item.value.id}`)
+		const res = await useApiFetch(`/workspaces/${workspace.value.id}/items/${item.value.id}`)
 		if (res.ok) {
 			item.value = await res.json()
 			folderStatus.value = "open"

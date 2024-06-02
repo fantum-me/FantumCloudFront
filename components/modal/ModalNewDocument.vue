@@ -5,6 +5,8 @@ import type {Ref} from "vue";
 import type Folder from "~/types/api/Folder";
 import type DocumentType from "~/types/DocumentType";
 
+const workspace = useWorkspace()
+
 const folder: Ref<Folder | undefined> = ref()
 const selectedType: Ref<DocumentType | undefined> = ref()
 const isOpen: Ref<boolean> = ref(false)
@@ -35,9 +37,10 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	if (!folder.value || !selectedType.value || isLoading.value) return
 	isLoading.value = true
 
-	const res = await useApiFetch("/files", {
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/items`, {
 		method: "POST",
 		body: JSON.stringify({
+			type: 'file',
 			name: event.data.name,
 			ext: selectedType.value.ext,
 			mime: selectedType.value.mime,

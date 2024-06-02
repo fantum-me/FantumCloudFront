@@ -9,7 +9,7 @@ const rootFolder = useItem(workspace.value.root) as Ref<Folder>
 
 onMounted(async () => {
 	if (!rootFolder.value && useView().value !== View.FILES) {
-		const res = await useApiFetch(`/folders/${workspace.value.root}`)
+		const res = await useApiFetch(`/workspaces/${workspace.value.id}/items/${workspace.value.root}`)
 		if (res.ok) {
 			rootFolder.value = await res.json();
 		}

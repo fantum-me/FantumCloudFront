@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
     const res = await serverFetchApi(
         event,
-        `/documents/${id}`,
+        `/private/documents/${id}`,
         {},
         runtimeConfig.docsApiAccessKey
     )

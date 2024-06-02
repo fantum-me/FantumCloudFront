@@ -29,20 +29,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	if (!item.value || isLoading.value) return
 	isLoading.value = true
 
-	const type = isFolder(item.value) ? "folder" : "file"
-
-	const res = await useApiFetch(`/${type}s/${item.value.id}`, {
-		method: "PATCH",
-		body: JSON.stringify({
-			name: event.data.name,
-		})
-	})
-
-	if (res.ok) {
-		const newItem: StorageItem = await res.json()
-		item.value.name = newItem.name
-		useSuccessToast(`${capitalize(type)} renamed successfully !`)
-	} else useErrorToast(`Failed to rename ${type}`)
+	await renameItem(item.value, event.data.name)
 
 	isOpen.value = false
 	isLoading.value = false
@@ -72,14 +59,16 @@ async function close() {
 			</template>
 
 			<UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
-				<UInput v-model="state.name" :loading="isLoading" placeholder="Name" name="name"
-				        size="xl" color="gray" variant="outline" autofocus>
-					<template #trailing v-if="isFile(item)">
-							<span class="text-gray-500 dark:text-gray-400 text-xs">
-								.{{ item.ext.toUpperCase() }}
-							</span>
-					</template>
-				</UInput>
+				<UFormGroup name="name">
+					<UInput v-model="state.name" :loading="isLoading" placeholder="Name" name="name"
+					        size="xl" color="gray" variant="outline" autofocus>
+						<template #trailing v-if="isFile(item)">
+								<span class="text-gray-500 dark:text-gray-400 text-xs">
+									.{{ item.ext.toUpperCase() }}
+								</span>
+						</template>
+					</UInput>
+				</UFormGroup>
 
 				<div class="flex justify-end items-center gap-4 pt-2">
 					<UButton v-if="!isLoading" color="gray" variant="ghost" @click="close">

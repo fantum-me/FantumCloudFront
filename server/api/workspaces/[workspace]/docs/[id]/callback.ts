@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
             const formData = new FormData();
             formData.append('file', fileBlob);
 
-            const res = await serverFetchApi(event, `/documents/${id}`, {
+            const res = await serverFetchApi(event, `/private/documents/${id}`, {
                 method: 'POST',
                 body: formData
             }, runtimeConfig.docsApiAccessKey);

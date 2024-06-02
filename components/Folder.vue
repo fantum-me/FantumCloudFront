@@ -16,7 +16,7 @@ onMounted(() => {
 })
 
 async function fetchFolder() {
-	const res = await useApiFetch('/folders/' + id);
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/items/${id}`);
 	status.value = "loading"
 	const current_folder = folder.value
 	if (res.ok) {

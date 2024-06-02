@@ -3,6 +3,8 @@ import type {FormError, FormSubmitEvent} from '#ui/types'
 import type Folder from "~/types/api/Folder";
 import type {Ref} from "vue";
 
+const workspace = useWorkspace()
+
 const folder: Ref<Folder | undefined> = ref()
 const isOpen = ref(false)
 const isLoading = ref(false)
@@ -28,9 +30,10 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	if (!folder.value || isLoading.value) return
 	isLoading.value = true
 
-	const res = await useApiFetch("/folders", {
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/items`, {
 		method: "POST",
 		body: JSON.stringify({
+			type: 'folder',
 			name: event.data.name,
 			parent_id: folder.value.id
 		})

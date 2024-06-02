@@ -4,10 +4,11 @@ import type Folder from "~/types/api/Folder";
 import type {Ref} from "vue";
 
 export const openItem = (item: StorageItem, imageViewerArrows = true) => {
+    const workspaceId = useWorkspace().value.id
     if (isFolder(item)) {
-        const link = item.is_root ? "/files" : "/folder/" + item.id
-        navigateTo("/workspace/" + useWorkspace().value.id + link)
-    } else if (isOfficeDocument(item)) navigateTo(`/docs/${item.id}`, {open: {target: "_blank"}})
+        const path = item.is_root ? "files" : "folder/" + item.id
+        navigateTo(`/workspace/${workspaceId}/${path}`)
+    } else if (isOfficeDocument(item)) navigateTo(`/workspace/${workspaceId}/docs/${item.id}`, {open: {target: "_blank"}})
     else if (getStorageItemType(item) === "image") useImageViewer().value(item as File, imageViewerArrows)
 }
 
@@ -32,7 +33,20 @@ export const moveItems = (items: StorageItem[], targetId: string, undoing = fals
             if (target.value.items) target.value.items.push(item)
             item.parent_id = target.value.id
         },
-        parentIds.length === 1 ? () => moveItems(items, parentIds[0], true): null,
+        parentIds.length === 1 ? () => moveItems(items, parentIds[0], true) : null,
+        undoing
+    )
+}
+
+export const renameItem = (item: StorageItem, newName: string, undoing = false) => {
+    const oldName = item.name
+    modifyItems(
+        [item],
+        ["rename", "renamed"],
+        "PATCH",
+        {name: newName},
+        (item: StorageItem) => item.name = newName,
+        () => renameItem(item, oldName, true),
         undoing
     )
 }
@@ -46,6 +60,7 @@ export const trashItems = (items: StorageItem[], undoing = false) => modifyItems
     () => restoreItems(items, true),
     undoing
 )
+
 export const restoreItems = (items: StorageItem[], undoing = false) => modifyItems(
     items,
     ["restore", "restored"],
@@ -55,12 +70,14 @@ export const restoreItems = (items: StorageItem[], undoing = false) => modifyIte
     () => trashItems(items, true),
     undoing
 )
+
 export const deleteItems = (items: StorageItem[]) => modifyItems(
     items,
     ["delete", "deleted"],
     "DELETE",
     {},
-    () => {},
+    () => {
+    },
     null,
     false
 )
@@ -90,15 +107,7 @@ async function modifyItems(
     useItemsSelection().value = []
 
     try {
-        const fileIds: string[] = []
-        const folderIds: string[] = []
-        items.forEach(item => {
-            isFile(item) ? fileIds.push(item.id) : folderIds.push(item.id)
-        })
-
-        body.files = fileIds
-        body.folders = folderIds
-        const name = composeElementsName(fileIds, folderIds)
+        body.items = items.map(item => item.id)
 
         let successActions = []
         if (undo && !undoing) {
@@ -116,7 +125,7 @@ async function modifyItems(
         if (res.ok) {
             items.forEach(itemFunction)
             useRefreshView().value()
-            useSuccessToast(`${name} ${past} successfully`, successActions)
+            useSuccessToast(`${items.length} items ${past} successfully`, successActions)
             useItemsSelection().value = []
         } else {
             if (res.status === 403) useErrorToast(`You are not allowed to perform this action`)
@@ -126,12 +135,4 @@ async function modifyItems(
         useErrorToast(`Error while trying to ${action}: Processing error (please reload the page)`)
     }
     useLoadingItems().value = []
-}
-
-function composeElementsName(files: any[], folders: any[]): string {
-    let name = ""
-    if (folders.length > 0) name += folders.length + " folder" + (folders.length > 1 ? "s" : "")
-    if (folders.length > 0 && files.length > 0) name += " and "
-    if (files.length > 0) name += files.length + " file" + (files.length > 1 ? "s" : "")
-    return name
 }

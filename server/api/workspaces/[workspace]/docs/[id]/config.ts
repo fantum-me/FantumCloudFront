@@ -6,11 +6,12 @@ import type File from "~/types/api/File";
 import {JWTPayload, SignJWT} from "jose";
 
 export default defineEventHandler(async (event) => {
+    const workspace = getRouterParam(event, 'workspace')
     const id = getRouterParam(event, 'id')
     const runtimeConfig = useRuntimeConfig()
     const user = await serverAuthenticate(event)
 
-    const res = await serverFetchApi(event, `/files/${id}`)
+    const res = await serverFetchApi(event, `/workspaces/${workspace}/items/${id}`)
     if (res.ok) {
         const file: File = await res.json()
         const documentType = getStorageItemType(file)
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
                 fileType: file.ext,
                 key: file.id + ":" + file.version,
                 title: file.name + "." + file.ext,
-                url: docsBasePath() + "/api/docs/" + file.id + "/document",
+                url: `${docsBasePath()}/api/workspaces/${workspace}/docs/${file.id}/document`,
                 permissions: {
                     edit: !!file.access.write,
                     protect: !!file.access.edit_permissions
@@ -34,7 +35,7 @@ export default defineEventHandler(async (event) => {
                     image: user.avatar,
                 },
                 mode: file.access["write"] ? "edit" : "view",
-                callbackUrl: docsBasePath() + "/api/docs/" + file.id + "/callback",
+                callbackUrl: `${docsBasePath()}/api/workspaces/${workspace}/docs/${file.id}/callback`,
                 customization: {
                     logo: {
                         image: runtimeConfig.public.baseUrl + "/logo/black.png",

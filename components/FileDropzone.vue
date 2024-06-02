@@ -34,7 +34,7 @@ async function processFile(file: File, folderId: string): Promise<boolean> {
 	formData.append('file', file);
 	formData.append('folder', folderId);
 
-	const res = await useApiFetch("/files/upload", {
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/files/upload`, {
 		method: "POST",
 		body: formData,
 	})
@@ -98,9 +98,10 @@ async function processUpload(acceptedFiles: File[], fileRejections: FileRejectRe
 				if (!upload.value.folders.find(f => f.path === path.join("/"))) {
 					const parent = upload.value.folders.find(f => f.path === tempPath)
 					if (!parent) throw new Error()
-					const res = await useApiFetch("/folders", {
+					const res = await useApiFetch(`/workspace/${workspace.value.id}/items`, {
 						method: "POST",
 						body: JSON.stringify({
+							type: "folder",
 							name: subPath,
 							parent_id: parent.id,
 						})

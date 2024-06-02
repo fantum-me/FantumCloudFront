@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type File from "~/types/api/File";
 
+const workspace = useWorkspace()
+
 const {item} = defineProps<{
 	item: File,
 }>()
-const src = "/api/files/" + item.id + "/preview"
+const src = `/api/workspaces/${workspace.value.id}/files/${item.id}/preview`
 const alt = "Preview of: " + item.name
 </script>
 

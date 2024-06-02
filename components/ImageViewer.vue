@@ -3,6 +3,7 @@ import type {Ref} from "vue";
 import type File from "~/types/api/File";
 import type Folder from "~/types/api/Folder";
 
+const workspace = useWorkspace()
 const currentFolder = useFolder()
 
 const item: Ref<File | undefined> = ref()
@@ -102,7 +103,7 @@ function refreshRatio() {
 		</div>
 
 		<div class="image-viewer">
-			<img :src="`/api/files/${item.id}/${loaded && !item.mime.startsWith('image/svg')  ? 'download' : 'preview'}`"
+			<img :src="`/api/workspaces/${workspace.id}/files/${item.id}/${loaded && !item.mime.startsWith('image/svg')  ? 'download' : 'preview'}`"
 			     :alt="item.name" @load="load" @click.stop/>
 		</div>
 
