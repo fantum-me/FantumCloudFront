@@ -1,6 +1,7 @@
 enum View {
     HOME = "home",
 
+    SEARCH = "search",
     FOLDER = "folder",
 
     FILES = "files",

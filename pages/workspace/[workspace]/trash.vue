@@ -22,7 +22,7 @@ onMounted(async () => {
 <template>
 	<NuxtLayout name="workspace">
 		<StorageItems :items="items" @contextmenu.prevent>
-			<h1 class="text-2xl font-bold mb-6">Trash</h1>
+			<h1 class="text-2xl font-bold">Trash</h1>
 		</StorageItems>
 	</NuxtLayout>
 </template>

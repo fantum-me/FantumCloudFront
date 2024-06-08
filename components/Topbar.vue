@@ -1,6 +1,20 @@
 <script setup lang="ts">
+import View from "~/types/View";
+import type {Ref} from "vue";
+
 const isOpen = useSidebarOpen();
+const workspace = useWorkspace();
 const session = useSession()
+
+const query: Ref<string> = ref(useView().value === View.SEARCH ? useRoute().query.q as string : "")
+
+
+async function handleSearch() {
+	await navigateTo(`/workspace/${workspace.value.id}/search?q=${query.value}`)
+	const event = new Event("search")
+	window.dispatchEvent(event)
+}
+
 </script>
 
 <template>
@@ -10,8 +24,10 @@ const session = useSession()
 			<UButton class="flex-center w-15 h-15 md:hidden" color="gray" variant="ghost" @click="isOpen = true">
 				<UIcon name="i-heroicons-bars-3-solid" class="w-10 h-10"/>
 			</UButton>
-			<UInput color="gray" variant="outline" :ui="{base: 'w-96 ring-opacity-0'}"
-			        icon="i-heroicons-magnifying-glass" placeholder="Search file, folder..."/>
+			<form @submit.prevent="handleSearch">
+				<UInput color="gray" variant="outline" :ui="{base: 'w-96 ring-opacity-0'}" v-model="query"
+				        name="q" icon="i-heroicons-magnifying-glass" placeholder="Search file, folder..."/>
+			</form>
 		</div>
 		<UPopover>
 			<div class="flex-center gap-3 py-2 px-3 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">

@@ -57,7 +57,7 @@ function onContextMenu(e: MouseEvent) {
 			<ContextMenuFolder/>
 			<FileDropzone>
 				<StorageItems :items="folder.items ?? []">
-					<div class="-mt-2 -ml-4 mb-4 flex-start">
+					<div class="-mt-2 -ml-4 flex-start">
 						<div v-for="(parent, index) in folder.parents">
 							<div :key="index" class="flex-center" data-type="folder" :data-item-id="parent.id">
 								<NuxtLink

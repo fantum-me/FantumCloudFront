@@ -14,7 +14,7 @@ onMounted(async () => {
 })
 
 async function fetchRecentFiles() {
-	const res = await useApiFetch(`/workspaces/${workspace.value.id}/files/recent`)
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/items/search?type=File&sort=updated_at&limit=10`)
 	if (res.ok) {
 		recentFiles.value = await res.json() as File[]
 	}
