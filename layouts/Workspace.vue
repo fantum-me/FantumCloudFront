@@ -12,7 +12,7 @@ if (view.value !== View.FILES && view.value !== View.FOLDER && view.value !== Vi
 </script>
 
 <template>
-	<div class="w-screen min-h-screen overflow-y-auto overflow-x-hidden flex" v-if="workspace">
+	<div class="w-screen min-h-screen flex" v-if="workspace">
 		<div>
 			<USlideover class="md:hidden w-64" v-model="isSidebarOpen" side="left">
 				<Sidebar/>
@@ -22,7 +22,7 @@ if (view.value !== View.FILES && view.value !== View.FOLDER && view.value !== Vi
 			</div>
 		</div>
 
-		<div class="flex-1 flex flex-col overflow-x-hidden">
+		<div class="flex-1 flex flex-col">
 			<Topbar/>
 			<ClientOnly>
 				<ContextMenuItems/>
