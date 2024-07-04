@@ -54,7 +54,6 @@ function onContextMenu(e: MouseEvent) {
 	<div v-else-if="status == 'loaded'" class="w-full h-full appear-0.1">
 		<ItemWrapper :id="folder.id" type="main" class="w-full h-full"
 		             @contextmenu.prevent="onContextMenu" @click="unselectAll">
-			<ContextMenuFolder/>
 			<FileDropzone>
 				<StorageItems :items="folder.items ?? []">
 					<div class="-mt-2 -ml-4 flex-start">

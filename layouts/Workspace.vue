@@ -26,6 +26,7 @@ if (view.value !== View.FILES && view.value !== View.FOLDER && view.value !== Vi
 			<Topbar/>
 			<ClientOnly>
 				<ContextMenuItems/>
+				<ContextMenuFolder/>
 				<ModalRenameItem/>
 				<ModalAccessControls/>
 				<ModalNewFolder/>
