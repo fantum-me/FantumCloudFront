@@ -98,7 +98,7 @@ async function processUpload(acceptedFiles: File[], fileRejections: FileRejectRe
 				if (!upload.value.folders.find(f => f.path === path.join("/"))) {
 					const parent = upload.value.folders.find(f => f.path === tempPath)
 					if (!parent) throw new Error()
-					const res = await useApiFetch(`/workspace/${workspace.value.id}/items`, {
+					const res = await useApiFetch(`/workspaces/${workspace.value.id}/items`, {
 						method: "POST",
 						body: JSON.stringify({
 							type: "folder",
