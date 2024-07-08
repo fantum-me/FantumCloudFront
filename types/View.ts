@@ -13,3 +13,7 @@ enum View {
 }
 
 export default View
+
+export function isDetailsPanelOnView(view: View): boolean {
+    return ![View.MEMBERS, View.PERMISSIONS, View.SETTINGS].includes(view);
+}

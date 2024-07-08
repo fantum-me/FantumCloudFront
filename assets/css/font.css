@@ -1,0 +1,19 @@
+@font-face {
+    src: url("/fonts/ReadexPro.ttf");
+    font-family: "Readex Pro";
+    font-display: swap;
+}
+
+@font-face {
+    src: url("/fonts/OpenSans.ttf");
+    font-family: "OpenSans";
+    font-display: swap;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Readex Pro", "OpenSans", "Noto Sans", Inter, sans-serif;
+}
+
+body {
+    font-family: "OpenSans", "Noto Sans", Inter, sans-serif;
+}

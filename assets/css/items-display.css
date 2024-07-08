@@ -13,12 +13,14 @@
         @container (min-width: 1024px) {
             grid-template-columns: repeat(4, minmax(0, 1fr));
         }
-        @container (min-width: 1280px) {
+        @container (min-width: 1398px) {
             grid-template-columns: repeat(5, minmax(0, 1fr));
         }
     }
 
     .items-list {
-        @apply w-full flex flex-col gap-2;
+        @apply w-full flex flex-col;
+        @apply divide-y divide-gray-200 dark:divide-gray-700;
+        @apply first:border-t border-b border-gray-200 dark:border-gray-700;
     }
 }

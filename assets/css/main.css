@@ -1,3 +1,6 @@
+/* Base */
+@import "font.css";
+
 /* Components */
 @import "items-display.css";
 @import "context-menu.css";

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import View from "~/types/View";
+import View, {isDetailsPanelOnView} from "~/types/View";
 import type Folder from "~/types/api/Folder";
 
 const isSidebarOpen = useSidebarOpen();
+const detailsPanel = useDetailsPanel()
 const workspaceId = useRoute().params.workspace
 const workspace = useWorkspace()
 const view = useView()
@@ -15,14 +16,16 @@ if (view.value !== View.FILES && view.value !== View.FOLDER && view.value !== Vi
 	<div class="w-screen min-h-screen flex" v-if="workspace">
 		<div>
 			<USlideover class="md:hidden w-64" v-model="isSidebarOpen" side="left">
-				<Sidebar/>
+				<div class="w-64 bg-primary-50 border-r border-primary-200">
+					<Sidebar/>
+				</div>
 			</USlideover>
-			<div class="max-md:hidden sticky top-0 left-0 w-64 shrink-0 z-30">
+			<div class="max-md:hidden w-64 shrink-0">
 				<Sidebar/>
 			</div>
 		</div>
 
-		<div class="flex-1 flex flex-col">
+		<div class="w-full h-screen flex flex-col">
 			<Topbar/>
 			<ClientOnly>
 				<ContextMenuItems/>
@@ -34,10 +37,28 @@ if (view.value !== View.FILES && view.value !== View.FOLDER && view.value !== Vi
 				<DraggingItems/>
 				<ImageViewer/>
 
-				<div class="flex-grow appear-0.25">
-					<slot/>
+				<div class="flex md:mb-6 md:mr-6 gap-6">
+					<div class="flex-1 panel main-panel">
+						<slot/>
+					</div>
+					<div v-if="isDetailsPanelOnView(view) && detailsPanel" class="max-lg:hidden panel w-80 shrink-0">
+						<DetailsPanel/>
+					</div>
 				</div>
 			</ClientOnly>
 		</div>
 	</div>
 </template>
+
+<style>
+.panel {
+	@apply bg-white dark:bg-gray-900 shadow overflow-hidden max-md:rounded-b-none rounded-2xl;
+}
+
+.main-panel {
+	height: calc(100vh - 4rem);
+	@media (min-width: 768px) {
+		height: calc(100vh - 4rem - 1.5rem);
+	}
+}
+</style>

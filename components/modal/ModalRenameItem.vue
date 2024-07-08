@@ -50,7 +50,7 @@ async function close() {
 					<span>
 						Rename
 						<span class="font-bold px-2 py-1 bg-gray-200 dark:bg-gray-600 rounded">
-							{{ item.name }}{{ isFile(item) ? "." + item.ext : "" }}
+							{{ item.name }}
 						</span>
 					</span>
 					<UButton v-if="!isLoading" color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"

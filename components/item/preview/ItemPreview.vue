@@ -6,11 +6,10 @@ const {item, crop} = defineProps<{
 	item: StorageItem,
 	crop?: boolean
 }>()
-
-const icon = getStorageItemIcon(item)
-const preview = isFile(item) && item.has_preview ? ItemPreviewImage : ItemPreviewIcon
 </script>
 
 <template>
-	<preview :crop="crop" :item="item" :icon="icon"/>
+	<component :is="isFile(item) && item.has_preview ? ItemPreviewImage : ItemPreviewIcon"
+	           :crop="crop" :item="item" :icon="getStorageItemIcon(item)"/>
 </template>
+

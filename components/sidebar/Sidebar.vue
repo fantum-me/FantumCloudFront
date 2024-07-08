@@ -3,6 +3,9 @@ import View from "~/types/View";
 
 export type SidebarItem = { view: View, label: string, icon: string, activeIcon: string, hidden?: boolean }
 
+const session = useSession()
+const view = useView()
+const folder = useFolder()
 const workspace = useWorkspace()
 
 const sidebarItems: { before: SidebarItem[], after: SidebarItem[] } = {
@@ -60,16 +63,35 @@ const usageColor = computed(() => {
 			return 'red'
 	}
 })
+
+function addNew() {
+	useFolderContextMenu().value.open(
+		[View.FILES, View.FOLDER].includes(view.value) ? folder.value : useItem(workspace.value.root).value,
+		true
+	)
+}
 </script>
 
 <template>
-	<UCard class="h-screen flex flex-col rounded-none divide-gray-100"
-	       :ui="{body:{base:'flex-1 overflow-hidden', padding: 'px-3 py-2 sm:px-3 sm:py-2'}, header:{base: 'h-16', padding: 'p-0 sm:p-0'}}">
+	<UCard class="h-screen flex flex-col rounded-none divide-none shadow-none ring-0 bg-transparent dark:bg-transparent"
+	       :ui="{body:{base:'flex-1 overflow-hidden', padding: 'px-3 py-2 sm:px-3 sm:pb-2 sm:pt-0.5'}, header:{base: 'h-16', padding: 'p-0 sm:p-0'}}">
 		<template #header>
-			<SidebarWorkspaceDropdown/>
+			<div class="w-full h-full flex-start ml-5">
+				<NuxtImg :src="`/logo/${session.scheme === 'light' ? 'black' : 'white'}.png`" class="w-32"/>
+			</div>
 		</template>
 
 		<div class="h-full flex flex-col gap-2">
+			<SidebarWorkspaceDropdown/>
+			<div>
+				<UButton color="black" icon="i-heroicons-plus" size="lg" class="mb-3 pr-5"
+				         :ui="{ rounded: 'rounded-full' }"
+				         @click="addNew">
+					Add New
+				</UButton>
+			</div>
+
+
 			<SidebarLink v-for="item in sidebarItems.before" :item="item"/>
 
 			<div class="flex-1 py-5 space-y-1 overflow-y-scroll overflow-x-hidden">

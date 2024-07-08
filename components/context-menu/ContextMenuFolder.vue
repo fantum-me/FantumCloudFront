@@ -11,6 +11,8 @@ const folder: Ref<Folder | undefined> = ref()
 const isOpen = ref(false)
 const virtualElement = ref({getBoundingClientRect: () => ({})})
 
+let openAfterCreation = false
+
 function onContextMenu() {
 	const top = unref(y) - unref(windowY)
 	const left = unref(x)
@@ -30,7 +32,8 @@ const newDocument = useNewDocumentModal()
 
 const contextMenu = useFolderContextMenu()
 contextMenu.value = {
-	open: (target: Folder) => {
+	open: (target: Folder, isOpeningAfterCreated = false) => {
+		openAfterCreation = isOpeningAfterCreated
 		console.log(target)
 		folder.value = target
 		onContextMenu()
@@ -48,23 +51,23 @@ contextMenu.value = {
 			<UIcon name="i-heroicons-document-arrow-down-solid" class="h-5 w-5"/>
 			Import File
 		</button>
-		<button @click="newFolder(folder) & contextMenu.close()">
+		<button @click="newFolder(folder, openAfterCreation) & contextMenu.close()">
 			<UIcon name="i-heroicons-folder-plus-solid" class="h-5 w-5"/>
 			Create Folder
 		</button>
-		<button @click="newDocument(folder, 'text') & contextMenu.close()">
+		<button @click="newDocument(folder, 'text', openAfterCreation) & contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypeDoc/>
 			</span>
 			New Text Document
 		</button>
-		<button @click="newDocument(folder, 'spreadsheet') & contextMenu.close()">
+		<button @click="newDocument(folder, 'spreadsheet', openAfterCreation) & contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypeSpreadsheet/>
 			</span>
 			New Spreadsheet
 		</button>
-		<button @click="newDocument(folder, 'presentation') & contextMenu.close()">
+		<button @click="newDocument(folder, 'presentation', openAfterCreation) & contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypePresentation/>
 			</span>

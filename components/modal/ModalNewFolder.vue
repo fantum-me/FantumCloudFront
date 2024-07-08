@@ -8,10 +8,12 @@ const workspace = useWorkspace()
 const folder: Ref<Folder | undefined> = ref()
 const isOpen = ref(false)
 const isLoading = ref(false)
+let openAfterCreation = false
 
-useNewFolderModal().value = (target: Folder) => {
+useNewFolderModal().value = (target: Folder, open: boolean = false) => {
 	folder.value = target
 	isOpen.value = true
+	openAfterCreation = open
 }
 
 const state = reactive({
@@ -39,11 +41,13 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 		})
 	})
 
+
 	if (res.ok) {
 		const item: Folder = await res.json()
 		useItem(item.id).value = item
 		if (folder.value.items) folder.value.items.push(item)
 		useSuccessToast(`Folder ${event.data.name} created successfully !`)
+		if (openAfterCreation) navigateTo(`/workspace/${workspace.value.id}/folder/${item.id}`)
 	} else useErrorToast(`Failed to create folder ${event.data.name}`)
 
 	isOpen.value = false

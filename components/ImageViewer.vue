@@ -87,9 +87,9 @@ function refreshRatio() {
 		<div class="p-3 flex-between">
 			<div class="flex-center gap-2 font-medium" @click.stop>
 				<span class="h-6 w-6">
-					<component :is="getStorageItemIcon(item)" :id="item.id" :ext="item.ext"/>
+					<component :is="getStorageItemIcon(item)" :id="item.id" :name="item.name"/>
 				</span>
-				{{ item.name + "." + item.ext }}
+				{{ item.name }}
 			</div>
 			<div class="flex-center gap-2">
 				<UButton icon="i-heroicons-folder-open" color="white" variant="soft" size="xl"

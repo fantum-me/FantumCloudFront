@@ -135,23 +135,22 @@ async function openKickMemberModal(target: Member) {
 					Invite a Member
 				</UButton>
 			</div>
-			<UCard class="w-full">
-				<UTable v-model="selected" :columns="columns" :rows="members" :loading="isLoading">
-					<template #loading-state>
-						<div class="flex-center h-32">
-							<Loader :size="28"/>
-						</div>
-					</template>
+			<UTable v-model="selected" :columns="columns" :rows="members" :loading="isLoading">
+				<template #loading-state>
+					<div class="flex-center h-32">
+						<Loader :size="28"/>
+					</div>
+				</template>
 
-					<template #name-data="{ row: member }">
-						<div :class="[selected.find(m => m.id === member.id) && 'font-bold', 'flex-start gap-2']">
-							{{ member.user.name }}
-							<IconOwner class="h-4" v-if="member.is_owner"/>
-						</div>
-					</template>
+				<template #name-data="{ row: member }">
+					<div :class="[selected.find(m => m.id === member.id) && 'font-bold', 'flex-start gap-2']">
+						{{ member.user.name }}
+						<IconOwner class="h-4" v-if="member.is_owner"/>
+					</div>
+				</template>
 
-					<template #roles-data="{ row: member }">
-						<div class="flex flex-wrap gap-2 text-gray-700 dark:text-gray-300">
+				<template #roles-data="{ row: member }">
+					<div class="flex flex-wrap gap-2 text-gray-700 dark:text-gray-300">
 							<span v-for="role in member.roles.filter((r: Role) => !r.is_default)">
 								<span class="group py-1 px-2 rounded flex-center gap-2 text-sm"
 								      :style="{backgroundColor: ((role.color ?? defaultRoleColor) + '20')}">
@@ -165,53 +164,52 @@ async function openKickMemberModal(target: Member) {
 										{{ role.name }}
 								</span>
 							</span>
-							<div v-if="workspace.access[Permission.EDIT_PERMISSIONS]">
-								<UPopover>
-									<UButton color="white" icon="i-heroicons-plus"/>
-
-									<template #panel>
-										<UButton
-											v-for="role in workspace.roles.filter(r => !r.is_default && r.editable)"
-											color="gray" variant="ghost" @click="toggleRole(member, role)"
-											class="w-full flex-between gap-5 rounded-none cursor-pointer">
-											<div class="flex-center gap-2">
-												<span class="h-3 w-3 rounded-full"
-												      :style="{backgroundColor: role.color ?? defaultRoleColor}"/>
-												<span class="truncate">{{ role.name }}</span>
-											</div>
-											<Loader v-if="loadingRoleIds.includes(role.id)" :size="12" :thickness="2"/>
-											<UCheckbox v-else
-											           :model-value="!!member.roles.find((r: Role) => r.id === role.id)"/>
-										</UButton>
-									</template>
-								</UPopover>
-							</div>
-						</div>
-					</template>
-
-					<template #actions-data="{ row: member }">
-						<div v-if="workspace.member.id !== member.id && workspace.owner_id !== member.id
-									&& (workspace.member.position > member.position || workspace.owner)">
+						<div v-if="workspace.access[Permission.EDIT_PERMISSIONS]">
 							<UPopover>
-								<UButton color="white" icon="i-heroicons-ellipsis-vertical"/>
+								<UButton color="white" icon="i-heroicons-plus"/>
 
 								<template #panel>
-									<UButton v-if="workspace.owner " color="gray" variant="ghost" size="md"
-									         block :ui="{block: 'justify-start', rounded: 'rounded-none'}"
-									         icon="i-heroicons-user-minus" @click="openKickMemberModal(member)">
-										Kick
-									</UButton>
-									<UButton v-if="workspace.owner " color="red" variant="ghost" icon="i-heroicons-key"
-									         size="md" block :ui="{block: 'justify-start', rounded: 'rounded-none'}"
-									         @click="openTransferOwnershipModal(member)">
-										Transfer ownership
+									<UButton
+										v-for="role in workspace.roles.filter(r => !r.is_default && r.editable)"
+										color="gray" variant="ghost" @click="toggleRole(member, role)"
+										class="w-full flex-between gap-5 rounded-none cursor-pointer">
+										<div class="flex-center gap-2">
+												<span class="h-3 w-3 rounded-full"
+												      :style="{backgroundColor: role.color ?? defaultRoleColor}"/>
+											<span class="truncate">{{ role.name }}</span>
+										</div>
+										<Loader v-if="loadingRoleIds.includes(role.id)" :size="12" :thickness="2"/>
+										<UCheckbox v-else
+										           :model-value="!!member.roles.find((r: Role) => r.id === role.id)"/>
 									</UButton>
 								</template>
 							</UPopover>
 						</div>
-					</template>
-				</UTable>
-			</UCard>
+					</div>
+				</template>
+
+				<template #actions-data="{ row: member }">
+					<div v-if="workspace.member.id !== member.id && workspace.owner_id !== member.id
+									&& (workspace.member.position > member.position || workspace.owner)">
+						<UPopover>
+							<UButton color="white" icon="i-heroicons-ellipsis-vertical"/>
+
+							<template #panel>
+								<UButton v-if="workspace.owner " color="gray" variant="ghost" size="md"
+								         block :ui="{block: 'justify-start', rounded: 'rounded-none'}"
+								         icon="i-heroicons-user-minus" @click="openKickMemberModal(member)">
+									Kick
+								</UButton>
+								<UButton v-if="workspace.owner " color="red" variant="ghost" icon="i-heroicons-key"
+								         size="md" block :ui="{block: 'justify-start', rounded: 'rounded-none'}"
+								         @click="openTransferOwnershipModal(member)">
+									Transfer ownership
+								</UButton>
+							</template>
+						</UPopover>
+					</div>
+				</template>
+			</UTable>
 		</div>
 	</NuxtLayout>
 </template>

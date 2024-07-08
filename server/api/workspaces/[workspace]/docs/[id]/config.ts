@@ -18,9 +18,9 @@ export default defineEventHandler(async (event) => {
 
         const config: IConfig = {
             document: {
-                fileType: file.ext,
+                fileType: file.name.split(".").pop() as string,
                 key: file.id + ":" + file.version,
-                title: file.name + "." + file.ext,
+                title: file.name,
                 url: `${docsBasePath()}/api/workspaces/${workspace}/docs/${file.id}/document`,
                 permissions: {
                     edit: !!file.access.write,

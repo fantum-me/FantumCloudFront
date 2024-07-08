@@ -8,9 +8,9 @@ const workspace = useWorkspace()
 </script>
 
 <template>
-	<UButton v-if="!item.hidden" color="gray" :variant="view === item.view ? 'active': 'ghost'" size="sm" block
+	<UButton v-if="!item.hidden" color="primary" :variant="view === item.view ? 'active': 'sidebar'" size="sm" block
 	         class="justify-start" :icon="view === item.view ? item.activeIcon : item.icon"
-	         :to="`/workspace/${workspace.id}/${item.view}`">
+	         :to="`/workspace/${workspace.id}/${item.view}`" :data-target="item.view">
 		{{ item.label }}
 	</UButton>
 </template>

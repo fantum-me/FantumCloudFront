@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const {ext} = defineProps<{ext: string}>()
+const {name} = defineProps<{name: string}>()
 </script>
 
 <template>
-	<ItemIconTextBased class="bg-gray-500" :text="ext.toUpperCase()"/>
+	<ItemIconTextBased class="bg-gray-500" :text="name.split('.').pop()?.toUpperCase() ?? ''"/>
 </template>

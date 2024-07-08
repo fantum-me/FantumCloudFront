@@ -32,6 +32,9 @@ function onDragEnd(e: MouseEvent) {
                         const items: StorageItem[] = lastSelection.value.map(id => useItem(id).value)
                         moveItems(items, targetId)
                     }
+                } else if (e.target.closest('[data-target="trash"]')) {
+                    const items: StorageItem[] = lastSelection.value.map(id => useItem(id).value)
+                    trashItems(items)
                 }
             }
         })

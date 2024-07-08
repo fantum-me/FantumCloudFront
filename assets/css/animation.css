@@ -1,21 +1,23 @@
-.appear-0\.25 {
-    animation: appear 0.25s
-}
-
-.appear-0\.1 {
-    animation: appear 0.1s
-}
-
-.appear-after-1s {
-    opacity: 0;
-    animation: appear 0.5s 1s forwards;
-}
-
-@keyframes appear {
-    from {
-        opacity: 0;
+@layer utilities {
+    .appear-0\.25 {
+        animation: appear 0.25s
     }
-    to {
-        opacity: 1;
+
+    .appear-0\.1 {
+        animation: appear 0.1s
+    }
+
+    .appear-after-1s {
+        opacity: 0;
+        animation: appear 0.5s 1s forwards;
+    }
+
+    @keyframes appear {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
     }
 }

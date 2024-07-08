@@ -42,6 +42,40 @@ async function processFile(file: File, folderId: string): Promise<boolean> {
 	return res.ok
 }
 
+async function createSubfolders(): Promise<boolean> {
+	if (!upload.value) return false;
+	for (const entry of upload.value.entries) {
+		if (entry.status !== "waiting") continue;
+		const file = entry.file as File;
+		const path = file.webkitRelativePath.split("/")
+		path.pop()
+
+		let tempPath = ""
+		for (const subPath of path) {
+			if (!path) continue;
+			const parent = tempPath ? upload.value.folders.find(f => f.path === tempPath) : folder.value
+			if (!parent) return false;
+			tempPath += (tempPath ? '/' : '') + subPath
+			if (!upload.value.folders.find(f => f.path === tempPath)) {
+				const res = await useApiFetch(`/workspaces/${workspace.value.id}/items`, {
+					method: "POST",
+					body: JSON.stringify({
+						type: "folder",
+						name: subPath,
+						parent_id: parent.id,
+					})
+				})
+				const folder: Folder = await res.json()
+				upload.value.folders.push({
+					path: tempPath,
+					id: folder.id
+				})
+			}
+		}
+	}
+	return true
+}
+
 async function processUpload(acceptedFiles: File[], fileRejections: FileRejectReason[]) {
 	if (!folder.value.access[Permission.WRITE]) {
 		useErrorToast('You don\'t have permission to write in this folder!');
@@ -88,34 +122,7 @@ async function processUpload(acceptedFiles: File[], fileRejections: FileRejectRe
 		})
 	})
 
-	try {
-		for (const file of acceptedFiles) {
-			const path = file.webkitRelativePath.split("/")
-			path.pop()
-
-			let tempPath = ""
-			for (const subPath of path) {
-				if (!upload.value.folders.find(f => f.path === path.join("/"))) {
-					const parent = upload.value.folders.find(f => f.path === tempPath)
-					if (!parent) throw new Error()
-					const res = await useApiFetch(`/workspaces/${workspace.value.id}/items`, {
-						method: "POST",
-						body: JSON.stringify({
-							type: "folder",
-							name: subPath,
-							parent_id: parent.id,
-						})
-					})
-					const folder: Folder = await res.json()
-					upload.value?.folders.push({
-						path: (tempPath ? tempPath + "/" : "") + subPath,
-						id: folder.id
-					})
-				}
-				tempPath = (tempPath ? tempPath + "/" : "") + subPath
-			}
-		}
-	} catch (e) {
+	if (!(await createSubfolders())) {
 		useErrorToast("Failed to process folder path")
 		upload.value = undefined
 		return
@@ -207,7 +214,7 @@ const uploadCard = {
 		<div :class="'overflow-y-scroll transition-[max-height] ' + (upload.reduced ? 'max-h-0': 'max-h-72')">
 			<div v-for="entry in upload.entries" class="py-2 px-3 flex-between gap-2">
 				<div class="flex-start gap-2">
-					<UIcon v-if="entry.status === 'failed'" name="i-heroicons-x-mark-circle"
+					<UIcon v-if="entry.status === 'failed'" name="i-heroicons-x-mark"
 					       class="text-red-500 w-6 h-6"/>
 					<UIcon v-else-if="entry.status === 'waiting'" name="i-heroicons-minus" class="w-6 h-6"/>
 					<span v-else-if="entry.status === 'uploading'" class="w-6 h-6 flex-center">

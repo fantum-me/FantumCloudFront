@@ -101,7 +101,7 @@ async function close() {
 					<span>
 						Manage
 						<span class="font-bold px-2 py-1 bg-gray-100 dark:bg-gray-600 rounded">
-							{{ item.name }}{{ item.ext ? "." + item.ext : "" }}
+							{{ item.name }}
 						</span>
 						Access
 					</span>

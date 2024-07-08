@@ -22,6 +22,10 @@ async function fetchFolder() {
 	if (res.ok) {
 		folder.value = await res.json() as Folder;
 		useItem(folder.value.id).value = folder.value
+		folder.value.items?.forEach(i => {
+			const item = useItem(i.id)
+			item.value = {...item.value, ...i}
+		})
 		if (current_folder) folder.value.import_file = current_folder.import_file
 		status.value = "loaded"
 	} else {
@@ -56,21 +60,18 @@ function onContextMenu(e: MouseEvent) {
 		             @contextmenu.prevent="onContextMenu" @click="unselectAll">
 			<FileDropzone>
 				<StorageItems :items="folder.items ?? []">
-					<div class="-mt-2 -ml-4 flex-start">
+					<div class="flex-start -ml-2.5">
 						<div v-for="(parent, index) in folder.parents">
 							<div :key="index" class="flex-center" data-type="folder" :data-item-id="parent.id">
-								<NuxtLink
-									class="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-2xl font-bold"
-									:to="getParentFolderPath(parent)">
-									{{ parent.is_root ? workspace.name : parent.name }}
-								</NuxtLink>
-								<UIcon name="i-heroicons-chevron-right-20-solid" class="mr-1 h-8 w-8"/>
+								<UButton color="gray" variant="ghost" class="text-base font-semibold" :to="getParentFolderPath(parent)">
+									{{ parent.is_root ? "Files" : parent.name }}
+								</UButton>
+								<UIcon name="i-heroicons-chevron-right-20-solid" class="ml-1 mr-1.5 h-4 w-4"/>
 							</div>
 						</div>
-						<button @click="fetchFolder"
-						        class="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-2xl font-bold">
-							{{ folder.is_root ? workspace.name : folder.name }}
-						</button>
+						<UButton @click="fetchFolder" color="gray" variant="ghost" class="text-base font-bold">
+							{{ folder.is_root ? "Files" : folder.name }}
+						</UButton>
 					</div>
 				</StorageItems>
 			</FileDropzone>

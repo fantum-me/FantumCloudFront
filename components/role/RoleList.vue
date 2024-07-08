@@ -61,7 +61,6 @@ const handleDrop = async (targetRole: Role) => {
 			<p class="-mt-32">Loading...</p>
 		</div>
 		<div class="space-y-2">
-			<h1 class="font-bold text-xl ml-2 mb-2">Roles</h1>
 			<div class="space-y-1">
 				<div v-for="role in workspace.roles" :key="role.position" class="relative">
 					<span v-if="role.editable && dropIndex === role.position" class="absolute z-50 h-1 w-full bg-primary"></span>

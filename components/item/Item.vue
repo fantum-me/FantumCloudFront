@@ -13,7 +13,6 @@ const props = defineProps<{
 
 const item: Ref<StorageItem> = useItem(props.item.id, props.item)
 
-const ext = isFile(item.value) ? item.value.ext : ""
 const icon = getStorageItemIcon(item.value)
 
 const loadingItems = useLoadingItems()
@@ -42,18 +41,18 @@ const cardConfig = {
 			       :ui="cardConfig" @click.stop="click">
 				<template #header>
 					<div class="flex-between gap-3">
-						<div class="flex-start gap-3 min-w-0" :title="item.name + (ext ? '.' + ext : '')">
+						<div class="flex-start gap-3 min-w-0" :title="item.name">
 							<span class=" shrink-0 h-5 w-5">
-								<icon :id="item.id" :ext="ext"/>
+								<icon :id="item.id" :name="item.name"/>
 							</span>
-							<span class="font-medium text-sm truncate">{{ item.name }}{{ ext ? '.' + ext : '' }}</span>
+							<span class="font-medium text-sm truncate">{{ item.name }}</span>
 						</div>
 						<UButton v-if="display === 'card'" icon="i-heroicons-ellipsis-vertical" color="gray"
 						         variant="ghost" @click="itemsSelection = [item.id]; itemsContextMenu.open()"/>
 					</div>
 				</template>
 
-				<div v-if="display === 'card'">
+				<div v-if="display === 'card' && isFile(item)">
 					<ItemPreview :crop="true" :item="item"/>
 				</div>
 
@@ -62,7 +61,7 @@ const cardConfig = {
 					<Loader :size="36" :thickness="4"/>
 				</div>
 
-				<template #footer>
+				<template #footer v-if="display === 'line' || isFile(item)">
 					<div class="flex-start gap-1.5 opacity-60 text-xs">
 						<UIcon v-if="item.in_trash" name="i-heroicons-trash"
 						       :class="(display === 'card' ? 'order-1 ' : '') + 'h-4 w-4 mr-2'"/>
@@ -93,7 +92,7 @@ const cardConfig = {
 	}
 
 	&.line {
-		@apply flex-between gap-2.5 ring-1 ring-gray-200 dark:ring-gray-700 rounded transition-colors;
+		@apply flex-between gap-2.5 rounded-none transition-colors ring-0;
 
 		&.selected {
 			@apply bg-primary-100 dark:bg-primary-500 dark:bg-opacity-30;

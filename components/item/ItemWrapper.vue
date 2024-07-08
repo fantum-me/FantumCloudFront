@@ -41,7 +41,7 @@ function getDroppableClass(): string {
 		@apply outline-dashed outline-2 outline-primary outline-offset-1 scale-95;
 
 		&.main {
-			@apply -outline-offset-4 scale-[99%];
+			@apply -outline-offset-4 scale-[99%] rounded-2xl;
 		}
 
 		&.sidebar {

@@ -11,10 +11,12 @@ const folder: Ref<Folder | undefined> = ref()
 const selectedType: Ref<DocumentType | undefined> = ref()
 const isOpen: Ref<boolean> = ref(false)
 const isLoading: Ref<boolean> = ref(false)
+let openAfterCreation = false
 
-useNewDocumentModal().value = (target: Folder, type: string) => {
+useNewDocumentModal().value = (target: Folder, type: string, open: boolean = false) => {
 	const documentType = documentTypes.find(d => d.type === type)
 	if (documentType) {
+		openAfterCreation = open
 		folder.value = target
 		selectedType.value = documentType
 		isOpen.value = true
@@ -41,8 +43,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 		method: "POST",
 		body: JSON.stringify({
 			type: 'file',
-			name: event.data.name,
-			ext: selectedType.value.ext,
+			name: event.data.name + "." + selectedType.value.ext,
 			mime: selectedType.value.mime,
 			parent_id: folder.value.id
 		})
@@ -53,6 +54,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 		useItem(item.id).value = item
 		if (folder.value.items) folder.value.items.push(item)
 		useSuccessToast(`Document ${event.data.name}.${selectedType.value.ext} created successfully !`)
+		if (openAfterCreation) openItem(item)
 	} else useErrorToast(`Failed to create document ${event.data.name}.${selectedType.value.ext}`)
 
 	isOpen.value = false

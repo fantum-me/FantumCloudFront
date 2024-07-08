@@ -3,16 +3,43 @@ import type File from "~/types/api/File";
 
 const workspace = useWorkspace()
 
-const {item} = defineProps<{
+const {crop, item} = defineProps<{
 	item: File,
+	crop: boolean
 }>()
-const src = `/api/workspaces/${workspace.value.id}/files/${item.id}/preview`
-const alt = "Preview of: " + item.name
 </script>
 
 <template>
-	<img v-if="item.mime.startsWith('image')" :src="src" :alt="alt"
-	     class="w-full aspect-video object-center object-cover rounded pointer-events-none"/>
-	<img v-else :src="src" :alt="alt"
-	     class="w-full aspect-video object-top object-cover rounded-t bg-white pointer-events-none"/>
+	<img :src="`/api/workspaces/${workspace.id}/files/${item.id}/preview`" :alt="item.name"
+	     :class="(item.mime.startsWith('image') ? 'image' : 'document') + ' preview-image ' + (crop ? 'crop' : '')"/>
+<!--	<img v-if="item.mime.startsWith('image')" :src="`/api/workspaces/${workspace.id}/files/${item.id}/preview`"-->
+<!--	     :alt="item.name" class="w-full aspect-video object-center object-cover rounded pointer-events-none"/>-->
+<!--	<img v-else :src="`/api/workspaces/${workspace.id}/files/${item.id}/preview`" :alt="item.name"-->
+<!--	     class="w-full aspect-video object-top object-cover rounded-t bg-white pointer-events-none"/>-->
 </template>
+
+<style>
+.preview-image {
+	@apply w-full pointer-events-none;
+
+	&.crop {
+		@apply aspect-video object-cover;
+	}
+
+	&.image {
+		@apply object-center rounded;
+
+		&.crop {
+			@apply aspect-video object-cover;
+		}
+	}
+
+	&.document {
+		@apply aspect-square object-cover object-top rounded-t-lg bg-gray-50;
+
+		&.crop {
+			@apply aspect-video;
+		}
+	}
+}
+</style>

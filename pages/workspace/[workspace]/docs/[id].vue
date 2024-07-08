@@ -13,10 +13,11 @@ const res = await useFetch(`/api/workspaces/${workspaceId}/docs/${id}/config`)
 if (res.status.value === "success" && res.data.value) {
 	const file: File = res.data.value.file as File;
 	if (isOfficeDocument(file)) {
-		if (!["doc", "ppt"].includes(file.ext)) {
+		const ext = file.name.split(".").pop() as string;
+		if (!["doc", "ppt"].includes(ext)) {
 			config.value = res.data.value?.config
 			loadAllowed.value = true
-		} else error.value = "The extension of this document is too old, please convert it to " + file.ext + "x"
+		} else error.value = "The extension of this document is too old, please convert it to " + ext + "x"
 	} else error.value = "This document cannot be edited"
 } else error.value = "Failed to load document editor"
 

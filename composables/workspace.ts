@@ -10,3 +10,8 @@ export const useFolder = () => useState<CurrentFolder>('folder')
 export const useSidebarExplorerFiles = () => useState<Folder>('sidebar-explorer-files')
 export const useItem = (id: string, item?: StorageItem) => useState<StorageItem>(`item-${id}`, item ? () => item : undefined)
 export const useImageViewer = () => useState<(target: File, arrows: boolean) => any>('image-viewer')
+export const useDetailsPanel = () => {
+    const cookie = useCookie<boolean|undefined>('details-panel')
+    if (cookie.value === undefined) cookie.value = true
+    return cookie
+}

@@ -18,25 +18,19 @@ async function handleSearch() {
 </script>
 
 <template>
-	<UCard class="sticky z-20 top-0 h-16 w-full rounded-none shadow-none"
-	       :ui="{body: {padding: 'px-3 sm:px-4', base: 'flex-between gap-3 h-full'}}">
+	<UCard class="sticky z-20 top-0 h-16 w-full rounded-none shadow-none ring-0 bg-transparent dark:bg-transparent"
+	       :ui="{body: {padding: 'px-3 sm:pl-0 sm:pr-6', base: 'flex-between gap-3 h-full'}}">
 		<div class="flex-start gap-3">
 			<UButton class="flex-center w-15 h-15 md:hidden" color="gray" variant="ghost" @click="isOpen = true">
 				<UIcon name="i-heroicons-bars-3-solid" class="w-10 h-10"/>
 			</UButton>
 			<form @submit.prevent="handleSearch">
-				<UInput color="gray" variant="outline" :ui="{base: 'w-96 ring-opacity-0'}" v-model="query"
-				        name="q" icon="i-heroicons-magnifying-glass" placeholder="Search file, folder..."/>
+				<UInput color="white" :ui="{base: 'w-96 ring-opacity-0', rounded: 'rounded-full'}"
+				        v-model="query" name="q" icon="i-heroicons-magnifying-glass" placeholder="Search file, folder..." size="lg"/>
 			</form>
 		</div>
 		<UPopover>
-			<div class="flex-center gap-3 py-2 px-3 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
-				<div class="text-end text-xs">
-					<p class="font-medium">{{ session.name }}</p>
-					<p class="opacity-70">{{ session.email }}</p>
-				</div>
-				<img :src="session.avatar" :alt="session.name + '\'s avatar'" class="rounded-full h-8 w-8">
-			</div>
+			<img :src="session.avatar" :alt="session.name + '\'s avatar'" class="rounded-full h-8 w-8">
 
 			<template #panel>
 				<UCard>

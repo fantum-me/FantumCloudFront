@@ -5,6 +5,6 @@ export const useRenameItemsModal = () => useState<(targetItem: StorageItem) => v
 
 export const useAccessControlsModal = () => useState<(targetItem: StorageItem) => void>('access-controls-modal')
 
-export const useNewFolderModal = () => useState<(target: Folder) => any>('new-folder-modal')
+export const useNewFolderModal = () => useState<(target: Folder, open: boolean) => any>('new-folder-modal')
 
-export const useNewDocumentModal = () => useState<(target: Folder, type: string) => any>('new-document-modal')
+export const useNewDocumentModal = () => useState<(target: Folder, type: string, open: boolean) => any>('new-document-modal')

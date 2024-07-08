@@ -86,7 +86,7 @@ export const downloadFile = (file: StorageItem) => {
     if (!isFile(file)) return;
     const link = document.createElement("a");
     link.setAttribute("href", `/api/files/${file.id}/download`);
-    link.setAttribute("download", file.name + "." + file.ext);
+    link.setAttribute("download", file.name);
     link.click();
     link.remove()
 }

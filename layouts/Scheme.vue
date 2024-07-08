@@ -4,7 +4,7 @@ useColorMode().preference = session.value.scheme
 </script>
 
 <template>
-	<div :class="'bg-gray-100 dark:bg-gray-800 w-screen min-h-screen'">
+	<div :class="'bg-primary-50 dark:bg-gray-950 w-screen h-screen'">
 		<slot/>
 	</div>
 </template>
