@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import type Role from "~/types/api/Role";
 
-const {selectRole} = defineProps<{
-	selectRole: (role: Role) => any
-	selectedId: string|undefined
-}>()
+const selectedRole = defineModel<Role>()
 
 const workspace = useWorkspace()
 const draggingRoleId = ref<number | null>(null);
@@ -67,8 +64,8 @@ const handleDrop = async (targetRole: Role) => {
 					<UButton color="gray" variant="ghost" class="w-full p-0" size="lg"
 					         draggable="true" @dragstart="handleDragStart($event, role)" @dragend="handleDragEnd"
 					         @dragover="handleDragOver($event, role.position)" @drop="handleDrop(role)">
-						<p :class="(role.id === selectedId ? 'bg-gray-200 dark:bg-gray-700 ' : '') + 'px-3 py-2.5 w-full text-start flex-start gap-3 rounded select-none'"
-						   @click="role.editable ? selectRole(role) : null">
+						<p :class="(role.id === selectedRole?.id ? 'bg-gray-200 dark:bg-gray-700 ' : '') + 'px-3 py-2.5 w-full text-start flex-start gap-3 rounded select-none'"
+						   @click="role.editable ? selectedRole = role : null">
 							<UIcon v-if="!role.editable" name="i-heroicons-lock-closed-solid" class="h-5 w-5 opacity-75"/>
 							<span class="h-3 w-3 rounded-full" :style="{ backgroundColor: role.color ?? '#555' }"/>
 							{{ role.name }}
