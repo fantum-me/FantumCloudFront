@@ -85,7 +85,7 @@ export const deleteItems = (items: StorageItem[]) => modifyItems(
 export const downloadFile = (file: StorageItem) => {
     if (!isFile(file)) return;
     const link = document.createElement("a");
-    link.setAttribute("href", `/api/files/${file.id}/download`);
+    link.setAttribute("href", `/api/workspaces/${file.workspace_id}/files/${file.id}/download`);
     link.setAttribute("download", file.name);
     link.click();
     link.remove()
