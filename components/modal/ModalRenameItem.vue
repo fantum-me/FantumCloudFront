@@ -4,12 +4,17 @@ import type {Ref} from "vue";
 import type StorageItem from "~/types/api/StorageItem";
 
 const item: Ref<StorageItem | undefined> = ref()
+const itemExt = ref<string>()
 const isOpen = ref(false)
 const isLoading = ref(false)
 
 useRenameItemsModal().value = (targetItem: StorageItem) => {
 	item.value = targetItem
-	state.name = targetItem.name
+	if (isFile(targetItem)) {
+		const parts = targetItem.name.split(".")
+		itemExt.value = parts.pop()
+		state.name = parts.join(".")
+	} else state.name = targetItem.name
 	isOpen.value = true
 }
 
@@ -29,7 +34,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 	if (!item.value || isLoading.value) return
 	isLoading.value = true
 
-	await renameItem(item.value, event.data.name)
+	renameItem(item.value, (event.data.name + (itemExt.value ? "." + itemExt.value : "")))
 
 	isOpen.value = false
 	isLoading.value = false
@@ -39,6 +44,7 @@ async function close() {
 	isOpen.value = false
 	await useWait(200) // wait for modal transition
 	state.name = ""
+	itemExt.value = undefined
 }
 </script>
 
@@ -62,9 +68,9 @@ async function close() {
 				<UFormGroup name="name">
 					<UInput v-model="state.name" :loading="isLoading" placeholder="Name" name="name"
 					        size="xl" color="gray" variant="outline" autofocus>
-						<template #trailing v-if="isFile(item)">
+						<template #trailing v-if="isFile(item) && itemExt">
 								<span class="text-gray-500 dark:text-gray-400 text-xs">
-									.{{ item.ext.toUpperCase() }}
+									.{{ itemExt.toUpperCase() }}
 								</span>
 						</template>
 					</UInput>
