@@ -2,14 +2,13 @@
 export default defineNuxtConfig({
     devtools: {enabled: true},
     modules: ['@nuxt/image', '@nuxt/ui'],
-    css: ["~/assets/css/main.css"],
+    tailwindcss: {
+        cssPath: ["~/assets/css/main.css", {injectPosition: "first"}],
+    },
     app: {
         head: {
             link: [{ rel: 'icon', type: 'image/svg+xml', href: "/favicon.svg" }]
         }
-    },
-    tailwindcss: {
-        cssPath: false,
     },
     runtimeConfig: {
         baseUrlForOnlyoffice: '',

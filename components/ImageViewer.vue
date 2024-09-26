@@ -11,6 +11,7 @@ const isOpen: Ref<boolean> = ref(false)
 const enableMove: Ref<boolean> = ref(false)
 const loaded = ref(false)
 const opacity = ref(0)
+const imageRef = ref<HTMLImageElement>()
 
 useImageViewer().value = open
 
@@ -68,16 +69,13 @@ function load() {
 }
 
 function refreshRatio() {
-	if (!item.value || !item.value.width || !item.value.height) return
-	const container = document.querySelector(".image-viewer") as HTMLElement|null
-	if (!container) return
-	const image = container.querySelector("img") as HTMLImageElement
+	if (!item.value || !item.value.width || !item.value.height || !imageRef.value) return
 
 	const imageRatio = item.value.width / item.value.height
 	const ratio = window.innerWidth / window.innerHeight
 
-	if (imageRatio > ratio) image.className = "w-full h-auto"
-	else image.className = "w-auto h-full"
+	if (imageRatio > ratio) imageRef.value.className = "w-full h-auto"
+	else imageRef.value.className = "w-auto h-full"
 }
 </script>
 
@@ -102,9 +100,9 @@ function refreshRatio() {
 			</div>
 		</div>
 
-		<div class="image-viewer">
+		<div class="image-viewer flex-center">
 			<img :src="`/api/workspaces/${workspace.id}/files/${item.id}/${loaded && !item.mime.startsWith('image/svg')  ? 'download' : 'preview'}`"
-			     :alt="item.name" @load="load" @click.stop/>
+			     :alt="item.name" @load="load" @click.stop ref="imageRef"/>
 		</div>
 
 		<UButton color="white" variant="soft" class="-mt-8 p-3 absolute left-2 top-1/2 -translate-y-1/2"
@@ -120,7 +118,7 @@ function refreshRatio() {
 
 <style>
 .image-viewer {
-	@apply h-4/5 w-4/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex-center;
+	@apply h-4/5 w-4/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
 
 	img {
 		@apply max-w-full max-h-full object-contain;

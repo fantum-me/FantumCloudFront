@@ -92,7 +92,7 @@ const cardConfig = {
 	}
 
 	&.line {
-		@apply flex-between gap-2.5 rounded-none transition-colors ring-0;
+		@apply flex justify-between items-center gap-2.5 rounded-none transition-colors ring-0;
 
 		&.selected {
 			@apply bg-primary-100 dark:bg-primary-500 dark:bg-opacity-30;
