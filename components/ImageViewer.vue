@@ -47,9 +47,9 @@ function previous() {
 	if (!item.value || !enableMove.value) return
 	const parent = useItem(item.value.parent_id).value as Folder
 	if (parent && parent.items) {
-		const images = parent.items.filter(i => getStorageItemType(i) === "image") as File[]
-		const index = images.indexOf(item.value)
-		if (index !== 0) open(images[index - 1])
+		const imageIds = parent.items.filter(i => getStorageItemType(i) === "image").map(x => x.id)
+		const index = imageIds.indexOf(item.value.id)
+		if (index !== 0) open(useItem(imageIds[index - 1]).value as File)
 	}
 }
 
@@ -57,9 +57,9 @@ function next() {
 	if (!item.value || !enableMove.value) return
 	const parent = useItem(item.value.parent_id).value as Folder
 	if (parent && parent.items) {
-		const images = parent.items.filter(file => getStorageItemType(file) === "image") as File[]
-		const index = images.indexOf(item.value)
-		if (index + 1 !== images.length) open(images[index + 1])
+		const imageIds = parent.items.filter(i => getStorageItemType(i) === "image").map(x => x.id)
+		const index = imageIds.indexOf(item.value.id)
+		if (index + 1 !== imageIds.length) open(useItem(imageIds[index + 1]).value as File)
 	}
 }
 

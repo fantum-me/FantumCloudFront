@@ -14,6 +14,8 @@
     "@nuxt/image": "^1.7.0",
     "@nuxt/ui": "^2.14.2",
     "@onlyoffice/document-editor-vue": "^1.4.0",
+    "@types/event-source-polyfill": "^1.0.5",
+    "event-source-polyfill": "^1.0.31",
     "jose": "^5.2.3",
     "moment": "^2.30.1",
     "nuxt": "^3.11.1",

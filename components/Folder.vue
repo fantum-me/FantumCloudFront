@@ -2,6 +2,7 @@
 import type ParentFolder from "~/types/api/ParentFolder";
 import type Folder from "~/types/api/Folder";
 import type {Ref} from "vue";
+import {EventSourcePolyfill} from "event-source-polyfill";
 
 const {id} = defineProps({id: String})
 
@@ -10,12 +11,14 @@ const folder = useFolder();
 const workspace = useWorkspace()
 const path = "/workspace/" + workspace.value.id
 
-onMounted(() => {
-	fetchFolder()
+onMounted(async () => {
+	await fetchFolder()
 	useRefreshView().value = fetchFolder
+	subscribeVersionUpdates()
 })
 
 async function fetchFolder() {
+	console.log("fetching current folder")
 	const res = await useApiFetch(`/workspaces/${workspace.value.id}/items/${id}`);
 	status.value = "loading"
 	const current_folder = folder.value
@@ -43,6 +46,30 @@ function getParentFolderPath(parent: ParentFolder) {
 function onContextMenu(e: MouseEvent) {
 	if (e.target && asHtmlElement(e.target)) {
 		if (!e.target.closest(".item-card")) useFolderContextMenu().value.open(folder.value)
+	}
+}
+
+function subscribeVersionUpdates() {
+	console.log("a")
+	if (!folder.value || !folder.value.version_update_url || !folder.value.version_update_token) return
+	console.log("b")
+	const es = new EventSourcePolyfill(folder.value.version_update_url, {
+		headers: {
+			'Authorization': 'Bearer ' + folder.value.version_update_token
+		},
+	})
+
+	es.onopen = () => useRefreshView().value = () => {}
+	es.onerror = () => {
+		es.close()
+		useRefreshView().value = fetchFolder
+	}
+
+	es.onmessage = (event) => {
+		if (Number(event.data) != folder.value.version) {
+			console.log("New update detected")
+			fetchFolder()
+		}
 	}
 }
 </script>
