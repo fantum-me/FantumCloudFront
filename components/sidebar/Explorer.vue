@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {Ref} from "vue";
-import type Folder from "~/types/api/Folder";
+import type Folder from "~/types/filesystem/Folder";
 import View from "~/types/View";
 
 const workspace = useWorkspace()

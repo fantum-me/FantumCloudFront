@@ -1,4 +1,4 @@
-import type StorageItem from "~/types/api/StorageItem";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 export const encodeStorageItem = (item: StorageItem): string => btoa(JSON.stringify(item))
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {FormError, FormSubmitEvent} from '#ui/types'
-import type Folder from "~/types/api/Folder";
+import type Folder from "~/types/filesystem/Folder";
 import type {Ref} from "vue";
 
 const workspace = useWorkspace()

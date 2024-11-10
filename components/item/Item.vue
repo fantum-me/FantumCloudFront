@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type StorageItem from "~/types/api/StorageItem";
+import type StorageItem from "~/types/filesystem/StorageItem";
 import moment from "moment/moment";
 import {DragSelectOption} from "@coleqiu/vue-drag-select";
 import type {Ref} from "vue";

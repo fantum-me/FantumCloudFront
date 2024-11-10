@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type File from "~/types/api/File";
+import type File from "~/types/filesystem/File";
 
 const workspace = useWorkspace()
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type PermissionObject from "~/types/api/PermissionObject";
-import Permission from "~/types/Permission";
+import type PermissionObject from "~/types/permission/PermissionObject";
+import Permission from "~/types/permission/Permission";
 
 const {permissions, type, inline} = defineProps<{
 	permissions: PermissionObject,

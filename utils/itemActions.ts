@@ -1,6 +1,6 @@
-import type StorageItem from "~/types/api/StorageItem";
-import type File from "~/types/api/File";
-import type Folder from "~/types/api/Folder";
+import type StorageItem from "~/types/filesystem/StorageItem";
+import type File from "~/types/filesystem/File";
+import type Folder from "~/types/filesystem/Folder";
 import type {Ref} from "vue";
 
 export const openItem = (item: StorageItem, imageViewerArrows = true) => {

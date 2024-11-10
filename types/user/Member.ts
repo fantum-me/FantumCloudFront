@@ -1,5 +1,5 @@
-import type User from "~/types/api/User";
-import type Role from "~/types/api/Role";
+import type User from "~/types/user/User";
+import type Role from "~/types/permission/Role";
 
 export default interface Member {
     id: string,

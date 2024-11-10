@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type {Ref} from "vue";
-import type AccessControl from "~/types/api/AccessControl";
-import type Role from "~/types/api/Role";
-import {getDefaultPermissionObject} from "~/types/api/PermissionObject";
-import type StorageItem from "~/types/api/StorageItem";
+import type AccessControl from "~/types/permission/AccessControl";
+import type Role from "~/types/permission/Role";
+import {getDefaultPermissionObject} from "~/types/permission/PermissionObject";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 const workspace = useWorkspace()
 const {defaultRoleColor} = useRuntimeConfig().public

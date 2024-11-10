@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type StorageItem from "~/types/api/StorageItem";
+import type StorageItem from "~/types/filesystem/StorageItem";
 import {ItemPreviewIcon, ItemPreviewImage} from "#components";
 
 const {item, crop} = defineProps<{

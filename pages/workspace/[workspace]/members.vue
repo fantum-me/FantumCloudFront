@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type {Ref} from "vue";
-import type Member from "~/types/api/Member";
-import type Role from "~/types/api/Role";
+import type Member from "~/types/user/Member";
+import type Role from "~/types/permission/Role";
 import View from "~/types/View";
-import type InviteCode from "~/types/api/InviteCode";
-import Permission from "~/types/Permission";
+import type InviteCode from "~/types/InviteCode";
+import Permission from "~/types/permission/Permission";
 
 useView().value = View.MEMBERS
 const runtimeConfig = useRuntimeConfig()

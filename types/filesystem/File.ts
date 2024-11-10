@@ -1,4 +1,4 @@
-import type StorageItem from "~/types/api/StorageItem";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 export default interface File extends StorageItem {
     mime: string,

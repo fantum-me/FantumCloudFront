@@ -1,4 +1,4 @@
-import Permission from "@/types/Permission";
+import Permission from "~/types/permission/Permission";
 
 export default interface PermissionObject {
     [Permission.READ]: true | false | null,

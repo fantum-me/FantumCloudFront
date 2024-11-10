@@ -1,4 +1,4 @@
-import type PermissionObject from "~/types/api/PermissionObject";
+import type PermissionObject from "~/types/permission/PermissionObject";
 
 export default interface Role {
     id: string,

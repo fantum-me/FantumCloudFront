@@ -2,7 +2,7 @@ import serverAuthenticate from "~/server/utils/serverAuthenticate";
 import serverFetchApi from "~/server/utils/serverFetchApi";
 import {getStorageItemType} from "~/utils/itemTypes";
 import {IConfig} from "@onlyoffice/document-editor-vue";
-import type File from "~/types/api/File";
+import type File from "~/types/filesystem/File";
 import {JWTPayload, SignJWT} from "jose";
 
 export default defineEventHandler(async (event) => {

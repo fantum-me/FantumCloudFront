@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type Workspace from "~/types/api/Workspace";
+import type Workspace from "~/types/Workspace";
 
 const failed = ref(false)
 const code: string = useRoute().params.code as string

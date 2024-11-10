@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type Role from "~/types/api/Role";
+import type Role from "~/types/permission/Role";
 
 const selectedRole = defineModel<Role>()
 

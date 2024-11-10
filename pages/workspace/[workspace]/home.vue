@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import View from "~/types/View";
-import type File from "~/types/api/File";
+import type File from "~/types/filesystem/File";
 import type {Ref} from "vue";
 
 useView().value = View.HOME

@@ -1,4 +1,4 @@
-import type Member from "~/types/api/Member";
+import type Member from "~/types/user/Member";
 
 export default interface InviteCode {
     code: string,

@@ -1,6 +1,6 @@
-import type PermissionObject from "~/types/api/PermissionObject";
-import type AccessControl from "~/types/api/AccessControl";
-import type Member from "~/types/api/Member";
+import type PermissionObject from "~/types/permission/PermissionObject";
+import type AccessControl from "~/types/permission/AccessControl";
+import type Member from "~/types/user/Member";
 
 export default interface StorageItem {
     id: string,

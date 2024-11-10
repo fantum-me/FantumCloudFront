@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type ParentFolder from "~/types/api/ParentFolder";
-import type Folder from "~/types/api/Folder";
+import type ParentFolder from "~/types/filesystem/ParentFolder";
+import type Folder from "~/types/filesystem/Folder";
 import type {Ref} from "vue";
 import {EventSourcePolyfill} from "event-source-polyfill";
 

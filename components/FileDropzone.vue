@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {type FileRejectReason, type InputFile, useDropzone} from "vue3-dropzone";
-import Permission from "~/types/Permission";
+import Permission from "~/types/permission/Permission";
 import type {Ref} from "vue";
-import type Folder from "~/types/api/Folder";
+import type Folder from "~/types/filesystem/Folder";
 
 type UploadEntry = {
 	label: string

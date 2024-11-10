@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import View, {isDetailsPanelOnView} from "~/types/View";
-import type Folder from "~/types/api/Folder";
+import type Folder from "~/types/filesystem/Folder";
 
 const isSidebarOpen = useSidebarOpen();
 const detailsPanel = useDetailsPanel()

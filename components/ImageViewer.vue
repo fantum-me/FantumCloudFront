@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {Ref} from "vue";
-import type File from "~/types/api/File";
-import type Folder from "~/types/api/Folder";
+import type File from "~/types/filesystem/File";
+import type Folder from "~/types/filesystem/Folder";
 
 const workspace = useWorkspace()
 const currentFolder = useFolder()

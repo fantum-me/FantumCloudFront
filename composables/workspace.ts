@@ -1,8 +1,8 @@
-import type Workspace from "~/types/api/Workspace";
-import type CurrentFolder from "~/types/CurrentFolder";
-import type Folder from "~/types/api/Folder";
-import type File from "~/types/api/File";
-import type StorageItem from "~/types/api/StorageItem";
+import type Workspace from "~/types/Workspace";
+import type CurrentFolder from "~/types/filesystem/CurrentFolder";
+import type Folder from "~/types/filesystem/Folder";
+import type File from "~/types/filesystem/File";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 export const useWorkspace = () => useState<Workspace>('workspace')
 export const useSidebarOpen = () => useState<boolean>('sidebar-open', () => false)

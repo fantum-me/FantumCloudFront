@@ -1,4 +1,4 @@
-import type Workspace from "~/types/api/Workspace";
+import type Workspace from "~/types/Workspace";
 
 export const getAccessToken = () => useCookie("accessToken")?.value;
 

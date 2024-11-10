@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from "@vueuse/core";
-import type Folder from "~/types/api/Folder";
+import type Folder from "~/types/filesystem/Folder";
 import type {Ref} from "vue";
 
 const {x, y} = useMouse()

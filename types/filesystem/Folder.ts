@@ -1,5 +1,5 @@
-import type StorageItem from "~/types/api/StorageItem";
-import type ParentFolder from "~/types/api/ParentFolder";
+import type StorageItem from "~/types/filesystem/StorageItem";
+import type ParentFolder from "~/types/filesystem/ParentFolder";
 
 export default interface Folder extends StorageItem {
     parents?: ParentFolder[],

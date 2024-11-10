@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {FormError, FormSubmitEvent} from '#ui/types'
 import type {Ref} from "vue";
-import type StorageItem from "~/types/api/StorageItem";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 const item: Ref<StorageItem | undefined> = ref()
 const itemExt = ref<string>()

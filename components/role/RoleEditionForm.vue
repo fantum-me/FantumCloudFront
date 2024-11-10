@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type {FormError} from "#ui/types";
 import type {Ref} from "vue";
-import type Role from "~/types/api/Role";
-import {getDefaultPermissionObject} from "~/types/api/PermissionObject";
-import type Permission from "~/types/Permission";
+import type Role from "~/types/permission/Role";
+import {getDefaultPermissionObject} from "~/types/permission/PermissionObject";
+import type Permission from "~/types/permission/Permission";
 
 const workspace = useWorkspace()
 const defaultRoleColor = useRuntimeConfig().public.defaultRoleColor

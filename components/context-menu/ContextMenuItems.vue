@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from "@vueuse/core";
 import type {Ref} from "vue";
-import type PermissionObject from "~/types/api/PermissionObject";
-import Permission from "~/types/Permission";
-import type StorageItem from "~/types/api/StorageItem";
+import type PermissionObject from "~/types/permission/PermissionObject";
+import Permission from "~/types/permission/Permission";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 type MenuItem = {
 	name: string

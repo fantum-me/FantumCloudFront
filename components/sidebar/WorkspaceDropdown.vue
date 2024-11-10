@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {Ref} from "vue";
-import type Workspace from "~/types/api/Workspace";
+import type Workspace from "~/types/Workspace";
 
 const currentWorkspace = useWorkspace()
 const workspaces: Ref<Workspace[]> = ref([]);

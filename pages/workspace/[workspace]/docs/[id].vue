@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {DocumentEditor} from "@onlyoffice/document-editor-vue";
-import type File from "~/types/api/File";
+import type File from "~/types/filesystem/File";
 
 const loadAllowed = ref(false)
 const error = ref()

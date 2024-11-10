@@ -2,7 +2,7 @@
 import {DragSelect} from "@coleqiu/vue-drag-select";
 import type {ItemDisplay} from "~/components/item/Item.vue";
 import type {Ref} from "vue";
-import type StorageItem from "~/types/api/StorageItem";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 
 const props = defineProps<{

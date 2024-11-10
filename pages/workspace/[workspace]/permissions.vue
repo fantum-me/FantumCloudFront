@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {Ref} from "vue";
-import type Role from "~/types/api/Role";
+import type Role from "~/types/permission/Role";
 import View from "~/types/View";
 
 useView().value = View.PERMISSIONS

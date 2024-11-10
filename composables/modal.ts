@@ -1,5 +1,5 @@
-import type Folder from "~/types/api/Folder";
-import type StorageItem from "~/types/api/StorageItem";
+import type Folder from "~/types/filesystem/Folder";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 export const useRenameItemsModal = () => useState<(targetItem: StorageItem) => void>('rename-items-modal')
 

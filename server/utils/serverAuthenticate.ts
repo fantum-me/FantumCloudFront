@@ -1,7 +1,7 @@
 import serverFetchApi from "~/server/utils/serverFetchApi";
 import type {H3Event} from "h3";
 import {jwtVerify, JWTVerifyResult} from "jose";
-import Session from "~/types/api/Session";
+import Session from "~/types/user/Session";
 
 export default async function serverAuthenticate(event: H3Event, accessToken: string = ""): Promise<Session> {
     const res = await serverFetchApi(event, useRuntimeConfig().public.userinfoEndpoint, {}, accessToken)

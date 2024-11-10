@@ -1,6 +1,6 @@
-import type Role from "~/types/api/Role";
-import type PermissionObject from "~/types/api/PermissionObject";
-import type Member from "~/types/api/Member";
+import type Role from "~/types/permission/Role";
+import type PermissionObject from "~/types/permission/PermissionObject";
+import type Member from "~/types/user/Member";
 
 export default interface Workspace {
     id: string,

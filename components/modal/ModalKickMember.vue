@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type Member from "~/types/api/Member";
+import type Member from "~/types/user/Member";
 
 const isOpen = defineModel()
 

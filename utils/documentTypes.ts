@@ -1,5 +1,5 @@
 import {ItemIconTypeDoc, ItemIconTypePresentation, ItemIconTypeSpreadsheet} from "#components";
-import type DocumentType from "~/types/DocumentType";
+import type DocumentType from "~/types/filesystem/DocumentType";
 
 export const documentTypes: DocumentType[] = [
     {

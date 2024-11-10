@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {Ref} from "vue";
 import View from "~/types/View";
-import type StorageItem from "~/types/api/StorageItem";
+import type StorageItem from "~/types/filesystem/StorageItem";
 
 useView().value = View.TRASH
 const items: Ref<StorageItem[]> = ref([])

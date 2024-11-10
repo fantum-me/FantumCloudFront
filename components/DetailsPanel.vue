@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type StorageItem from "~/types/api/StorageItem";
+import type StorageItem from "~/types/filesystem/StorageItem";
 import type {Ref} from "vue";
 import {ItemPreview} from "#components";
 import moment from "moment/moment";

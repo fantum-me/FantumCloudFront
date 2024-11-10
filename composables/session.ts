@@ -1,3 +1,3 @@
-import type Session from "~/types/api/Session";
+import type Session from "~/types/user/Session";
 
 export const useSession = () => useState<Session>('session')
