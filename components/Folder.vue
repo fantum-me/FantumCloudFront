@@ -11,11 +11,15 @@ const folder = useFolder();
 const workspace = useWorkspace()
 const path = "/workspace/" + workspace.value.id
 
+const eventSourceRef: Ref<EventSourcePolyfill | null> = ref(null);
+
 onMounted(async () => {
 	await fetchFolder()
 	useRefreshView().value = fetchFolder
 	subscribeVersionUpdates()
 })
+
+onUnmounted(() => eventSourceRef.value?.close())
 
 async function fetchFolder() {
 	console.log("fetching current folder")
@@ -53,19 +57,21 @@ function subscribeVersionUpdates() {
 	console.log("a")
 	if (!folder.value || !folder.value.version_update_url || !folder.value.version_update_token) return
 	console.log("b")
-	const es = new EventSourcePolyfill(folder.value.version_update_url, {
+	eventSourceRef.value = new EventSourcePolyfill(folder.value.version_update_url, {
 		headers: {
 			'Authorization': 'Bearer ' + folder.value.version_update_token
 		},
 	})
 
-	es.onopen = () => useRefreshView().value = () => {}
-	es.onerror = () => {
-		es.close()
+	eventSourceRef.value.onopen = () => useRefreshView().value = () => {
+	}
+
+	eventSourceRef.value.onerror = () => {
+		eventSourceRef.value?.close()
 		useRefreshView().value = fetchFolder
 	}
 
-	es.onmessage = (event) => {
+	eventSourceRef.value.onmessage = (event) => {
 		if (Number(event.data) != folder.value.version) {
 			console.log("New update detected")
 			fetchFolder()
@@ -90,7 +96,8 @@ function subscribeVersionUpdates() {
 					<div class="flex-start -ml-2.5">
 						<div v-for="(parent, index) in folder.parents">
 							<div :key="index" class="flex-center" data-type="folder" :data-item-id="parent.id">
-								<UButton color="gray" variant="ghost" class="text-base font-semibold" :to="getParentFolderPath(parent)">
+								<UButton color="gray" variant="ghost" class="text-base font-semibold"
+								         :to="getParentFolderPath(parent)">
 									{{ parent.is_root ? "Files" : parent.name }}
 								</UButton>
 								<UIcon name="i-heroicons-chevron-right-20-solid" class="ml-1 mr-1.5 h-4 w-4"/>
