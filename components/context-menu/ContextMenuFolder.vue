@@ -29,6 +29,7 @@ function onContextMenu() {
 
 const newFolder = useNewFolderModal()
 const newDocument = useNewDocumentModal()
+const newDatabase = useNewDatabaseModal()
 
 const contextMenu = useFolderContextMenu()
 contextMenu.value = {
@@ -72,6 +73,10 @@ contextMenu.value = {
 				<ItemIconTypePresentation/>
 			</span>
 			New Presentation
+		</button>
+		<button @click="newDatabase(folder, openAfterCreation) & contextMenu.close()">
+			<UIcon name="i-heroicons-circle-stack" class="h-5 w-5"/>
+			New Database
 		</button>
 	</UContextMenu>
 </template>

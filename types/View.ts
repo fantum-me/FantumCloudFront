@@ -3,6 +3,7 @@ enum View {
 
     SEARCH = "search",
     FOLDER = "folder",
+    DATABASE = "database",
 
     FILES = "files",
     TRASH = "trash",
@@ -15,5 +16,5 @@ enum View {
 export default View
 
 export function isDetailsPanelOnView(view: View): boolean {
-    return ![View.MEMBERS, View.PERMISSIONS, View.SETTINGS].includes(view);
+    return [View.FILES, View.FOLDER, View.SEARCH, View.TRASH].includes(view);
 }
