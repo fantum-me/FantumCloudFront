@@ -2,8 +2,12 @@ export default defineAppConfig({
     ui: {
         primary: 'primary-color',
         gray: 'gray-color',
+        modal: {
+          base: "sm:-mt-12"
+        },
         contextMenu: {
-            base: "context-menu"
+            base: "context-menu",
+            rounded: "rounded-xl"
         },
         popover: {
             rounded: "rounded-lg",
@@ -16,6 +20,14 @@ export default defineAppConfig({
         divider: {
             border: {
                 base: "dark:border-gray-700"
+            }
+        },
+        input: {
+            color: {
+                gray: {
+                    databaseTableEdit: "shadow-none bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-0 dark:focus:ring-0",
+                    databaseSelectMenu: "shadow-none bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-0 dark:focus:ring-0"
+                }
             }
         },
         button: {
@@ -33,7 +45,8 @@ export default defineAppConfig({
                 },
                 gray: {
                     outline: "ring-1 ring-gray-300 hover:ring-gray-400 hover:bg-gray-50",
-                    ghost: "hover:bg-gray-100"
+                    ghost: "hover:bg-gray-100",
+                    databaseBottom: "text-gray-400 dark:text-gray-400 rounded-none border-y border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
                 },
                 white: {
                     soft: "bg-transparent text-gray-100 hover:bg-gray-200 hover:bg-opacity-25 " +

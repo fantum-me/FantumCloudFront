@@ -1,4 +1,9 @@
 import type { Config } from 'tailwindcss'
+import {TABLE_FIELD_SELECT_COLORS} from "./utils/colors";
+
+const bgLight = new RegExp("bg-(" + TABLE_FIELD_SELECT_COLORS.join("|") + ")-50")
+const light = new RegExp("(text|ring)-(" + TABLE_FIELD_SELECT_COLORS.join("|") + ")-500")
+const dark = new RegExp("(bg|text|ring)-(" + TABLE_FIELD_SELECT_COLORS.join("|") + ")-400")
 
 export default {
 	content: [
@@ -10,6 +15,11 @@ export default {
 		"./error.vue",
 	],
 	darkMode: "class",
+	safelist: [
+		{pattern: bgLight},
+		{pattern: light},
+		{pattern: dark, variants: ["dark"]},
+	],
 	theme: {
 		extend: {
 			aspectRatio: {

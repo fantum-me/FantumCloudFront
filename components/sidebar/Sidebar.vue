@@ -73,15 +73,12 @@ function addNew() {
 </script>
 
 <template>
-	<UCard class="h-screen flex flex-col rounded-none divide-none shadow-none ring-0 bg-transparent dark:bg-transparent"
-	       :ui="{body:{base:'flex-1 overflow-hidden', padding: 'px-3 py-2 sm:px-3 sm:pb-2 sm:pt-0.5'}, header:{base: 'h-16', padding: 'p-0 sm:p-0'}}">
-		<template #header>
-			<div class="w-full h-full flex-start ml-5">
-				<NuxtImg :src="`/logo/${session.scheme === 'light' ? 'black' : 'white'}.png`" class="w-32"/>
-			</div>
-		</template>
+	<div class="h-full w-64 shrink-0 flex flex-col pb-2">
+		<div class="w-full h-16 flex-start pl-5 shrink-0">
+			<NuxtImg :src="`/logo/${session.scheme === 'light' ? 'black' : 'white'}.png`" class="w-32"/>
+		</div>
 
-		<div class="h-full flex flex-col gap-2">
+		<div class="flex-1 h-full flex flex-col gap-2 overflow-hidden">
 			<SidebarWorkspaceDropdown/>
 			<div>
 				<UButton color="black" icon="i-heroicons-plus" size="lg" class="mb-3 pr-5"
@@ -94,19 +91,19 @@ function addNew() {
 
 			<SidebarLink v-for="item in sidebarItems.before" :item="item"/>
 
-			<div class="flex-1 py-5 space-y-1 overflow-y-scroll overflow-x-hidden">
-				<p class="text-xs opacity-75 ml-2">Cloud</p>
+			<p class="text-xs opacity-75 ml-2 mt-4">Cloud</p>
+			<div class="flex-1 mb-5 overflow-y-scroll overflow-x-hidden">
 				<SidebarExplorer/>
 			</div>
 
 			<SidebarLink v-for="item in sidebarItems.after" :item="item"/>
 		</div>
 
-		<template #footer>
+		<div class="mt-8 mx-2">
 			<UProgress :color="usageColor" indicator size="md" :value="workspace.used_space" :max="workspace.quota"/>
 			<p class="text-sm opacity-50 mt-1">
 				{{ formatSize(workspace.used_space) }} used on {{ formatSize(workspace.quota) }}
 			</p>
-		</template>
-	</UCard>
+		</div>
+	</div>
 </template>

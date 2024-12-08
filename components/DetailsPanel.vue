@@ -43,7 +43,7 @@ watch(() => itemsSelection.value, (newVal) => {
 					<p class="font-semibold">Type</p>
 					<p>{{ capitalize(getStorageItemType(item)) }}</p>
 				</div>
-				<div>
+				<div v-if="item.size">
 					<p class="font-semibold">Size</p>
 					<p>{{ formatSize(item.size) }}</p>
 				</div>

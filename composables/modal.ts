@@ -8,3 +8,6 @@ export const useAccessControlsModal = () => useState<(targetItem: StorageItem) =
 export const useNewFolderModal = () => useState<(target: Folder, open: boolean) => any>('new-folder-modal')
 
 export const useNewDocumentModal = () => useState<(target: Folder, type: string, open: boolean) => any>('new-document-modal')
+
+export const useNewDatabaseModal = () => useState<(target: Folder, open: boolean) => any>('new-database-modal')
+

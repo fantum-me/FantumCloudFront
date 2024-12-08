@@ -52,7 +52,7 @@ const cardConfig = {
 					</div>
 				</template>
 
-				<div v-if="display === 'card' && isFile(item)">
+				<div v-if="display === 'card' && !isFolder(item)">
 					<ItemPreview :crop="true" :item="item"/>
 				</div>
 
@@ -61,12 +61,12 @@ const cardConfig = {
 					<Loader :size="36" :thickness="4"/>
 				</div>
 
-				<template #footer v-if="display === 'line' || isFile(item)">
+				<template #footer v-if="display === 'line' || !isFolder(item)">
 					<div class="flex-start gap-1.5 opacity-60 text-xs">
 						<UIcon v-if="item.in_trash" name="i-heroicons-trash"
 						       :class="(display === 'card' ? 'order-1 ' : '') + 'h-4 w-4 mr-2'"/>
-						<span>{{ formatSize(item.size) }}</span>
-						<span class="dot"/>
+						<span v-if="item.size">{{ formatSize(item.size) }}</span>
+						<span v-if="item.size" class="dot"/>
 						<span>{{ moment.unix(item.updated_at).fromNow() }}</span>
 						<div class="relative flex-center w-5 ml-3" v-if="display === 'line'">
 							<UButton icon="i-heroicons-ellipsis-vertical" color="gray" class="absolute"

@@ -2,6 +2,7 @@ import {
     ItemIconTypeArchive,
     ItemIconTypeAudio,
     ItemIconTypeCode,
+    ItemIconTypeDatabase,
     ItemIconTypeDoc,
     ItemIconTypeExe,
     ItemIconTypeFolder,
@@ -17,6 +18,7 @@ import type StorageItem from "~/types/filesystem/StorageItem";
 export const getStorageItemIcon = (item: StorageItem): any => {
 
     if (isFolder(item)) return ItemIconTypeFolder
+    else if (isDatabase(item)) return ItemIconTypeDatabase
     else if (isFile(item)) {
         switch (getStorageItemType(item)) {
             case "image":

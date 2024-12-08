@@ -14,6 +14,6 @@ export default interface StorageItem {
     access_controls: AccessControl[],
     workspace_id: string,
     parent_id: string,
-    size: number,
-    type: 'file' | 'folder'
+    size?: number,
+    type: 'file' | 'folder' | 'database'
 }
