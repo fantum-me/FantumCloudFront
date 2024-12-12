@@ -54,9 +54,7 @@ function onContextMenu(e: MouseEvent) {
 }
 
 function subscribeVersionUpdates() {
-	console.log("a")
 	if (!folder.value || !folder.value.version_update_url || !folder.value.version_update_token) return
-	console.log("b")
 	eventSourceRef.value = new EventSourcePolyfill(folder.value.version_update_url, {
 		headers: {
 			'Authorization': 'Bearer ' + folder.value.version_update_token

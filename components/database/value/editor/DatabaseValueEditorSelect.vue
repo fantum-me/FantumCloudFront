@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import type TableRecord from "~/types/database/TableRecord";
 import type TableField from "~/types/database/TableField";
 
 const workspace = useWorkspace()
 const database = useDatabase()
 
-const newValue = defineModel<string>('newValue')
-const inputValue = ref("")
+const newValue = defineModel<string>()
 
-const {record, field, isEditing, endEditing} = defineProps<{
-	record: TableRecord,
+const {field, endEditing} = defineProps<{
 	field: TableField,
-	isEditing: boolean,
 	endEditing: () => void
 }>()
+
+const inputValue = ref("")
 
 const searchResults = computed(() => {
 	const result: Record<string, string> = {}
@@ -64,33 +62,30 @@ function onInputSubmit() {
 		endEditing()
 	}
 }
+
+async function onClickOption(label: string) {
+	newValue.value = label
+	inputValue.value = ''
+	endEditing()
+}
 </script>
 
 <template>
-	<div class="relative py-0.5">
-		<UBadge v-if="record.values[field.id]" :color="field.options?.[record.values[field.id]]" variant="subtle"
-		        class="m-2.5">
-			{{ record.values[field.id] }}
-		</UBadge>
-		<div v-else class="select-none">&nbsp;</div>
+	<form class="w-52 bg-white rounded-lg" style="box-shadow: 0 0 10px rgba(0,0,0,.25);" @submit.prevent="onInputSubmit">
+		<UInput v-model="inputValue" :ui="{base: 'sm:py-3 sm:px-4', rounded: 'rounded-b-none'}" autofocus class="w-full"
+		        color="gray" variant="databaseSelectMenu"/>
+		<div class="p-1 space-y-1">
+			<UButton v-for="(color, label) in searchResults" block class="justify-start px-2" color="gray"
+			         type="button" variant="ghost" @click.stop="onClickOption(label)">
+				<span class="w-px bg-gray-200 mr-1">&nbsp;</span>
+				<UBadge :color="color" variant="subtle">{{ label }}</UBadge>
+			</UButton>
 
-		<form v-if="isEditing" class="absolute top-0 left-0 -mt-[11px] -ml-px rounded w-64 z-50 bg-white"
-		      style="box-shadow: 0 0 10px rgba(0,0,0,.25);" @submit.prevent="onInputSubmit">
-			<UInput v-model="inputValue" color="gray" variant="databaseSelectMenu" class="w-full" autofocus
-			        :ui="{base: 'sm:py-3 sm:px-4', rounded: 'rounded-b-none'}"/>
-			<div class="p-1 space-y-1">
-				<UButton v-for="(color, label) in searchResults" class="justify-start px-2" color="gray" variant="ghost"
-				         block type="button" @click.stop="() => {newValue = label; inputValue = ''; endEditing()}">
-					<span class="w-px bg-gray-200 mr-1">&nbsp;</span>
-					<UBadge :color="color" variant="subtle">{{ label }}</UBadge>
-				</UButton>
-
-				<UButton v-if="inputValue && !(inputValue in searchResults)" @click="submitWithNewOption" type="button"
-				         block class="justify-start px-1.5 opacity-75" color="gray" variant="ghost">
-					Create
-					<UBadge :color="newOptionColor" variant="subtle">{{ inputValue }}</UBadge>
-				</UButton>
-			</div>
-		</form>
-	</div>
+			<UButton v-if="inputValue && !(inputValue in searchResults)" block class="justify-start px-1.5 opacity-75"
+			         color="gray" type="button" variant="ghost" @click="submitWithNewOption">
+				Create
+				<UBadge :color="newOptionColor" variant="subtle">{{ inputValue }}</UBadge>
+			</UButton>
+		</div>
+	</form>
 </template>

@@ -6,4 +6,5 @@ export default interface TableField {
     is_title: boolean
     type: TableFieldType
     options: Record<string, string> | null
+    default_value: string
 }

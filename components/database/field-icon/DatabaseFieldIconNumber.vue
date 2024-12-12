@@ -1,3 +1,3 @@
 <template>
-	<UIcon name="i-heroicons-hashtag-20-solid" class="h-4 w-4"/>
+	<UIcon class="h-4 w-4" name="i-heroicons-hashtag-20-solid"/>
 </template>
