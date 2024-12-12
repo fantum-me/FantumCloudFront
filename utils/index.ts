@@ -24,3 +24,5 @@ export const getWelcomeMessage = (): string => {
 
     return `${welcomeMessage}, ${useSession().value.name}`;
 }
+
+export const arraySum = (array: Array<number>) => array.reduce((a, b) => a + b, 0);

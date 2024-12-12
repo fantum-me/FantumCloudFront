@@ -1,8 +1,9 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {getFieldIcon} from "~/types/database/TableFieldType";
 import {ModalConfirmation} from "#components";
+import type DatabaseView from "~/types/database/DatabaseView";
 
-const {id} = defineProps<{ id: string }>()
+const {id, view, width} = defineProps<{ id: string, view: DatabaseView, width: number }>()
 
 const workspace = useWorkspace()
 const database = useDatabase()
@@ -41,26 +42,19 @@ async function deleteProperty() {
 		color: "red",
 		onSuccess: async () => {
 			if (!field.value) return
-			const res = await useApiFetch(
+			await useApiFetch(
 				`/workspaces/${workspace.value.id}/databases/${database.value.id}/fields/${field.value.id}`,
 				{method: "DELETE"}
 			)
-			if (res.ok) {
-				database.value.records?.forEach(record => {
-					if (!field.value) return
-					delete record.values[field.value.id]
-				})
-				database.value.fields = database.value.fields?.filter(f => f !== field.value)
-			}
 		}
 	})
 }
 </script>
 
 <template>
-	<UPopover v-if="field" v-model:open="isEditing" @contextmenu.prevent="isEditing = !isEditing" class="font-medium"
-	          :popper="{ placement: 'bottom-start', offsetDistance: -40 }" @update:open="endEditing">
-		<div class="flex-start gap-0.5 px-4 py-3.5 truncate">
+	<UPopover v-if="field" v-model:open="isEditing" :popper="{ placement: 'bottom-start', offsetDistance: -40 }" class="font-medium"
+	          @contextmenu.prevent="isEditing = !isEditing" @update:open="endEditing">
+		<div :style="{width: width + 'px'}" class="flex-start gap-0.5 px-4 py-3.5 truncate">
 			<component :is="getFieldIcon(field)" class="opacity-40 -mb-0.5 shrink-0"/>
 			<span class="truncate text-gray-800 dark:text-gray-200">{{ field.name }}</span>
 		</div>
@@ -70,8 +64,8 @@ async function deleteProperty() {
 				<form @submit.prevent="endEditing">
 					<UInput v-model="newName" autofocus/>
 				</form>
-				<UButton v-if="!field.is_title" block color="red" variant="ghost" class="justify-start text-sm"
-				         leading-icon="i-heroicons-trash" size="xs" @click="deleteProperty">
+				<UButton v-if="!field.is_title" block class="justify-start text-sm" color="red" leading-icon="i-heroicons-trash"
+				         size="xs" variant="ghost" @click="deleteProperty">
 					Delete property
 				</UButton>
 			</div>
