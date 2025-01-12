@@ -46,7 +46,7 @@ export default defineAppConfig({
                 gray: {
                     outline: "ring-1 ring-gray-300 hover:ring-gray-400 hover:bg-gray-50",
                     ghost: "hover:bg-gray-100",
-                    databaseBottom: "text-gray-400 dark:text-gray-400 rounded-none border-y border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    databaseBottom: "text-gray-400 dark:text-gray-400 rounded-none border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
                 },
                 white: {
                     soft: "bg-transparent text-gray-100 hover:bg-gray-200 hover:bg-opacity-25 " +

@@ -4,35 +4,55 @@ import TableFieldType, {getFieldTypeIcon} from "~/types/database/TableFieldType"
 const workspace = useWorkspace()
 const database = useDatabase()
 
+const isOpen = ref(false)
+const buttonRef = ref()
+
 const selectedType = ref<TableFieldType>()
 const name = ref<string>()
 
 async function onSubmit() {
 	if (!selectedType.value || !name.value || name.value.length < 1) return
+	const body = JSON.stringify({name: name.value, type: selectedType.value})
+	close()
 
 	const res = await useApiFetch(`/workspaces/${workspace.value.id}/databases/${database.value.id}/fields`, {
 		method: "POST",
-		body: JSON.stringify({name: name.value, type: selectedType.value})
+		body: body
 	})
 
 	if (!res.ok) useErrorToast("Failed to create field")
 }
+
+function close() {
+	isOpen.value = false
+	selectedType.value = undefined
+}
+
+function getPopupX() {
+	return buttonRef.value.getBoundingClientRect().left
+}
+
+function getPopupY() {
+	return buttonRef.value.getBoundingClientRect().top
+}
 </script>
 
 <template>
-	<UPopover :popper="{ placement: 'right-start', arrow: true }" :ui="{trigger: 'w-auto'}" class="flex-start">
+	<div ref="buttonRef" class="w-full h-full flex-start" @click="isOpen = true" @contextmenu.prevent="isOpen = true">
 		<slot/>
+	</div>
 
-		<template #panel="{ close }">
-			<div class="w-56 p-1 space-y-1">
-				<div class="flex-between gap-4">
+	<Teleport v-if="isOpen" to="body">
+		<div class="fixed z-[40] w-screen h-screen top-0 left-0" @click="close">
+			<UCard :style="{transform: `translate(${getPopupX()}px, ${getPopupY()}px)`}" :ui="{rounded: 'rounded-xl', body: {padding: 'p-2 sm:p-2'}}"
+			       class="m-1 absolute top-0 left-0" @click.stop>
+				<div class="flex-between gap-4 mb-2">
 					<p class="pt-0.5 pl-2.5">New Property</p>
-					<UButton color="gray" icon="i-heroicons-x-mark" variant="ghost"
-					         @click="close(); selectedType = undefined;"/>
+					<UButton color="gray" icon="i-heroicons-x-mark" variant="ghost" @click="close"/>
 				</div>
 
 				<div v-if="selectedType" class="space-y-1.5">
-					<form class="flex-center" @submit.prevent="onSubmit(); close()">
+					<form class="flex-center" @submit.prevent="onSubmit">
 						<UInput v-model="name" :ui="{wrapper: 'w-full mx-px'}" autofocus color="gray"
 						        placeholder="name" variant="outline"/>
 						<UButton v-if="name" class="ml-1" color="gray" icon="i-heroicons-chevron-right" type="submit"
@@ -53,7 +73,7 @@ async function onSubmit() {
 						{{ capitalize(type) }}
 					</UButton>
 				</div>
-			</div>
-		</template>
-	</UPopover>
+			</UCard>
+		</div>
+	</Teleport>
 </template>

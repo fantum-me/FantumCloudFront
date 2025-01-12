@@ -5,8 +5,8 @@ export default interface DatabaseView {
     id: string
     name: string
     type: DatabaseViewType
-    field_settings: Record<string, {
-        width?: number
-    }>
+    settings: {
+        widths?: Record<string, number>
+    }
     created_by: Member
 }

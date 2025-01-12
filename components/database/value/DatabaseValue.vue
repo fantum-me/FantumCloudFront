@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import TableFieldType from "~/types/database/TableFieldType";
 
-const {recordId, fieldId, width} = defineProps<{
+const {recordId, fieldId} = defineProps<{
 	recordId: string,
 	fieldId: string,
-	width: number,
 }>()
 
 const database = useDatabase()
@@ -20,7 +19,7 @@ function startEditing() {
 	useState("database-value-editing-target").value = {
 		recordId: recordId,
 		fieldId: fieldId,
-		width: width,
+		width: cellRef.value.parentNode.clientWidth,
 		position: {
 			x: cellRef.value.getBoundingClientRect().left,
 			y: cellRef.value.getBoundingClientRect().top

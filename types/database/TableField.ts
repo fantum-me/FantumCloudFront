@@ -7,4 +7,5 @@ export default interface TableField {
     type: TableFieldType
     options: Record<string, string> | null
     default_value: string
+    position: number
 }

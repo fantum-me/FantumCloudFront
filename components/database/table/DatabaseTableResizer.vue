@@ -1,23 +1,21 @@
 <script lang="ts" setup>
 import type TableField from "~/types/database/TableField";
-import type DatabaseView from "~/types/database/DatabaseView";
 import {DATABASE_TABLE_MIN_WIDTH} from "~/types/database/DatabaseViewType";
+
+const {field} = defineProps<{ field: TableField }>()
 
 const workspace = useWorkspace()
 const database = useDatabase()
+const view = useDatabaseView()
 
 const width = defineModel<number>()
-
-const {view, field} = defineProps<{
-	view: DatabaseView,
-	field: TableField
-}>()
 
 const dragStartX = ref(0)
 const draggingFieldWidth = ref(0)
 
 async function onResize(e: MouseEvent) {
-	view.field_settings[field.id].width = Math.max(
+	if (!view.value.settings.widths) view.value.settings.widths = {}
+	view.value.settings.widths[field.id] = Math.max(
 		DATABASE_TABLE_MIN_WIDTH,
 		draggingFieldWidth.value + e.pageX - dragStartX.value
 	)
@@ -27,11 +25,8 @@ async function startResizing(e: MouseEvent) {
 	dragStartX.value = e.pageX;
 	draggingFieldWidth.value = width.value ?? DATABASE_TABLE_MIN_WIDTH
 
-	if (!view.field_settings) view.field_settings = {}
-	if (!(field.id in view.field_settings)) view.field_settings[field.id] = {}
-	if (!("width" in view.field_settings[field.id])) {
-		view.field_settings[field.id].width = draggingFieldWidth.value
-	}
+	if (!view.value.settings.widths) view.value.settings.widths = {}
+	view.value.settings.widths[field.id] = DATABASE_TABLE_MIN_WIDTH
 
 	document.addEventListener('mousemove', onResize);
 	document.addEventListener('mouseup', () => {
@@ -42,11 +37,10 @@ async function startResizing(e: MouseEvent) {
 }
 
 async function endResizing() {
-	console.log(view.field_settings)
 	const res = await useApiFetch(
-		`/workspaces/${workspace.value.id}/databases/${database.value.id}/views/${view.id}`, {
+		`/workspaces/${workspace.value.id}/databases/${database.value.id}/views/${view.value.id}`, {
 			method: "PATCH",
-			body: JSON.stringify({field_settings: view.field_settings})
+			body: JSON.stringify({settings: view.value.settings})
 		})
 
 	if (!res.ok) useErrorToast("Failed to update column size.")

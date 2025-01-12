@@ -14,7 +14,7 @@ const status: Ref<"loaded" | "loading" | "failed"> = ref("loading");
 const database = useDatabase()
 const workspace = useWorkspace()
 
-const selectedView = ref<DatabaseView>()
+const selectedView = useDatabaseView()
 
 const eventSourceRef: Ref<EventSourcePolyfill | null> = ref(null);
 
@@ -89,6 +89,10 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 		case "table_field_update":
 			const field = database.value.fields.find(f => f.id === data.id);
 			if (field) Object.assign(field, data as TableField);
+			break;
+		case "table_field_reposition":
+			if ("position" in data)
+				repositionField(database.value, data.id as string, data.position as number);
 			break;
 		case "table_field_delete":
 			database.value.records?.forEach(record => {

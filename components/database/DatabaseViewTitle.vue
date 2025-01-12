@@ -1,35 +1,31 @@
 <script lang="ts" setup>
-import type DatabaseView from "~/types/database/DatabaseView";
-
-const {view} = defineProps<{ view: DatabaseView }>()
-
 const workspace = useWorkspace()
 const database = useDatabase()
+const view = useDatabaseView()
 
 const inputRef = ref()
 const name = ref("")
 
-watch(() => view.name, newName => {
+watch(() => view.value.name, newName => {
 	name.value = newName
 	resizeInput()
 }, {immediate: true})
 watch(inputRef, resizeInput)
 
 function resizeInput() {
-	console.log("a")
 	if (inputRef.value)
 		inputRef.value.style.width = inputRef.value.value.length + 1 + 'ch'
 }
 
 async function onSubmit() {
 	inputRef.value.blur()
-	const res = await useApiFetch(`/workspaces/${workspace.value.id}/databases/${database.value.id}/views/${view.id}`, {
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/databases/${database.value.id}/views/${view.value.id}`, {
 		method: "PATCH",
 		body: JSON.stringify({name: name.value})
 	})
 
 	if (!res.ok) {
-		name.value = view.name
+		name.value = view.value.name
 		useErrorToast("Failed to rename view")
 	}
 }
@@ -38,8 +34,8 @@ async function onSubmit() {
 <template>
 	<div class="flex">
 		<form @submit.prevent="onSubmit">
-			<input ref="inputRef" v-model="name" class="text-xl font-semibold opacity-80" @focusout="onSubmit"
-			       @input="resizeInput">
+			<input ref="inputRef" v-model="name" class="text-xl font-semibold opacity-80 bg-transparent"
+			       @focusout="onSubmit" @input="resizeInput">
 		</form>
 		<!--		<UButton icon="i-heroicons-ellipsis-horizontal" color="gray" size="sm" variant="ghost"/>-->
 	</div>

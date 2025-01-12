@@ -4,11 +4,15 @@ import type Folder from "~/types/filesystem/Folder";
 import type File from "~/types/filesystem/File";
 import type StorageItem from "~/types/filesystem/StorageItem";
 import type Database from "~/types/database/Database";
+import type DatabaseView from "~/types/database/DatabaseView";
 
 export const useWorkspace = () => useState<Workspace>('workspace')
 export const useSidebarOpen = () => useState<boolean>('sidebar-open', () => false)
 export const useFolder = () => useState<CurrentFolder>('folder')
+
 export const useDatabase = () => useState<Database>('database')
+export const useDatabaseView = () => useState<DatabaseView>('database-view')
+
 export const useSidebarExplorerFiles = () => useState<Folder>('sidebar-explorer-files')
 export const useItem = (id: string, item?: StorageItem) => useState<StorageItem>(`item-${id}`, item ? () => item : undefined)
 export const useImageViewer = () => useState<(target: File, arrows: boolean) => any>('image-viewer')
