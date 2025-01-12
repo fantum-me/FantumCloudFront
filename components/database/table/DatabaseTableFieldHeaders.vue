@@ -66,7 +66,7 @@ function onDragOver(e: DragEvent, targetField: TableField) {
 async function onDragEnd() {
 	if (draggingField.value && draggingTargetPosition.value !== undefined) {
 		const basePositon = draggingField.value.position
-		repositionField(database.value, draggingField.value.id, draggingTargetPosition.value)
+		repositionField(draggingField.value.id, draggingTargetPosition.value)
 		draggingTargetPosition.value = undefined
 		const res = await useApiFetch(
 			`/workspaces/${workspace.value.id}/databases/${database.value.id}/fields/${draggingField.value.id}/reposition`,
@@ -76,7 +76,7 @@ async function onDragEnd() {
 			}
 		)
 		if (!res.ok) {
-			repositionField(database.value, draggingField.value.id, basePositon)
+			repositionField(draggingField.value.id, basePositon)
 			useErrorToast("Failed to change field position")
 		}
 	}

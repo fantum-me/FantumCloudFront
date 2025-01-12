@@ -1,25 +1,24 @@
 <script lang="ts" setup>
 import TableFieldType from "~/types/database/TableFieldType";
+import type TableField from "~/types/database/TableField";
 
-const {recordId, fieldId} = defineProps<{
-	recordId: string,
-	fieldId: string,
+const value = defineModel<string>()
+const {field, placeholder = "", small = false} = defineProps<{
+	field: TableField,
+	placeholder?: string,
+	small?: boolean
 }>()
-
-const database = useDatabase()
-
-const record = computed(() => database.value.records?.find(r => r.id === recordId))
-const field = computed(() => database.value.fields?.find(f => f.id === fieldId))
 
 const cellRef = ref()
 
 function startEditing() {
-	if (field.value?.type === TableFieldType.BooleanType) return
-	console.log("aaa")
+	if (field.type === TableFieldType.BooleanType) return
 	useState("database-value-editing-target").value = {
-		recordId: recordId,
-		fieldId: fieldId,
+		field: field,
 		width: cellRef.value.parentNode.clientWidth,
+		currentValue: value,
+		update: (v: string) => value.value = v,
+		small: small,
 		position: {
 			x: cellRef.value.getBoundingClientRect().left,
 			y: cellRef.value.getBoundingClientRect().top
@@ -29,12 +28,18 @@ function startEditing() {
 </script>
 
 <template>
-	<div v-if="record && field" ref="cellRef" class="h-full w-full" @click="startEditing">
-		<DatabaseValueBoolean v-if="field.type === TableFieldType.BooleanType" :field="field" :record="record"/>
-		<DatabaseValueSelect v-else-if="field.type === TableFieldType.SelectType" :field="field" :record="record"/>
+	<div v-if="field" ref="cellRef" class="h-full w-full relative" @click="startEditing">
+		<DatabaseValueBoolean v-if="field.type === TableFieldType.BooleanType" v-model="value" :small="small"/>
+		<DatabaseValueSelect v-else-if="field.type === TableFieldType.SelectType"
+		                     :field="field" :small="small" :value="value as string"/>
 
-		<div v-else class="mx-4 py-3 break-all text-wrap">
-			{{ record?.values[field.id] }}<span class="select-none">&nbsp;</span>
+		<div v-else :class="(small ? 'text-sm' : 'mx-4 py-3') + ' break-all text-wrap'">
+			<span class="select-none">&nbsp;</span>
+
+			<span v-if="value">{{ value }}</span>
+			<span v-else-if="placeholder" class="text-gray-400 dark:text-gray-600 select-none">
+				{{ placeholder }}
+			</span>
 		</div>
 	</div>
 </template>

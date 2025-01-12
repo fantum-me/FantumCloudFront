@@ -15,6 +15,7 @@ const database = useDatabase()
 const workspace = useWorkspace()
 
 const selectedView = useDatabaseView()
+const isOptionBarOpen = ref(false)
 
 const eventSourceRef: Ref<EventSourcePolyfill | null> = ref(null);
 
@@ -42,6 +43,11 @@ async function fetchDatabase() {
 
 	if (!selectedView.value) selectedView.value = database.value.views[0]
 }
+
+const records = computed(() => {
+	if (!database.value?.records || !selectedView.value) return []
+	return database.value.records.filter(record => isRecordValidateFilters(record, selectedView.value))
+})
 
 async function addView(view: DatabaseViewType) {
 	const res = await useApiFetch(`/workspaces/${workspace.value.id}/databases/${database.value.id}/views`, {
@@ -92,7 +98,7 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 			break;
 		case "table_field_reposition":
 			if ("position" in data)
-				repositionField(database.value, data.id as string, data.position as number);
+				repositionField(data.id as string, data.position as number);
 			break;
 		case "table_field_delete":
 			database.value.records?.forEach(record => {
@@ -172,8 +178,14 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 		<hr class="mx-8 mb-3 -mt-px border-gray-200 dark:border-gray-700"/>
 		<div v-if="selectedView" :key="selectedView.id" class="w-full max-h-full px-10 pb-16 flex flex-col gap-2">
 			<DatabaseValueEditor/>
-			<DatabaseViewTitle :view="selectedView"/>
-			<DatabaseTable v-if="selectedView.type === DatabaseViewType.TableView" :view="selectedView"/>
+			<div class="w-full flex-between">
+				<DatabaseViewTitle/>
+				<UButton :color="selectedView.settings?.filters?.length ? 'primary' : 'gray'" icon="i-heroicons-funnel"
+				         variant="soft"
+				         @click="isOptionBarOpen = !isOptionBarOpen"/>
+			</div>
+			<DatabaseViewOptionBar v-if="isOptionBarOpen"/>
+			<DatabaseTable v-if="selectedView.type === DatabaseViewType.TableView" :records="records"/>
 		</div>
 	</div>
 </template>

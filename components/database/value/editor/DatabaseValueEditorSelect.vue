@@ -35,6 +35,7 @@ async function submitWithNewOption() {
 	if (!inputValue.value) return
 
 	if (!field.options) field.options = {}
+	inputValue.value = inputValue.value.replace(",", "")
 	field.options[inputValue.value] = newOptionColor.value
 
 	const res = await useApiFetch(
@@ -84,7 +85,7 @@ async function onClickOption(label: string) {
 			<UButton v-if="inputValue && !(inputValue in searchResults)" block class="justify-start px-1.5 opacity-75"
 			         color="gray" type="button" variant="ghost" @click="submitWithNewOption">
 				Create
-				<UBadge :color="newOptionColor" variant="subtle">{{ inputValue }}</UBadge>
+				<UBadge :color="newOptionColor" variant="subtle">{{ inputValue.replace(",", "") }}</UBadge>
 			</UButton>
 		</div>
 	</form>

@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import {DATABASE_TABLE_MIN_WIDTH} from "~/types/database/DatabaseViewType";
+import type TableRecord from "~/types/database/TableRecord";
+
+const {records} = defineProps<{ records: TableRecord[] }>()
 
 const database = useDatabase()
 const view = useDatabaseView()
@@ -28,11 +31,10 @@ const fieldWidths = useState("database-table-field-widths").value = computed<Rec
 					</DatabaseButtonNewField>
 				</div>
 			</div>
-			<div v-for="record in database.records" :key="record.id" class="row group">
+			<div v-for="record in records" :key="record.id" class="row group">
 				<div v-for="field in database.fields" :key="field.id" :style="{width: fieldWidths[field.id] + 'px'}"
 				     class="cell">
-					<DatabaseValue v-if="field.id in record.values" :field-id="field.id" :record-id="record.id"
-					               :width="fieldWidths[field.id]"/>
+					<DatabaseRecordValue :field="field" :record="record"/>
 				</div>
 				<div class="cell flex-start pl-2.5 w-40">
 					<DatabaseButtonDeleteRecord :id="record.id">

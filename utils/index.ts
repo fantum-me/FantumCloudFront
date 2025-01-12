@@ -8,7 +8,10 @@ export const isAbsoluteUrl = (url: string): boolean => (/^https?:\/\//i).test(ur
 
 export const asHtmlElement = (target: EventTarget): target is HTMLElement => true
 
-export const capitalize = (string: string) => string[0].toUpperCase() + string.slice(1);
+export const capitalize = (string: string) => {
+    if (string.trim() === "") return ""
+    return string.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
+}
 
 export const getWelcomeMessage = (): string => {
     const hour = new Date().getHours();

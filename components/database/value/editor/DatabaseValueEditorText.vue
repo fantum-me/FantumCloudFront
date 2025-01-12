@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import TableFieldType from "~/types/database/TableFieldType";
 import type TableField from "~/types/database/TableField";
-import type TableRecord from "~/types/database/TableRecord";
 
 const newValue = defineModel<string>()
 
-const {field, record, endEditing} = defineProps<{
+const {field, currentValue, endEditing, small} = defineProps<{
 	field: TableField,
-	record: TableRecord,
-	endEditing: () => void
+	currentValue: string,
+	endEditing: () => void,
+	small: boolean
 }>()
 
-newValue.value = record.values[field.id]
+newValue.value = currentValue
 
 function onKeydown(event: KeyboardEvent) {
 	const target = (event.target as HTMLInputElement)
@@ -37,6 +37,6 @@ function onInput(event: InputEvent) {
 <template>
 	<form class="w-full" @submit.prevent="endEditing">
 		<UTextarea v-model="newValue" :placeholder="field.name" :rows="1" autofocus autoresize color="gray"
-		           size="xl" @input="onInput" @keydown="onKeydown"/>
+		           :size="small ? 'md' : 'xl'" @input="onInput" @keydown="onKeydown"/>
 	</form>
 </template>
