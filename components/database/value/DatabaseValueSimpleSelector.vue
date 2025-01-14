@@ -40,7 +40,8 @@ const selectToggle = (option: string) => {
 			</template>
 		</UCheckbox>
 	</div>
-	<form v-else class="w-40" @submit.prevent="submit">
-		<UInput v-model="newValue as string" :type="field.type === TableFieldType.NumberType ? 'number' : ''"/>
+	<form v-else-if="typeof newValue === 'string'" class="w-40" @submit.prevent="submit">
+		<UInput v-if="field.type === TableFieldType.NumberType" v-model="newValue" type="number"/>
+		<UInput v-else v-model="newValue" type="text"/>
 	</form>
 </template>
