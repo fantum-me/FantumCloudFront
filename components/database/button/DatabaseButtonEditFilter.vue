@@ -85,7 +85,7 @@ async function remove() {
 			       class="m-1 absolute top-0 left-0 min-w-40" @click.stop>
 				<div class="space-y-2">
 					<div class="w-full flex-between gap-4">
-						<div class="flex-start gap-1 text-sm text-gray-500">
+						<div class="flex-start gap-1 text-sm text-gray-500 dark:text-gray-200/90">
 							<component :is="getFieldTypeIcon(field.type)" class="opacity-50"/>
 							{{ field.name }}
 						</div>

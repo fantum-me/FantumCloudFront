@@ -181,8 +181,7 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 			<div class="w-full flex-between">
 				<DatabaseViewTitle/>
 				<UButton :color="selectedView.settings?.filters?.length ? 'primary' : 'gray'" icon="i-heroicons-funnel"
-				         variant="soft"
-				         @click="isOptionBarOpen = !isOptionBarOpen"/>
+				         variant="ghost" @click="isOptionBarOpen = !isOptionBarOpen"/>
 			</div>
 			<DatabaseViewOptionBar v-if="isOptionBarOpen"/>
 			<DatabaseTable v-if="selectedView.type === DatabaseViewType.TableView" :records="records"/>

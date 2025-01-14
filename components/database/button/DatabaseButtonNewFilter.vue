@@ -48,13 +48,4 @@ async function addFilter(field: TableField) {
 			</UCard>
 		</div>
 	</Teleport>
-
-
-	<!--	<USelect v-model="filter.field_id" :options="fields" option-attribute="name"/>-->
-	<!--	<USelect v-model="filter.operation" :options="operations" option-attribute="name"/>-->
-	<!--	<div class="m-1 relative">-->
-	<!--		<DatabaseValue :key="filter.field_id" v-if="filter.operation && isFilterTypeNeedValue(filter.operation)"-->
-	<!--		               v-model="filter.value" :field="field" :placeholder="true"/>-->
-	<!--	</div>-->
-	<!--	{{filter.field_id}}-->
 </template>

@@ -72,13 +72,14 @@ async function onClickOption(label: string) {
 </script>
 
 <template>
-	<form class="w-52 bg-white rounded-lg" style="box-shadow: 0 0 10px rgba(0,0,0,.25);" @submit.prevent="onInputSubmit">
+	<form class="w-52 bg-white dark:bg-gray-950 rounded-lg" style="box-shadow: 0 0 10px rgba(0,0,0,.25);"
+	      @submit.prevent="onInputSubmit">
 		<UInput v-model="inputValue" :ui="{base: 'sm:py-3 sm:px-4', rounded: 'rounded-b-none'}" autofocus class="w-full"
 		        color="gray" variant="databaseSelectMenu"/>
 		<div class="p-1 space-y-1">
 			<UButton v-for="(color, label) in searchResults" block class="justify-start px-2" color="gray"
 			         type="button" variant="ghost" @click.stop="onClickOption(label)">
-				<span class="w-px bg-gray-200 mr-1">&nbsp;</span>
+				<span class="w-px bg-gray-200 dark:bg-gray-600 mr-1">&nbsp;</span>
 				<UBadge :color="color" variant="subtle">{{ label }}</UBadge>
 			</UButton>
 
