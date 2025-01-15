@@ -2,6 +2,8 @@
 import type DatabaseViewFilter from "~/types/database/DatabaseViewFilter";
 import type TableField from "~/types/database/TableField";
 import {isFilterTypeNeedValue} from "~/types/database/DatabaseViewFilterType";
+import TableFieldType from "~/types/database/TableFieldType";
+import {formatDatetimeToString} from "~/utils/datetime";
 
 const database = useDatabase()
 const view = useDatabaseView()
@@ -18,7 +20,10 @@ const display = (filter: DatabaseViewFilter) => {
 	let text = field(filter).name
 	if (active(filter)) {
 		text += ": " + capitalize(filter.operation.replaceAll("_", " "))
-		if (isFilterTypeNeedValue(filter.operation)) text += " " + filter.value
+		if (isFilterTypeNeedValue(filter.operation)) {
+			if (field(filter).type === TableFieldType.DatetimeType) text += " " + formatDatetimeToString(filter.value)
+			else text += " " + filter.value
+		}
 	}
 	return text
 }

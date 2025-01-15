@@ -2,14 +2,14 @@
 import TableFieldType from "~/types/database/TableFieldType";
 import type TableField from "~/types/database/TableField";
 
-const value = defineModel<string>()
-const {field, placeholder = "", small = false} = defineProps<{
-	field: TableField,
-	placeholder?: string,
-	small?: boolean
-}>()
+const value = defineModel<string>({required: true})
+const {field} = defineProps<{ field: TableField }>()
 
 const cellRef = ref()
+const formatedValue = computed<string>(() => {
+	if (field.type === TableFieldType.DatetimeType) return formatDatetimeToString(value.value)
+	else return value.value
+})
 
 function startEditing() {
 	if (field.type === TableFieldType.BooleanType) return
@@ -18,7 +18,6 @@ function startEditing() {
 		width: cellRef.value.parentNode.clientWidth,
 		currentValue: value,
 		update: (v: string) => value.value = v,
-		small: small,
 		position: {
 			x: cellRef.value.getBoundingClientRect().left,
 			y: cellRef.value.getBoundingClientRect().top
@@ -29,17 +28,12 @@ function startEditing() {
 
 <template>
 	<div v-if="field" ref="cellRef" class="h-full w-full relative" @click="startEditing">
-		<DatabaseValueBoolean v-if="field.type === TableFieldType.BooleanType" v-model="value" :small="small"/>
-		<DatabaseValueSelect v-else-if="field.type === TableFieldType.SelectType"
-		                     :field="field" :small="small" :value="value as string"/>
+		<DatabaseValueBoolean v-if="field.type === TableFieldType.BooleanType" v-model="value"/>
+		<DatabaseValueSelect v-else-if="field.type === TableFieldType.SelectType" :field="field" :value="value"/>
 
-		<div v-else :class="(small ? 'text-sm' : 'mx-4 py-3') + ' break-all text-wrap'">
+		<div v-else class="mx-4 py-3 break-all text-wrap">
+			<span class="whitespace-pre">{{ formatedValue }}</span>
 			<span class="select-none">&nbsp;</span>
-
-			<span v-if="value">{{ value }}</span>
-			<span v-else-if="placeholder" class="text-gray-400 dark:text-gray-600 select-none">
-				{{ placeholder }}
-			</span>
 		</div>
 	</div>
 </template>

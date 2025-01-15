@@ -2,19 +2,19 @@
 import TableFieldType from "~/types/database/TableFieldType";
 import type TableField from "~/types/database/TableField";
 
+const newValue = ref("")
+
 const target = useState<undefined|{
 	field: TableField,
 	currentValue: string,
 	update: (v: string) => void,
 	width: number,
-	small: boolean,
 	position: {
 		x: number,
 		y: number
 	}
 }>("database-value-editing-target", () => undefined)
-
-const newValue = ref("")
+watch(() => target.value, (v) => newValue.value = v?.currentValue ?? newValue.value)
 
 function endEditing() {
 	if (!target.value) return;
@@ -32,8 +32,9 @@ function endEditing() {
 		}">
 			<DatabaseValueEditorSelect v-if="target.field.type === TableFieldType.SelectType" v-model="newValue"
 			                           :end-editing="endEditing" :field="target.field"/>
-			<DatabaseValueEditorText v-else v-model="newValue" :current-value="target.currentValue" :end-editing="endEditing"
-			                         :field="target.field" :small="target.small"/>
+			<DatabaseValueEditorDatetime v-else-if="target.field.type === TableFieldType.DatetimeType"
+			                             v-model="newValue"/>
+			<DatabaseValueEditorText v-else v-model="newValue" :end-editing="endEditing" :field="target.field"/>
 		</div>
 	</div>
 </template>

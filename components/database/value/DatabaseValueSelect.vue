@@ -1,15 +1,14 @@
 <script lang="ts" setup>
 import type TableField from "~/types/database/TableField";
 
-const {value, field, small} = defineProps<{
+const {value, field} = defineProps<{
 	value: string,
-	field: TableField,
-	small: boolean
+	field: TableField
 }>()
 </script>
 
 <template>
-	<UBadge v-if="value" :class="small ? '' : 'm-2.5'" :color="field.options?.[value]" variant="subtle">
+	<UBadge v-if="value" :color="field.options?.[value]" class="m-2.5" variant="subtle">
 		{{ value }}
 	</UBadge>
 	<div v-else class="select-none">&nbsp;</div>

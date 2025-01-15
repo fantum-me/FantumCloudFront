@@ -1,5 +1,6 @@
 import {
     DatabaseFieldIconBoolean,
+    DatabaseFieldIconDatetime,
     DatabaseFieldIconNumber,
     DatabaseFieldIconSelect,
     DatabaseFieldIconText,
@@ -12,6 +13,7 @@ enum TableFieldType {
     NumberType = "number",
     BooleanType = "boolean",
     SelectType = "select",
+    DatetimeType = "datetime"
 }
 
 export default TableFieldType
@@ -26,5 +28,6 @@ export function getFieldTypeIcon(type: TableFieldType) {
     else if (type === TableFieldType.NumberType) return DatabaseFieldIconNumber;
     else if (type === TableFieldType.BooleanType) return DatabaseFieldIconBoolean;
     else if (type === TableFieldType.SelectType) return DatabaseFieldIconSelect;
+    else if (type === TableFieldType.DatetimeType) return DatabaseFieldIconDatetime;
     else return DatabaseFieldIconText;
 }

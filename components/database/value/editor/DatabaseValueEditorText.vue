@@ -4,14 +4,10 @@ import type TableField from "~/types/database/TableField";
 
 const newValue = defineModel<string>()
 
-const {field, currentValue, endEditing, small} = defineProps<{
+const {field, endEditing} = defineProps<{
 	field: TableField,
-	currentValue: string,
-	endEditing: () => void,
-	small: boolean
+	endEditing: () => void
 }>()
-
-newValue.value = currentValue
 
 function onKeydown(event: KeyboardEvent) {
 	const target = (event.target as HTMLInputElement)
@@ -37,6 +33,6 @@ function onInput(event: InputEvent) {
 <template>
 	<form class="w-full" @submit.prevent="endEditing">
 		<UTextarea v-model="newValue" :placeholder="field.name" :rows="1" autofocus autoresize color="gray"
-		           :size="small ? 'md' : 'xl'" @input="onInput" @keydown="onKeydown"/>
+		           size="xl" @input="onInput" @keydown="onKeydown"/>
 	</form>
 </template>
