@@ -84,6 +84,25 @@ export function isRecordValidateFilters(record: TableRecord, view: DatabaseView)
                 if (record.values[filter.field_id] > filter.value)
                     return false
                 break
+
+            case DatabaseViewFilterType.IsBefore:
+                let startDate = record.values[filter.field_id]
+                if (startDate.includes(",")) {
+                    startDate = startDate.split(",")[0]
+                }
+
+                if (new Date(startDate) > new Date(filter.value))
+                    return false
+                break
+            case DatabaseViewFilterType.IsAfter:
+                let endDate = record.values[filter.field_id]
+                if (endDate.includes(",")) {
+                    endDate = endDate.split(",")[1]
+                }
+
+                if (new Date(endDate) < new Date(filter.value))
+                    return false
+                break
         }
     }
     return true

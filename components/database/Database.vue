@@ -7,6 +7,7 @@ import type TableField from "~/types/database/TableField";
 import type {DatabaseUpdateTypes} from "~/types/database/DatabaseUpdateType";
 import type TableRecord from "~/types/database/TableRecord";
 import type DatabaseView from "~/types/database/DatabaseView";
+import {isFilterTypeNeedValue} from "~/types/database/DatabaseViewFilterType";
 
 const {id} = defineProps({id: String})
 
@@ -16,6 +17,13 @@ const workspace = useWorkspace()
 
 const selectedView = useDatabaseView()
 const isOptionBarOpen = ref(false)
+const hasActiveFilter = computed(() => {
+	if (!selectedView.value.settings.filters) return false
+	for (const filter of selectedView.value.settings.filters) {
+		if (filter.operation && (filter.value.trim() || !isFilterTypeNeedValue(filter.operation))) return true
+	}
+	return false
+})
 
 const eventSourceRef: Ref<EventSourcePolyfill | null> = ref(null);
 
@@ -180,7 +188,7 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 			<DatabaseValueEditor/>
 			<div class="w-full flex-between">
 				<DatabaseViewTitle/>
-				<UButton :color="selectedView.settings?.filters?.length ? 'primary' : 'gray'" icon="i-heroicons-funnel"
+				<UButton :color="hasActiveFilter ? 'primary' : 'gray'" icon="i-heroicons-funnel"
 				         variant="ghost" @click="isOptionBarOpen = !isOptionBarOpen"/>
 			</div>
 			<DatabaseViewOptionBar v-if="isOptionBarOpen"/>

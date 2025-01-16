@@ -13,7 +13,7 @@ const range = ref({
 	end: newValue.value ? new Date(newValue.value.split(",")[1]) : getTheNextDay(date.value)
 });
 
-const isRange = ref(newValue.value && newValue.value.includes(","))
+const isRange = ref<boolean>(!!newValue.value && newValue.value.includes(","))
 watch(() => isRange.value, (newValue) => {
 	if (newValue) {
 		range.value = {
@@ -24,7 +24,8 @@ watch(() => isRange.value, (newValue) => {
 	onUpdate()
 })
 
-const includeTime = ref(newValue.value && newValue.value.includes("T"))
+console.log(newValue.value)
+const includeTime = ref<boolean>(!!newValue.value && newValue.value.includes("T"))
 watch(() => includeTime.value, () => onUpdate())
 
 function onUpdate(newDate: Date | { start: Date, end: Date } | undefined = undefined): void {
@@ -54,14 +55,11 @@ function onUpdate(newDate: Date | { start: Date, end: Date } | undefined = undef
 		<UDivider class="opacity-50 my-2"/>
 	</div>
 
-	<DatePicker v-if="allowRange && isRange" v-model.range="range" :is-dark="colorMode.value === 'dark'"
-	            :mode="includeTime ? 'dateTime' : 'date'" borderless
-	            is24hr
-	            title-position="left" transparent trim-weeks
+	<DatePicker v-if="allowRange && isRange" v-model.range="range" :is-dark="colorMode.value === 'dark'" :mode="includeTime ? 'dateTime' : 'date'"
+	            borderless is24hr title-position="left" transparent trim-weeks
 	            @update:modelValue="onUpdate"/>
 	<DatePicker v-else v-model="date" :is-dark="colorMode.value === 'dark'" :mode="includeTime ? 'dateTime' : 'date'"
-	            borderless is24hr
-	            title-position="left" transparent trim-weeks @update:modelValue="onUpdate"/>
+	            borderless is24hr title-position="left" transparent trim-weeks @update:modelValue="onUpdate"/>
 </template>
 
 <!--suppress CssUnresolvedCustomProperty -->

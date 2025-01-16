@@ -15,6 +15,9 @@ enum DatabaseViewFilterType {
     IsGreaterOrEqual = 'is_greater_or_equal',
     IsLower = 'is_lower',
     IsLowerOrEqual = 'is_lower_or_equal',
+
+    IsBefore = 'is_before',
+    IsAfter = 'is_after',
 }
 
 export default DatabaseViewFilterType;
@@ -33,6 +36,8 @@ export function getTableFieldAvailableFilter(field: TableField): DatabaseViewFil
         allowed.push(filter.Contains, filter.DoesNotContain, filter.StartsWith, filter.EndsWith)
     } else if (field.type === TableFieldType.NumberType) {
         allowed.push(filter.IsGreater, filter.IsGreaterOrEqual, filter.IsLower, filter.IsLowerOrEqual)
+    } else if (field.type === TableFieldType.DatetimeType) {
+        allowed.push(filter.IsBefore, filter.IsAfter)
     }
     return allowed
 }
