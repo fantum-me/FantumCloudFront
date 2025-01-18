@@ -1,19 +1,9 @@
 <script setup lang="ts">
 import TableFieldType from "~/types/database/TableFieldType";
-import type TableField from "~/types/database/TableField";
 
 const newValue = ref("")
 
-const target = useState<undefined|{
-	field: TableField,
-	currentValue: string,
-	update: (v: string) => void,
-	width: number,
-	position: {
-		x: number,
-		y: number
-	}
-}>("database-value-editing-target", () => undefined)
+const target = useValueEditingTarget()
 watch(() => target.value, (v) => newValue.value = v?.currentValue ?? newValue.value)
 
 function endEditing() {

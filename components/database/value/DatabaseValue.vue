@@ -3,6 +3,8 @@ import TableFieldType from "~/types/database/TableFieldType";
 import type TableField from "~/types/database/TableField";
 
 const value = defineModel<string>({required: true})
+const editingTarget = useValueEditingTarget()
+
 const {field} = defineProps<{ field: TableField }>()
 
 const cellRef = ref()
@@ -13,10 +15,10 @@ const formatedValue = computed<string>(() => {
 
 function startEditing() {
 	if (field.type === TableFieldType.BooleanType) return
-	useState("database-value-editing-target").value = {
+	editingTarget.value = {
 		field: field,
 		width: cellRef.value.parentNode.clientWidth,
-		currentValue: value,
+		currentValue: value.value,
 		update: (v: string) => value.value = v,
 		position: {
 			x: cellRef.value.getBoundingClientRect().left,
