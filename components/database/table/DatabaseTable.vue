@@ -2,7 +2,7 @@
 import {DATABASE_TABLE_MIN_WIDTH} from "~/types/database/DatabaseViewType";
 import type TableRecord from "~/types/database/TableRecord";
 
-const {records} = defineProps<{ records: TableRecord[] }>()
+const records = defineModel<TableRecord[]>({required: true})
 
 const database = useDatabase()
 const view = useDatabaseView()

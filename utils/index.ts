@@ -29,3 +29,5 @@ export const getWelcomeMessage = (): string => {
 }
 
 export const arraySum = (array: Array<number>) => array.reduce((a, b) => a + b, 0);
+
+export const rangesOverlap = (start1: number, end1: number, start2: number, end2: number) => !(end1 < start2 || end2 < start1);

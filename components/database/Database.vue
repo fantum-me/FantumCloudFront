@@ -192,7 +192,9 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 				         variant="ghost" @click="isOptionBarOpen = !isOptionBarOpen"/>
 			</div>
 			<DatabaseViewOptionBar v-if="isOptionBarOpen"/>
-			<DatabaseTable v-if="selectedView.type === DatabaseViewType.TableView" :records="records"/>
+
+			<DatabaseTable v-if="selectedView.type === DatabaseViewType.TableView" v-model="records"/>
+			<DatabaseCalendar v-else-if="selectedView.type === DatabaseViewType.CalendarView" v-model="records"/>
 		</div>
 	</div>
 </template>
