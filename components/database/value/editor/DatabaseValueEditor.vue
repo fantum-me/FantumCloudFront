@@ -15,16 +15,18 @@ function endEditing() {
 </script>
 
 <template>
-	<div v-if="target" class="z-50 fixed top-0 left-0 w-screen h-screen" @click="endEditing">
-		<div class="absolute" @click.stop :style="{
+	<Teleport to="body" v-if="target">
+		<div class="z-[100] fixed top-0 left-0 w-screen h-screen" @click="endEditing">
+			<div class="absolute" @click.stop :style="{
 			transform: `translate(${target.position.x - 1}px, ${target.position.y - 1}px)`,
 			width: target.width + 'px'
 		}">
-			<DatabaseValueEditorSelect v-if="target.field.type === TableFieldType.SelectType" v-model="newValue"
-			                           :end-editing="endEditing" :field="target.field"/>
-			<DatabaseValueEditorDatetime v-else-if="target.field.type === TableFieldType.DatetimeType"
-			                             v-model="newValue"/>
-			<DatabaseValueEditorText v-else v-model="newValue" :end-editing="endEditing" :field="target.field"/>
+				<DatabaseValueEditorSelect v-if="target.field.type === TableFieldType.SelectType" v-model="newValue"
+				                           :end-editing="endEditing" :field="target.field"/>
+				<DatabaseValueEditorDatetime v-else-if="target.field.type === TableFieldType.DatetimeType"
+				                             v-model="newValue" :end-editing="endEditing"/>
+				<DatabaseValueEditorText v-else v-model="newValue" :end-editing="endEditing" :field="target.field"/>
+			</div>
 		</div>
-	</div>
+	</Teleport>
 </template>

@@ -28,5 +28,5 @@ export const formatDatetimeToString = (dateString: string) => {
         return date.toLocaleString('en-US', options).replace(" at ", " ");
     }
 
-    return dateString.split(",").map(d => format(d)).join("\n")
+    return dateString.split(",").map(d => format(d)).join(" → ")
 }

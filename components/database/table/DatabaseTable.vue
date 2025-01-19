@@ -37,9 +37,9 @@ const fieldWidths = useState("database-table-field-widths").value = computed<Rec
 					<DatabaseRecordValue :field="field" :record="record"/>
 				</div>
 				<div class="cell flex-start pl-2.5 w-40">
-					<DatabaseButtonDeleteRecord :id="record.id">
-						<UButton color="gray" icon="i-heroicons-trash" variant="ghost"/>
-					</DatabaseButtonDeleteRecord>
+					<DatabaseButtonMenuRecord :record="record" context="view">
+						<UButton icon="i-heroicons-ellipsis-horizontal" color="gray" variant="ghost"/>
+					</DatabaseButtonMenuRecord>
 				</div>
 			</div>
 		</div>

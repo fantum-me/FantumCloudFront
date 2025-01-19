@@ -2,9 +2,11 @@
 import type TableRecord from "~/types/database/TableRecord";
 import TableFieldType from "~/types/database/TableFieldType";
 import type TableField from "~/types/database/TableField";
+import {DatabaseModalEditRecord} from "#components";
 
 const records = defineModel<TableRecord[]>({required: true})
 
+const modal = useModal()
 const database = useDatabase()
 const titleField = computed(() => database.value.fields?.find(f => f.is_title))
 
@@ -15,6 +17,8 @@ const calendar = ref()
 const width = ref(0)
 
 const weeks = computed(() => calculateWeeks(date.value, records.value, targetField.value))
+
+const editRecord = (record: TableRecord) => modal.open(DatabaseModalEditRecord, {record})
 
 const prevMonth = () => date.value = new Date(date.value.setMonth(date.value.getMonth() - 1))
 const nextMonth = () => date.value = new Date(date.value.setMonth(date.value.getMonth() + 1))
@@ -29,7 +33,7 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 
 <template>
 	<div class="overflow-hidden flex flex-col">
-		<div class="flex-center gap-2 mb-4">
+		<div class="flex-center gap-2 mb-4 select-none">
 			<UButton color="gray" icon="i-heroicons-chevron-left" variant="ghost" @click="prevMonth"/>
 			<p class="text-lg font-semibold">
 				{{
@@ -58,13 +62,13 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 					marginTop: (event.position + 1) * 32 + 'px',
 					marginLeft: event.startIndex * (width / 7) + 'px',
 					width: (event.endIndex - event.startIndex + 1) * (width / 7) + 'px'
-				}" class="absolute h-6 z-10 flex-start">
+				}" class="absolute h-6 z-10 flex-start cursor-pointer event" @click="editRecord(event.record)">
 					<div :class="{
 						'w-full h-full bg-gray-200 dark:bg-gray-600 px-2': true,
 						'rounded-l-lg ml-1.5': event.isStart,
 						'rounded-r-lg mr-1.5': event.isEnd
 					}">
-						<p>{{ event.record.values[titleField.id] ?? 'Unnamed' }}</p>
+						<p class="truncate">{{ event.record.values[titleField.id] }}</p>
 					</div>
 				</div>
 			</div>
@@ -82,7 +86,7 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 	}
 
 	.day {
-		@apply w-full bg-white dark:bg-gray-800;
+		@apply w-full bg-white dark:bg-gray-800 select-none;
 
 		&.outside-of-month {
 			@apply bg-gray-100 dark:bg-gray-900 text-gray-400;
@@ -91,6 +95,10 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 		&.today .date-number {
 			@apply text-red-500 font-bold;
 		}
+	}
+
+	.event {
+		border: 0 !important;
 	}
 }
 </style>

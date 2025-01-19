@@ -23,9 +23,12 @@ export default defineAppConfig({
             }
         },
         input: {
+            size: {
+                '4xl': 'text-4xl'
+            },
             color: {
                 gray: {
-                    databaseTableEdit: "shadow-none bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-0 dark:focus:ring-0",
+                    transparent: "bg-transparent shadow-none text-gray-900 dark:text-white focus:ring-0 dark:focus:ring-0",
                     databaseSelectMenu: "shadow-none bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-0 dark:focus:ring-0"
                 }
             }
