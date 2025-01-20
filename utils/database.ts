@@ -23,86 +23,51 @@ export const repositionField = (id: string, newPosition: number) => {
     database.fields?.sort((a, b) => a.position - b.position)
 }
 
+function equal(fieldType: TableFieldType, filterValue: string, recordValue: string) {
+    if (fieldType === TableFieldType.SelectType) return filterValue.split(",").includes(recordValue)
+    else if (fieldType === TableFieldType.DatetimeType) return areDateStringsEqual(recordValue, filterValue)
+    else return filterValue.toLowerCase() === recordValue.toLowerCase()
+}
+
 export function isRecordValidateFilters(record: TableRecord, view: DatabaseView): boolean {
     if (!view.settings?.filters) return true
     const database = useDatabase().value
     for (const filter of view.settings.filters) {
         if (!filter.operation || (!filter.value.trim() && isFilterTypeNeedValue(filter.operation))) continue;
-        const field: TableField | undefined = database.fields?.find(f => f.id === filter.field_id)
+        const field: TableField = database.fields?.find(f => f.id === filter.field_id) as TableField
+        const value = record.values[filter.field_id]
+
         switch (filter.operation) {
             case DatabaseViewFilterType.Is:
-                if (field?.type === TableFieldType.SelectType) {
-                    if (!filter.value.split(",").includes(record.values[filter.field_id]))
-                        return false
-                } else if (filter.value !== record.values[filter.field_id])
-                    return false
-                break
+                return equal(field.type, filter.value, value)
             case DatabaseViewFilterType.IsNot:
-                if (field?.type === TableFieldType.SelectType) {
-                    if (filter.value.split(",").includes(record.values[filter.field_id]))
-                        return false
-                } else if (filter.value === record.values[filter.field_id])
-                    return false
-                break
+                return !equal(field.type, filter.value, value)
             case DatabaseViewFilterType.Contains:
-                if (!record.values[filter.field_id].includes(filter.value))
-                    return false
-                break
+                return value.toLowerCase().includes(filter.value.toLowerCase())
             case DatabaseViewFilterType.DoesNotContain:
-                if (record.values[filter.field_id].includes(filter.value))
-                    return false
-                break
+                return !value.toLowerCase().includes(filter.value.toLowerCase())
             case DatabaseViewFilterType.StartsWith:
-                if (!record.values[filter.field_id].startsWith(filter.value))
-                    return false
-                break
+                return value.toLowerCase().startsWith(filter.value.toLowerCase())
             case DatabaseViewFilterType.EndsWith:
-                if (!record.values[filter.field_id].endsWith(filter.value))
-                    return false
-                break
+                return value.toLowerCase().endsWith(filter.value.toLowerCase())
             case DatabaseViewFilterType.IsEmpty:
-                if (record.values[filter.field_id])
-                    return false
-                break
+                return !value
             case DatabaseViewFilterType.IsNotEmpty:
-                if (!record.values[filter.field_id])
-                    return false
-                break
+                return !!value
             case DatabaseViewFilterType.IsGreater:
-                if (record.values[filter.field_id] <= filter.value)
-                    return false
-                break
+                return value > filter.value
             case DatabaseViewFilterType.IsGreaterOrEqual:
-                if (record.values[filter.field_id] < filter.value)
-                    return false
-                break
+                return value >= filter.value
             case DatabaseViewFilterType.IsLower:
-                if (record.values[filter.field_id] >= filter.value)
-                    return false
-                break
+                return value < filter.value
             case DatabaseViewFilterType.IsLowerOrEqual:
-                if (record.values[filter.field_id] > filter.value)
-                    return false
-                break
-
+                return value <= filter.value
             case DatabaseViewFilterType.IsBefore:
-                let startDate = record.values[filter.field_id]
-                if (startDate.includes(",")) {
-                    startDate = startDate.split(",")[0]
-                }
-
-                if (new Date(startDate) > new Date(filter.value))
-                    return false
-                break
+                let startDate = new Date(value.split(",")[0])
+                return startDate <= new Date(filter.value)
             case DatabaseViewFilterType.IsAfter:
-                let endDate = record.values[filter.field_id]
-                if (endDate.includes(",")) {
-                    endDate = endDate.split(",")[1]
-                }
-
-                if (new Date(endDate) < new Date(filter.value))
-                    return false
-                break
+                let endDate = new Date(value.includes(",") ? value.split(',')[1] : value)
+                return endDate >= new Date(filter.value)
         }
     }
     return true

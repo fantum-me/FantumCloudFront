@@ -5,7 +5,7 @@ import 'v-calendar/dist/style.css'
 const colorMode = useColorMode()
 
 const newValue = defineModel<string>()
-const {allowRange = false} = defineProps<{ allowRange?: boolean }>()
+const {selectTime = true, allowRange = false} = defineProps<{ selectTime?: boolean, allowRange?: boolean }>()
 
 const date = ref<Date>(newValue.value ? new Date(newValue.value) : getTodayNoon())
 const range = ref({
@@ -24,8 +24,7 @@ watch(() => isRange.value, (newValue) => {
 	onUpdate()
 })
 
-console.log(newValue.value)
-const includeTime = ref<boolean>(!!newValue.value && newValue.value.includes("T"))
+const includeTime = ref<boolean>(selectTime && !!newValue.value && newValue.value.includes("T"))
 watch(() => includeTime.value, () => onUpdate())
 
 function onUpdate(newDate: Date | { start: Date, end: Date } | undefined = undefined): void {
@@ -41,9 +40,9 @@ function onUpdate(newDate: Date | { start: Date, end: Date } | undefined = undef
 </script>
 
 <template>
-	<div class="w-full px-3.5">
+	<div v-if="selectTime || allowRange" class="w-full px-3.5">
 		<div class="p-2 space-y-1">
-			<div class="flex-between select-none">
+			<div v-if="selectTime" class="flex-between select-none">
 				<p>Include Time</p>
 				<UToggle v-model="includeTime"/>
 			</div>

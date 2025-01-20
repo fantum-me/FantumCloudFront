@@ -195,9 +195,11 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 			<DatabaseValueEditor/>
 			<div class="w-full flex-between">
 				<DatabaseViewTitle/>
-				<div class="flex-center gap-2">
+				<div class="flex-center gap-3">
 					<UButton :color="hasActiveFilter ? 'primary' : 'gray'" icon="i-heroicons-funnel"
-					         variant="ghost" @click="isOptionBarOpen = !isOptionBarOpen"/>
+					         variant="soft" @click="isOptionBarOpen = !isOptionBarOpen"/>
+
+					<span class="h-full w-px border-l border-gray-500">&nbsp;</span>
 					<DatabaseButtonNewRecord @click="creatingRecord = true">
 						<UButton>New</UButton>
 					</DatabaseButtonNewRecord>
