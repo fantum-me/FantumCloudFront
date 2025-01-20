@@ -42,7 +42,7 @@ watch(() => database.value.records, (newValue) => {
 					</DatabaseButtonFieldHeader>
 				</UTooltip>
 				<div class="flex-1">
-					<DatabaseRecordValue :field="field" :record="record"/>
+					<DatabaseRecordValue :field="field" :record="record" placeholder/>
 				</div>
 			</div>
 			<div class="w-36 mt-2 opacity-60">

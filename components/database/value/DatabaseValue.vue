@@ -5,7 +5,7 @@ import type TableField from "~/types/database/TableField";
 const value = defineModel<string>({required: true})
 const editingTarget = useValueEditingTarget()
 
-const {field} = defineProps<{ field: TableField }>()
+const {field, placeholder = false} = defineProps<{ field: TableField, placeholder?: boolean }>()
 
 const cellRef = ref()
 const formatedValue = computed<string>(() => {
@@ -34,8 +34,10 @@ function startEditing() {
 		<DatabaseValueSelect v-else-if="field.type === TableFieldType.SelectType" :field="field" :value="value"/>
 
 		<div v-else class="mx-4 py-3 break-all text-wrap">
-			<span class="whitespace-pre">{{ formatedValue }}</span>
+			<span v-if="value" class="whitespace-pre">{{ formatedValue }}</span>
+			<span v-else-if="placeholder" class="text-sm text-gray-400 dark:text-gray-600">Empty</span>
 			<span class="select-none">&nbsp;</span>
 		</div>
+
 	</div>
 </template>

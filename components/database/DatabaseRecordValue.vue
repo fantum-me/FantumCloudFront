@@ -2,9 +2,10 @@
 import type TableRecord from "~/types/database/TableRecord";
 import type TableField from "~/types/database/TableField";
 
-const {record, field} = defineProps<{
+const {record, field, placeholder = false} = defineProps<{
 	record: TableRecord,
-	field: TableField
+	field: TableField,
+	placeholder?: boolean
 }>()
 
 const workspace = useWorkspace()
@@ -38,5 +39,5 @@ async function updateValue(newValue: string) {
 </script>
 
 <template>
-	<DatabaseValue v-model="value" :field="field"/>
+	<DatabaseValue v-model="value" :field="field" :placeholder="placeholder"/>
 </template>
