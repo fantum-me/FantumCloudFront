@@ -8,14 +8,17 @@ import type {DatabaseUpdateTypes} from "~/types/database/DatabaseUpdateType";
 import type TableRecord from "~/types/database/TableRecord";
 import type DatabaseView from "~/types/database/DatabaseView";
 import {isFilterTypeNeedValue} from "~/types/database/DatabaseViewFilterType";
+import {DatabaseModalEditRecord} from "#components";
 
 const {id} = defineProps({id: String})
 
 const status: Ref<"loaded" | "loading" | "failed"> = ref("loading");
 const database = useDatabase()
 const workspace = useWorkspace()
+const modal = useModal()
 
 const selectedView = useDatabaseView()
+const creatingRecord = ref(false)
 const isOptionBarOpen = ref(false)
 const hasActiveFilter = computed(() => {
 	if (!selectedView.value.settings.filters) return false
@@ -117,6 +120,10 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 
 		case "table_record_insert":
 			database.value.records.push(data as TableRecord)
+			if (creatingRecord.value) {
+				creatingRecord.value = false
+				modal.open(DatabaseModalEditRecord, {record: database.value.records.at(-1) as TableRecord})
+			}
 			break;
 		case "table_record_delete":
 			database.value.records = database.value.records.filter(f => f.id !== data.id)
@@ -188,8 +195,13 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 			<DatabaseValueEditor/>
 			<div class="w-full flex-between">
 				<DatabaseViewTitle/>
-				<UButton :color="hasActiveFilter ? 'primary' : 'gray'" icon="i-heroicons-funnel"
-				         variant="ghost" @click="isOptionBarOpen = !isOptionBarOpen"/>
+				<div class="flex-center gap-2">
+					<UButton :color="hasActiveFilter ? 'primary' : 'gray'" icon="i-heroicons-funnel"
+					         variant="ghost" @click="isOptionBarOpen = !isOptionBarOpen"/>
+					<DatabaseButtonNewRecord @click="creatingRecord = true">
+						<UButton>New</UButton>
+					</DatabaseButtonNewRecord>
+				</div>
 			</div>
 			<DatabaseViewOptionBar v-if="isOptionBarOpen"/>
 

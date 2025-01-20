@@ -11,32 +11,14 @@ const workspace = useWorkspace()
 const database = useDatabase()
 const titleField = computed(() => database.value.fields?.find(f => f.is_title) as TableField)
 
-const currentName = computed(() => record.values[titleField.value.id])
 const newName = ref(record.values[titleField.value.id])
-watch(() => currentName.value, (newValue) => newName.value = newValue)
+watch(() => record, (newValue) => newName.value = newValue.values[titleField.value.id])
 
 watch(() => database.value.records, (newValue) => {
 	if (!newValue?.find(r => r.id === record.id)) modal.close()
 })
 
-onMounted(() => console.log("aaaaaaaa"))
 
-async function updateName() {
-	const oldValue = record.values[titleField.value.id]
-	if (newName.value === oldValue) return
-	record.values[titleField.value.id] = newName.value
-	const res = await useApiFetch(
-		`/workspaces/${workspace.value.id}/databases/${database.value.id}/fields/${titleField.value.id}/records/${record.id}`,
-		{
-			method: "PATCH",
-			body: JSON.stringify({value: newName.value}),
-		}
-	)
-	if (!res.ok) {
-		record.values[titleField.value.id] = oldValue;
-		useErrorToast("Rename failed")
-	}
-}
 </script>
 
 <template>
@@ -49,10 +31,7 @@ async function updateName() {
 				</DatabaseButtonMenuRecord>
 			</div>
 
-			<form @submit.prevent="updateName">
-				<UInput v-model="newName" size="4xl" class="font-semibold opacity-80" placeholder="New Item" autofocus
-				        color="gray" variant="transparent" @focusout="updateName"/>
-			</form>
+			<DatabaseRecordTitleInput :record="record"/>
 			<div v-for="field in database.fields.filter(f => !f.is_title)" class="w-full flex-start gap-3">
 				<UTooltip :text="field.name" class="w-36" :popper="{placement: 'left'}" :prevent="field.name.length < 15">
 					<DatabaseButtonFieldHeader :field="field">

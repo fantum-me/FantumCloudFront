@@ -33,17 +33,18 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 
 <template>
 	<div class="overflow-hidden flex flex-col">
-		<div class="flex-center gap-2 mb-4 select-none">
-			<UButton color="gray" icon="i-heroicons-chevron-left" variant="ghost" @click="prevMonth"/>
-			<p class="text-lg font-semibold">
-				{{
-					date.toLocaleDateString('default', {
-						year: 'numeric',
-						month: 'long'
-					})
-				}}
+		<div class="flex-between mb-1">
+			<p class="text-sm font-medium">
+				{{ date.toLocaleDateString('default', {year: 'numeric', month: 'long'}) }}
 			</p>
-			<UButton color="gray" icon="i-heroicons-chevron-right" variant="ghost" @click="nextMonth"/>
+			<div class="flex-center select-none">
+				<UButton color="gray" icon="i-heroicons-chevron-left-16-solid" size="2xs" variant="ghost"
+				         @click="prevMonth"/>
+				<UButton class="text-sm" color="gray" size="2xs" variant="ghost" @click="date = new Date()">Today
+				</UButton>
+				<UButton color="gray" icon="i-heroicons-chevron-right-16-solid" size="2xs" variant="ghost"
+				         @click="nextMonth"/>
+			</div>
 		</div>
 		<div v-if="targetField && titleField" ref="calendar" class="flex-1 overflow-y-scroll calendar">
 			<div v-for="week in weeks" v-if="calendar" :key="JSON.stringify(week)" :style="{

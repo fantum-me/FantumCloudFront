@@ -9,7 +9,7 @@ const {field} = defineProps<{ field: TableField }>()
 
 const cellRef = ref()
 const formatedValue = computed<string>(() => {
-	if (field.type === TableFieldType.DatetimeType) return formatDatetimeToString(value.value)
+	if (field.type === TableFieldType.DatetimeType && value.value) return formatDatetimeToString(value.value)
 	else return value.value
 })
 
