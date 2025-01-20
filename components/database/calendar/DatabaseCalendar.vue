@@ -8,10 +8,11 @@ const records = defineModel<TableRecord[]>({required: true})
 
 const modal = useModal()
 const database = useDatabase()
-const titleField = computed(() => database.value.fields?.find(f => f.is_title))
+const titleField = computed(() => database.value.fields?.find(f => f.is_title) as TableField)
 
 const targetField = ref(database.value.fields?.find(f => f.type === TableFieldType.DatetimeType) as TableField)
 const date = ref(new Date());
+const noDateRecords = computed(() => records.value.filter(r => !r.values[targetField.value.id]))
 
 const calendar = ref()
 const width = ref(0)
@@ -38,6 +39,18 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 				{{ date.toLocaleDateString('default', {year: 'numeric', month: 'long'}) }}
 			</p>
 			<div class="flex-center select-none">
+				<UPopover v-if="noDateRecords.length" class="mr-2">
+					<UButton color="gray" variant="ghost">No date ({{ noDateRecords.length }})</UButton>
+
+					<template #panel>
+						<div class="p-1 space-y-1">
+							<UButton v-for="record in noDateRecords" :key="record.id" block
+							         class="justify-start" color="gray" variant="ghost" @click="editRecord(record)">
+								{{ record.values[titleField.id] ? record.values[titleField.id] : "New Item" }}
+							</UButton>
+						</div>
+					</template>
+				</UPopover>
 				<UButton color="gray" icon="i-heroicons-chevron-left-16-solid" size="2xs" variant="ghost"
 				         @click="prevMonth"/>
 				<UButton class="text-sm" color="gray" size="2xs" variant="ghost" @click="date = new Date()">Today
@@ -46,7 +59,7 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 				         @click="nextMonth"/>
 			</div>
 		</div>
-		<div v-if="targetField && titleField" ref="calendar" class="flex-1 overflow-y-scroll calendar">
+		<div v-if="targetField" ref="calendar" class="flex-1 overflow-y-scroll calendar">
 			<div v-for="week in weeks" v-if="calendar" :key="JSON.stringify(week)" :style="{
 				height: (Math.max(...week.events.map(e => e.position)) + 2) * 32 + 'px'
 			}" class="week relative">
@@ -69,7 +82,9 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 						'rounded-l-lg ml-1.5': event.isStart,
 						'rounded-r-lg mr-1.5': event.isEnd
 					}">
-						<p class="truncate">{{ event.record.values[titleField.id] }}</p>
+						<p class="truncate">
+							{{ event.record.values[titleField.id] ? event.record.values[titleField.id] : "New Item" }}
+						</p>
 					</div>
 				</div>
 			</div>
