@@ -33,6 +33,11 @@ async function endEditing() {
 }
 
 async function deleteProperty() {
+	if (modal.isOpen) {
+		modal.close()
+		await useWait(200) // Wait for the current modal close duration
+	}
+
 	modal.open(ModalConfirmation, {
 		title: `Delete property ${field.name} ?`,
 		description: `Are you sure you want to delete the property ${field.name} ?`,

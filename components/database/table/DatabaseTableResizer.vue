@@ -25,9 +25,7 @@ async function startResizing(e: MouseEvent) {
 	dragStartX.value = e.pageX;
 	draggingFieldWidth.value = width.value ?? DATABASE_TABLE_MIN_WIDTH
 
-	if (!view.value.settings.widths) view.value.settings.widths = {}
-	view.value.settings.widths[field.id] = DATABASE_TABLE_MIN_WIDTH
-
+	await onResize(e)
 	document.addEventListener('mousemove', onResize);
 	document.addEventListener('mouseup', () => {
 		document.removeEventListener('mousemove', onResize)

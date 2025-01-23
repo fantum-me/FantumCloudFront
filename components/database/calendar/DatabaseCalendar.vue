@@ -7,33 +7,47 @@ import {DatabaseModalEditRecord} from "#components";
 const records = defineModel<TableRecord[]>({required: true})
 
 const modal = useModal()
+
+const workspace = useWorkspace()
 const database = useDatabase()
 const titleField = computed(() => database.value.fields?.find(f => f.is_title) as TableField)
 
-const targetField = ref(database.value.fields?.find(f => f.type === TableFieldType.DatetimeType) as TableField)
+const targetField = computed(() => database.value.fields?.find(f => f.type === TableFieldType.DatetimeType))
 const date = ref(new Date());
-const noDateRecords = computed(() => records.value.filter(r => !r.values[targetField.value.id]))
+const noDateRecords = computed(() => records.value.filter(r => targetField.value ? !r.values[targetField.value.id] : false))
 
+const isLoading = ref(false)
 const calendar = ref()
 const width = ref(0)
 
-const weeks = computed(() => calculateWeeks(date.value, records.value, targetField.value))
+const weeks = computed(() => targetField.value ? calculateWeeks(date.value, records.value, targetField.value) : [])
 
 const editRecord = (record: TableRecord) => modal.open(DatabaseModalEditRecord, {record})
 
 const prevMonth = () => date.value = new Date(date.value.setMonth(date.value.getMonth() - 1))
 const nextMonth = () => date.value = new Date(date.value.setMonth(date.value.getMonth() + 1))
-const calculateWidths = () => width.value = calendar.value.clientWidth
+const calculateWidths = () => calendar.value ? width.value = calendar.value.clientWidth : undefined
+
+async function createDatetimeField() {
+	isLoading.value = true
+	const res = await useApiFetch(`/workspaces/${workspace.value.id}/databases/${database.value.id}/fields`, {
+		method: "POST",
+		body: JSON.stringify({name: "Date", type: TableFieldType.DatetimeType})
+	})
+	if (!res.ok) useErrorToast("Failed to create datetime field")
+	isLoading.value = false
+}
 
 onMounted(() => {
-	calculateWidths();
+	if (targetField.value) calculateWidths()
+	else createDatetimeField()
 	window.addEventListener("resize", calculateWidths)
 })
 onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 </script>
 
 <template>
-	<div class="overflow-hidden flex flex-col">
+	<div v-if="targetField" class="overflow-hidden flex flex-col">
 		<div class="flex-between mb-1">
 			<p class="text-sm font-medium">
 				{{ date.toLocaleDateString('default', {year: 'numeric', month: 'long'}) }}
@@ -59,7 +73,7 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 				         @click="nextMonth"/>
 			</div>
 		</div>
-		<div v-if="targetField" ref="calendar" class="flex-1 overflow-y-scroll calendar">
+		<div ref="calendar" class="flex-1 overflow-y-scroll calendar">
 			<div v-for="week in weeks" v-if="calendar" :key="JSON.stringify(week)" :style="{
 				height: (Math.max(...week.events.map(e => e.position)) + 2) * 32 + 'px'
 			}" class="week relative">
@@ -89,6 +103,15 @@ onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 				</div>
 			</div>
 		</div>
+	</div>
+	<div v-else-if="isLoading" class="flex-center w-full pt-16">
+		<Loader/>
+	</div>
+	<div v-else class="w-full flex-center flex-col pt-12 gap-6">
+		<h1 class="text-3xl font-semibold">Datetime field missing !</h1>
+		<p>To display your database as a calendar, a datatime field is neeeded.
+			<br>Please reload the page or click on the button bellow to create one.</p>
+		<UButton @click="createDatetimeField">Create datetime field</UButton>
 	</div>
 </template>
 
