@@ -137,19 +137,22 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 			if (record) record.values[data.field_id as string] = data.value as string;
 			break;
 
-		case "table_view_insert":
+		case "database_view_insert":
 			const view = data as DatabaseView;
 			database.value.views.push(data as DatabaseView)
 			if (view.created_by.user.id === useSession().value.id) selectedView.value = view
 			break;
-		case "table_view_update":
+		case "database_view_update":
 			Object.assign(
 				database.value.views.find(v => v.id === data.id) as DatabaseView,
 				data as DatabaseView
 			);
 			break;
-		case "table_view_delete":
+		case "database_view_delete":
 			database.value.views = database.value.views.filter(v => v.id !== data.id)
+			if (selectedView.value && data.id === selectedView.value.id) {
+				selectedView.value = database.value.views[0]
+			}
 			break;
 	}
 }
@@ -164,7 +167,8 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 	</div>
 	<div v-else-if="status == 'loaded' && database" class="w-full h-full py-5 appear-0.1">
 		<div class="w-full mx-8 flex">
-			<div v-for="view in database.views" :class="view === selectedView ? 'view-option selected' : 'view-option'">
+			<div v-for="view in database.views" :key="view.id"
+			     :class="{'view-option' : true, 'selected': view.id === selectedView.id}">
 				<UButton color="gray" variant="ghost" @click="selectedView = view">
 					<component :is="getViewTypeIcon(view.type)"/>
 					{{ capitalize(view.name) }}
@@ -200,7 +204,7 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 				<div class="flex-center gap-3">
 					<UButton :color="hasActiveFilter ? 'primary' : 'gray'" icon="i-heroicons-funnel"
 					         variant="soft" @click="isOptionBarOpen = !isOptionBarOpen"/>
-
+					<DatabaseButtonViewSettings/>
 					<span class="h-full w-px border-l border-gray-500">&nbsp;</span>
 					<DatabaseButtonNewRecord @click="creatingRecord = true">
 						<UButton>New</UButton>
