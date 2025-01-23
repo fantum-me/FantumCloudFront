@@ -52,7 +52,9 @@ async function fetchDatabase() {
 		status.value = "failed"
 	}
 
-	if (!selectedView.value) selectedView.value = database.value.views[0]
+	if (!selectedView.value || !database.value.views.find(v => v.id === selectedView.value.id)) {
+		selectedView.value = database.value.views[0]
+	}
 }
 
 const records = computed(() => {
