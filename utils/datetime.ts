@@ -8,6 +8,12 @@ export const areSameDay = (d1: Date, d2: Date) => {
         d1.getDate() === d2.getDate();
 }
 
+export const calculateDayDifference = (date1: Date, date2: Date) => {
+    const oneDay = 24 * 60 * 60 * 1000
+    const diffInTime = date2.getTime() - date1.getTime()
+    return Math.round(diffInTime / oneDay)
+}
+
 export const formatDatetimeToString = (dateString: string) => {
     const format = (dateString: string) => {
         const date = new Date(dateString);
