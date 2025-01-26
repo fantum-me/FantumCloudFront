@@ -23,7 +23,7 @@ watch(() => database.value.records, (newValue) => {
 
 <template>
 	<UModal v-if="database.fields" :ui="{width: 'sm:max-w-3xl', wrapper: 'z-40'}">
-		<UCard :ui="{ base: 'px-8 py-7 sm:px-16 sm:py-14', ring: '', background: 'dark:bg-gray-700',
+		<UCard :ui="{ base: 'px-8 py-7 sm:px-16 sm:py-14', ring: '', background: 'dark:bg-gray-900',
 		divide: 'divide-y divide-gray-100 dark:divide-gray-700/50' }">
 			<div class="absolute top-0 right-0 m-2">
 				<DatabaseButtonMenuRecord :record="record" context="edit-modal">

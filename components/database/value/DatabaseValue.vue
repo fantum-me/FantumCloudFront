@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import TableFieldType from "~/types/database/TableFieldType";
+import TableFieldType, {isFieldTypeSelect} from "~/types/database/TableFieldType";
 import type TableField from "~/types/database/TableField";
 
 const value = defineModel<string>({required: true})
@@ -31,13 +31,12 @@ function startEditing() {
 <template>
 	<div v-if="field" ref="cellRef" class="h-full w-full relative" @click="startEditing">
 		<DatabaseValueBoolean v-if="field.type === TableFieldType.BooleanType" v-model="value"/>
-		<DatabaseValueSelect v-else-if="field.type === TableFieldType.SelectType" :field="field" :value="value"/>
+		<DatabaseValueSelect v-else-if="value && isFieldTypeSelect(field.type)" :field="field" :value="value"/>
 
 		<div v-else class="mx-4 py-3 break-all text-wrap">
 			<span v-if="value" class="whitespace-pre">{{ formatedValue }}</span>
 			<span v-else-if="placeholder" class="text-sm text-gray-400 dark:text-gray-600">Empty</span>
 			<span class="select-none">&nbsp;</span>
 		</div>
-
 	</div>
 </template>

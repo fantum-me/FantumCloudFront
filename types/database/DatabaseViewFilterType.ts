@@ -28,14 +28,17 @@ export function isFilterTypeNeedValue(type: DatabaseViewFilterType): boolean {
 
 export function getTableFieldAvailableFilter(field: TableField): DatabaseViewFilterType[] {
     const filter = DatabaseViewFilterType
-    let allowed = [filter.Is, filter.IsNot]
+    let allowed = []
 
+    if (field.type !== TableFieldType.MultiselectType) allowed.push(filter.Is, filter.IsNot)
     if (field.type !== TableFieldType.BooleanType) allowed.push(filter.IsEmpty, filter.IsNotEmpty)
 
     if (field.type === TableFieldType.TextType) {
         allowed.push(filter.Contains, filter.DoesNotContain, filter.StartsWith, filter.EndsWith)
     } else if (field.type === TableFieldType.NumberType) {
         allowed.push(filter.IsGreater, filter.IsGreaterOrEqual, filter.IsLower, filter.IsLowerOrEqual)
+    } else if (field.type === TableFieldType.MultiselectType) {
+        allowed.push(filter.Contains, filter.DoesNotContain)
     } else if (field.type === TableFieldType.DatetimeType) {
         allowed.push(filter.IsBefore, filter.IsAfter)
     }

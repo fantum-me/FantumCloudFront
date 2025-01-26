@@ -49,10 +49,7 @@ function onDragStart(e: DragEvent, field: TableField) {
 		draggingOffsetX.value = e.layerX
 		draggingBaseTranslate.value = fieldTranslates.value[field.id]
 
-		const transparentImage = document.createElement('canvas');
-		transparentImage.getContext('2d')?.clearRect(0, 0, 1, 1);
-		e.dataTransfer?.setDragImage(transparentImage, 0, 0);
-
+		removeDragEventImage(e)
 	}
 }
 
@@ -90,11 +87,11 @@ async function onDragEnd() {
 
 <template>
 	<div ref="headersRef" :style="{width: arraySum(Object.values(fieldWidths))}">
-		<div v-for="field in database.fields" v-if="draggingField" :key="field.id"
-		     :style="{
+		<div v-for="field in database.fields" v-if="draggingField" :key="field.id" :style="{
 				 width: fieldWidths[field.id] + 'px',
 				 transform: `translateX(${field === draggingField ? draggingBaseTranslate : fieldTranslates[field.id]}px)`
-			 }" class="z-50 h-14 absolute" @dragover="e => onDragOver(e, field)"/>
+			 }"
+		     class="z-50 h-14 absolute" @dragover="e => onDragOver(e, field)"/>
 
 		<div v-for="field in database.fields" :key="field.id"
 		     :class="'cell h-14 flex-between absolute' + (repositioning ? ' transition-transform duration-300' : '')"

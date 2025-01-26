@@ -28,8 +28,7 @@ export default defineAppConfig({
             },
             color: {
                 gray: {
-                    transparent: "bg-transparent shadow-none text-gray-900 dark:text-white focus:ring-0 dark:focus:ring-0",
-                    databaseSelectMenu: "shadow-none bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-0 dark:focus:ring-0"
+                    transparent: "bg-transparent shadow-none text-gray-900 dark:text-white focus:ring-0 dark:focus:ring-0"
                 }
             }
         },
