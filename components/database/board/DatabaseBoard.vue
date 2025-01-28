@@ -95,7 +95,7 @@ async function onDragEnd() {
 				</div>
 			</Teleport>
 
-			<div v-for="option in options" class="relative w-56 bg-gray-100/50 rounded-lg shrink-0"
+			<div v-for="option in options" class="relative w-56 bg-gray-100/50 dark:bg-gray-700/30 rounded-lg shrink-0 overflow-hidden"
 			     @dragover="onDragOver(option)">
 				<div v-if="draggingRecord && draggingRecord?.values[targetField.id] === option.value"
 				     class="absolute top-0 left-0 w-full h-full bg-primary opacity-10 z-10"/>
