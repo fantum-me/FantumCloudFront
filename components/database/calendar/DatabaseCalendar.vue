@@ -35,35 +35,53 @@ onMounted(() => {
 onUnmounted(() => window.removeEventListener("resize", calculateWidths))
 
 const draggingRecord = ref<TableRecord | undefined>()
-const draggingDefaultValue = ref<string | undefined>()
+const draggingTarget = ref<Date | undefined>()
 
 function onDragStart(e: DragEvent, record: TableRecord) {
 	if (!targetField.value) return
 	draggingRecord.value = record
-	draggingDefaultValue.value = record.values[targetField.value.id]
 	removeDragEventImage(e)
 }
 
-function onDragOver(day: Date) {
-	const oneDay = 24 * 60 * 60 * 1000
-	if (targetField.value && draggingRecord.value) {
-		const dates = draggingRecord.value.values[targetField.value.id].split(",")
-		if (areSameDay(day, new Date(dates[0]))) return
-		const includeTime = dates[0].includes('T')
-		const dayDiff = calculateDayDifference(day, new Date(dates[0]))
-
-		for (let i = 0; i < dates.length; i++) {
-			const date = new Date(new Date(dates[i]).getTime() - (dayDiff * oneDay))
-			dates[i] = includeTime ? date.toJSON() : date.toJSON().split('T')[0]
-		}
-
-		draggingRecord.value.values[targetField.value.id] = dates.join(",")
-	}
+function onDragEnter(targetValue?: Date) {
+	draggingTarget.value = targetValue
 }
 
 async function onDragEnd() {
-	if (!targetField.value || !draggingRecord.value || !draggingDefaultValue.value) return
+	await useWait(150)
+	draggingRecord.value = undefined
+	draggingTarget.value = undefined
+}
+
+function calculateTargetValue(day?: Date): string {
+	console.log(targetField.value, draggingRecord.value, day)
+	if (!targetField.value || !draggingRecord.value) return ""
+	if (!day) return "";
+
+	const val = draggingRecord.value.values[targetField.value.id]
+	if (!val) return new Date(day.getTime() + 24 * 60 * 60 * 1000).toJSON().split('T')[0]
+
+	const dates = val.split(",")
+	if (!areSameDay(day, new Date(dates[0]))) {
+		const includeTime = dates[0].includes('T')
+		const dayDiff = calculateDayDifference(day, new Date(dates[0]))
+
+		console.log(dates, day, dayDiff)
+
+		for (let i = 0; i < dates.length; i++) {
+			const date = new Date(new Date(dates[i]).getTime() - (dayDiff * 24 * 60 * 60 * 1000))
+			dates[i] = includeTime ? date.toJSON() : date.toJSON().split('T')[0]
+		}
+	}
+	return dates.join(",")
+}
+
+async function onDrop(day?: Date) {
+	if (!targetField.value || !draggingRecord.value) return
+
 	const record = draggingRecord.value
+	const defaultValue = record.values[targetField.value.id]
+	record.values[targetField.value.id] = calculateTargetValue(day)
 	draggingRecord.value = undefined
 
 	const res = await useApiFetch(
@@ -75,10 +93,9 @@ async function onDragEnd() {
 	)
 
 	if (!res.ok) {
-		record.values[targetField.value.id] = draggingDefaultValue.value
+		record.values[targetField.value.id] = defaultValue
 		useErrorToast("Failed to update value")
 	}
-	draggingDefaultValue.value = undefined
 }
 </script>
 
@@ -90,14 +107,19 @@ async function onDragEnd() {
 			</p>
 			<div class="flex-center select-none">
 				<UPopover v-if="noDateRecords.length" class="mr-2">
-					<UButton color="gray" variant="ghost">No date ({{ noDateRecords.length }})</UButton>
+					<UButton :color="draggingRecord && !draggingTarget ? 'primary' : 'gray'" variant="ghost"
+					         @drop.prevent="onDrop()" @dragover.prevent
+					         @dragenter.prevent="onDragEnter()">
+						No date ({{ noDateRecords.length }})
+					</UButton>
 
 					<template #panel>
 						<div class="p-1 space-y-1">
-							<UButton v-for="record in noDateRecords" :key="record.id" block
-							         class="justify-start" color="gray" variant="ghost" @click="editRecord(record)">
+							<div v-for="record in noDateRecords" :key="record.id" class="w-full rounded px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+							     draggable="true" @click="editRecord(record)" @dragend="onDragEnd"
+							     @dragstart="e => onDragStart(e, record)">
 								{{ record.values[titleField.id] ? record.values[titleField.id] : "New Item" }}
-							</UButton>
+							</div>
 						</div>
 					</template>
 				</UPopover>
@@ -119,10 +141,14 @@ async function onDragEnd() {
 				height: (Math.max(...week.events.map(e => e.position)) + 2) * 32 + 'px'
 			}" class="week relative">
 				<div v-for="day in week.days" :key="day.toJSON()" :class="{
-						'day': true,
+						'relative day': true,
 						'today' : areSameDay(day, new Date()),
 						'outside-of-month': day.getMonth() !== date.getMonth()
-					}" @dragover="onDragOver(day)">
+					}" @dragover.prevent @drop.prevent="onDrop(day)" @dragenter.prevent="onDragEnter(day)">
+					<div v-if="draggingRecord" :class="{
+						'absolute top-0 left-0 w-full h-full bg-primary-500 z-10 transition-opacity opacity-0': true,
+						'opacity-10': draggingTarget === day
+					}"/>
 					<div class="h-8 flex-start pl-2">
 						<span class="date-number">{{ day.getDate() }}</span>
 					</div>
@@ -131,9 +157,7 @@ async function onDragEnd() {
 						 marginTop: (event.position + 1) * 32 + 'px',
 						 marginLeft: event.startIndex * (width / 7) + 'px',
 						 width: (event.endIndex - event.startIndex + 1) * (width / 7) + 'px'
-					 }"
-				     class="absolute h-6 z-10 flex-start cursor-pointer event" draggable="true"
-				     @click="editRecord(event.record)"
+					 }" class="absolute h-6 z-10 flex-start cursor-pointer event" draggable="true" @click="editRecord(event.record)"
 				     @dragend="onDragEnd" @dragstart="e => onDragStart(e, event.record)">
 					<div :class="{
 						'w-full h-full bg-gray-200 dark:bg-gray-600 px-2': true,
