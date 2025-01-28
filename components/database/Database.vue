@@ -215,6 +215,7 @@ function handleDatabaseUpdate(type: DatabaseUpdateTypes, data: object) {
 
 			<DatabaseTable v-if="selectedView.type === DatabaseViewType.TableView" v-model="records"/>
 			<DatabaseCalendar v-else-if="selectedView.type === DatabaseViewType.CalendarView" v-model="records"/>
+			<DatabaseBoard v-else-if="selectedView.type === DatabaseViewType.BoardView" v-model="records"/>
 		</div>
 	</div>
 </template>

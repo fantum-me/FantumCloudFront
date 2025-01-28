@@ -32,7 +32,7 @@ export function getViewTargetFieldTypes(view: DatabaseView): TableFieldType[] | 
         case DatabaseViewType.TimelineView:
             return [TableFieldType.DatetimeType]
         case DatabaseViewType.BoardView:
-            return [TableFieldType.BooleanType, TableFieldType.SelectType, TableFieldType.MultiselectType]
+            return [TableFieldType.BooleanType, TableFieldType.SelectType]
         default:
             return null;
     }

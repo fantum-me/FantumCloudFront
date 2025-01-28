@@ -38,7 +38,7 @@ export const getDatabaseViewTargetField = (view: DatabaseView): TableField | und
         }
         const field = database.fields?.find(f => targetFieldTypes.includes(f.type))
         if (field) setDatabaseViewTargetField(view, field.id)
-        else createDatabaseTableField(TableFieldType.DatetimeType)
+        else createDatabaseTableField(targetFieldTypes[0])
     }
 }
 
