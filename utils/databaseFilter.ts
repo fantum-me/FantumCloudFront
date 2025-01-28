@@ -23,13 +23,13 @@ export const repositionField = (id: string, newPosition: number) => {
     database.fields?.sort((a, b) => a.position - b.position)
 }
 
-function equal(fieldType: TableFieldType, filterValue: string, recordValue: string) {
+function fieldValueEqual(fieldType: TableFieldType, filterValue: string, recordValue: string) {
     if (fieldType === TableFieldType.SelectType) return filterValue.split(",").includes(recordValue)
     else if (fieldType === TableFieldType.DatetimeType) return areDateStringsEqual(recordValue, filterValue)
     else return filterValue.toLowerCase() === recordValue.toLowerCase()
 }
 
-export function isRecordValidateFilters(record: TableRecord, view: DatabaseView): boolean {
+export function doesRecordValidateFilters(record: TableRecord, view: DatabaseView): boolean {
     if (!view.settings?.filters) return true
     const database = useDatabase().value
     for (const filter of view.settings.filters) {
@@ -39,9 +39,9 @@ export function isRecordValidateFilters(record: TableRecord, view: DatabaseView)
 
         switch (filter.operation) {
             case DatabaseViewFilterType.Is:
-                return equal(field.type, filter.value, value)
+                return fieldValueEqual(field.type, filter.value, value)
             case DatabaseViewFilterType.IsNot:
-                return !equal(field.type, filter.value, value)
+                return !fieldValueEqual(field.type, filter.value, value)
             case DatabaseViewFilterType.Contains:
                 return value.toLowerCase().includes(filter.value.toLowerCase())
             case DatabaseViewFilterType.DoesNotContain:

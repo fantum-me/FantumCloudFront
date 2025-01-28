@@ -4,6 +4,8 @@ import {
     DatabaseViewIconTable,
     DatabaseViewIconTimeline
 } from "#components";
+import TableFieldType from "~/types/database/TableFieldType";
+import type DatabaseView from "~/types/database/DatabaseView";
 
 enum DatabaseViewType {
     TableView = 'table',
@@ -22,4 +24,16 @@ export function getViewTypeIcon(type: DatabaseViewType) {
     else if (type === DatabaseViewType.BoardView) return DatabaseViewIconBoard;
     else if (type === DatabaseViewType.TimelineView) return DatabaseViewIconTimeline;
     else return "";
+}
+
+export function getViewTargetFieldTypes(view: DatabaseView): TableFieldType[] | null {
+    switch (view.type) {
+        case DatabaseViewType.CalendarView:
+        case DatabaseViewType.TimelineView:
+            return [TableFieldType.DatetimeType]
+        case DatabaseViewType.BoardView:
+            return [TableFieldType.BooleanType, TableFieldType.SelectType, TableFieldType.MultiselectType]
+        default:
+            return null;
+    }
 }

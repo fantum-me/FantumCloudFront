@@ -59,7 +59,7 @@ async function fetchDatabase() {
 
 const records = computed(() => {
 	if (!database.value?.records || !selectedView.value) return []
-	return database.value.records.filter(record => isRecordValidateFilters(record, selectedView.value))
+	return database.value.records.filter(record => doesRecordValidateFilters(record, selectedView.value))
 })
 
 async function addView(view: DatabaseViewType) {

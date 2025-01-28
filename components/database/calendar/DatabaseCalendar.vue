@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import type TableRecord from "~/types/database/TableRecord";
-import TableFieldType from "~/types/database/TableFieldType";
 import type TableField from "~/types/database/TableField";
 import {DatabaseModalEditRecord} from "#components";
-import {calculateDayDifference} from "~/utils/datetime";
 
 const records = defineModel<TableRecord[]>({required: true})
 
@@ -11,13 +9,13 @@ const modal = useModal()
 
 const workspace = useWorkspace()
 const database = useDatabase()
+const view = useDatabaseView()
 const titleField = computed(() => database.value.fields?.find(f => f.is_title) as TableField)
 
-const targetField = computed(() => database.value.fields?.find(f => f.type === TableFieldType.DatetimeType))
+const targetField = computed(() => getDatabaseViewTargetField(view.value))
 const date = ref(new Date());
 const noDateRecords = computed(() => records.value.filter(r => targetField.value ? !r.values[targetField.value.id] : false))
 
-const isLoading = ref(false)
 const calendar = ref()
 const width = ref(0)
 
@@ -29,19 +27,9 @@ const prevMonth = () => date.value = new Date(date.value.setMonth(date.value.get
 const nextMonth = () => date.value = new Date(date.value.setMonth(date.value.getMonth() + 1))
 const calculateWidths = () => calendar.value ? width.value = calendar.value.clientWidth : undefined
 
-async function createDatetimeField() {
-	isLoading.value = true
-	const res = await useApiFetch(`/workspaces/${workspace.value.id}/databases/${database.value.id}/fields`, {
-		method: "POST",
-		body: JSON.stringify({name: "Date", type: TableFieldType.DatetimeType})
-	})
-	if (!res.ok) useErrorToast("Failed to create datetime field")
-	isLoading.value = false
-}
-
+watch(() => calendar.value, calculateWidths)
 onMounted(() => {
 	if (targetField.value) calculateWidths()
-	else createDatetimeField()
 	window.addEventListener("resize", calculateWidths)
 })
 onUnmounted(() => window.removeEventListener("resize", calculateWidths))
@@ -144,7 +132,8 @@ async function onDragEnd() {
 						 marginLeft: event.startIndex * (width / 7) + 'px',
 						 width: (event.endIndex - event.startIndex + 1) * (width / 7) + 'px'
 					 }"
-				     class="absolute h-6 z-10 flex-start cursor-pointer event" draggable="true" @click="editRecord(event.record)"
+				     class="absolute h-6 z-10 flex-start cursor-pointer event" draggable="true"
+				     @click="editRecord(event.record)"
 				     @dragend="onDragEnd" @dragstart="e => onDragStart(e, event.record)">
 					<div :class="{
 						'w-full h-full bg-gray-200 dark:bg-gray-600 px-2': true,
@@ -160,14 +149,8 @@ async function onDragEnd() {
 			</div>
 		</div>
 	</div>
-	<div v-else-if="isLoading" class="flex-center w-full pt-16">
+	<div v-else class="flex-center w-full pt-16">
 		<Loader/>
-	</div>
-	<div v-else class="w-full flex-center flex-col pt-12 gap-6">
-		<h1 class="text-3xl font-semibold">Datetime field missing !</h1>
-		<p>To display your database as a calendar, a datatime field is neeeded.
-			<br>Please reload the page or click on the button bellow to create one.</p>
-		<UButton @click="createDatetimeField">Create datetime field</UButton>
 	</div>
 </template>
 

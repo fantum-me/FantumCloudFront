@@ -7,6 +7,7 @@ export default interface DatabaseView {
     name: string
     type: DatabaseViewType
     settings: {
+        target_field?: string,
         widths?: Record<string, number>
         filters?: DatabaseViewFilter[]
     }
