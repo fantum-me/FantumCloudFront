@@ -8,7 +8,10 @@ export const isAbsoluteUrl = (url: string): boolean => (/^https?:\/\//i).test(ur
 
 export const asHtmlElement = (target: EventTarget): target is HTMLElement => true
 
-export const capitalize = (string: string) => string[0].toUpperCase() + string.slice(1);
+export const capitalize = (string: string) => {
+    if (string.trim() === "") return ""
+    return string.split(' ').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
+}
 
 export const getWelcomeMessage = (): string => {
     const hour = new Date().getHours();
@@ -23,4 +26,14 @@ export const getWelcomeMessage = (): string => {
     }
 
     return `${welcomeMessage}, ${useSession().value.name}`;
+}
+
+export const arraySum = (array: Array<number>) => array.reduce((a, b) => a + b, 0);
+
+export const rangesOverlap = (start1: number, end1: number, start2: number, end2: number) => !(end1 < start2 || end2 < start1);
+
+export const removeDragEventImage = (e: DragEvent) => {
+    const transparentImage = document.createElement('canvas');
+    transparentImage.getContext('2d')?.clearRect(0, 0, 1, 1);
+    e.dataTransfer?.setDragImage(transparentImage, 0, 0);
 }

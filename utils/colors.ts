@@ -1,3 +1,5 @@
+import type {BadgeColor} from "#ui/types";
+
 export function getContrastColor(hex: string) {
     const color = hexToRgb(hex)
     if (!color) return true
@@ -14,3 +16,5 @@ function hexToRgb(hex: string): { r: number, g: number, b: number } | null {
         b: parseInt(result[3], 16)
     } : null;
 }
+
+export const TABLE_FIELD_SELECT_COLORS: BadgeColor[] = ["red", "orange", "amber", "lime", "green", "cyan", "blue", "indigo", "fuchsia", "pink"];

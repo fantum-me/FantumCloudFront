@@ -8,7 +8,8 @@ export const openItem = (item: StorageItem, imageViewerArrows = true) => {
     if (isFolder(item)) {
         const path = item.is_root ? "files" : "folder/" + item.id
         navigateTo(`/workspace/${workspaceId}/${path}`)
-    } else if (isOfficeDocument(item)) navigateTo(`/workspace/${workspaceId}/docs/${item.id}`, {open: {target: "_blank"}})
+    } else if (isDatabase(item)) navigateTo(`/workspace/${workspaceId}/database/${item.id}`)
+    else if (isOfficeDocument(item)) navigateTo(`/workspace/${workspaceId}/docs/${item.id}`, {open: {target: "_blank"}})
     else if (getStorageItemType(item) === "image") useImageViewer().value(item as File, imageViewerArrows)
 }
 

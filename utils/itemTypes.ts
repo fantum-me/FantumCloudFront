@@ -1,8 +1,11 @@
 import type StorageItem from "~/types/filesystem/StorageItem";
 import type File from "~/types/filesystem/File";
 import type Folder from "~/types/filesystem/Folder";
+import type Database from "~/types/database/Database";
 
-export const isFile = (item: StorageItem): item is File => item.type === 'file';
+export const isFile = (item: StorageItem): item is File => !isFolder(item);
+
+export const isDatabase = (item: StorageItem): item is Database => item.type === 'database';
 
 export const isFolder = (item: StorageItem): item is Folder => item.type === 'folder';
 
