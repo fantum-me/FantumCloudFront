@@ -22,6 +22,7 @@ export function getViewTypeIcon(type: DatabaseViewType) {
 export function getViewTargetFieldTypes(view: DatabaseView): TableFieldType[] | null {
     switch (view.type) {
         case DatabaseViewType.CalendarView:
+            return [TableFieldType.DatetimeType]
         case DatabaseViewType.BoardView:
             return [TableFieldType.BooleanType, TableFieldType.SelectType]
         default:
