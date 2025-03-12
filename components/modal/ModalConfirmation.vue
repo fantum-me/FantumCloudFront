@@ -27,8 +27,11 @@ function onSuccess() {
 				<div class="flex items-center justify-between font-semibold">{{ title }}</div>
 			</template>
 
-			<p class="ml-2 mb-3">{{description}}</p>
-			<UAlert v-if="warning" color="red" variant="soft" :description="warning" icon="i-heroicons-exclamation-triangle"/>
+			<div class="space-y-3">
+				<p class="ml-2 text-sm">{{ description }}</p>
+				<UAlert v-if="warning" :description="warning" color="red" icon="i-heroicons-exclamation-triangle"
+				        variant="soft"/>
+			</div>
 
 			<template #footer>
 				<div class="flex-end">

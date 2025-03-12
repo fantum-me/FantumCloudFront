@@ -1,31 +1,22 @@
 <script setup lang="ts">
 import type {FormError, FormSubmitEvent} from '#ui/types'
 import type File from "~/types/filesystem/File"
-import type {Ref} from "vue";
 import type Folder from "~/types/filesystem/Folder";
 import type DocumentType from "~/types/filesystem/DocumentType";
 
+const {folder, type, openAfterCreation = false} = defineProps<{
+	folder: Folder,
+	type: string,
+	openAfterCreation: boolean
+}>()
+
+const modal = useModal()
 const workspace = useWorkspace()
 
-const folder: Ref<Folder | undefined> = ref()
-const selectedType: Ref<DocumentType | undefined> = ref()
-const isOpen: Ref<boolean> = ref(false)
-const isLoading: Ref<boolean> = ref(false)
-let openAfterCreation = false
+const selectedType = ref<DocumentType>(documentTypes.find(d => d.type === type) as DocumentType)
+const isLoading = ref(false)
 
-useNewDocumentModal().value = (target: Folder, type: string, open: boolean = false) => {
-	const documentType = documentTypes.find(d => d.type === type)
-	if (documentType) {
-		openAfterCreation = open
-		folder.value = target
-		selectedType.value = documentType
-		isOpen.value = true
-	}
-}
-
-const state = reactive({
-	name: "",
-})
+const state = reactive({name: ""})
 
 const validate = (state: any): FormError[] => {
 	const errors = []
@@ -36,7 +27,7 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-	if (!folder.value || !selectedType.value || isLoading.value) return
+	if (!folder || !selectedType.value || isLoading.value) return
 	isLoading.value = true
 
 	const res = await useApiFetch(`/workspaces/${workspace.value.id}/items`, {
@@ -45,37 +36,31 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 			type: 'file',
 			name: event.data.name + "." + selectedType.value.ext,
 			mime: selectedType.value.mime,
-			parent_id: folder.value.id
+			parent_id: folder.id
 		})
 	})
 
 	if (res.ok) {
 		const item: File = await res.json()
 		useItem(item.id).value = item
-		if (folder.value.items) folder.value.items.push(item)
+		if (folder.items) folder.items.push(item)
 		useSuccessToast(`Document ${event.data.name}.${selectedType.value.ext} created successfully !`)
 		if (openAfterCreation) openItem(item)
 	} else useErrorToast(`Failed to create document ${event.data.name}.${selectedType.value.ext}`)
 
-	isOpen.value = false
+	await modal.close()
 	isLoading.value = false
-}
-
-async function close() {
-	isOpen.value = false
-	await useWait(200) // wait for modal transition
-	state.name = ""
 }
 </script>
 
 <template>
-	<UModal v-if="folder && selectedType" v-model="isOpen" :prevent-close="isLoading" @close="close">
+	<UModal v-if="folder && selectedType">
 		<UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
 			<template #header>
 				<div class="flex items-center justify-between font-semibold">
 					Create new document
 					<UButton :v-if="!isLoading" color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"
-					         class="-my-1" @click="close"/>
+					         class="-my-1" @click="modal.close"/>
 				</div>
 			</template>
 
@@ -106,7 +91,7 @@ async function close() {
 				</UFormGroup>
 
 				<div class="flex justify-end items-center gap-4 pt-2">
-					<UButton v-if="!isLoading" color="gray" variant="ghost" @click="close">
+					<UButton v-if="!isLoading" color="gray" variant="ghost" @click="modal.close">
 						Cancel
 					</UButton>
 					<UButton type="submit" :loading="isLoading">

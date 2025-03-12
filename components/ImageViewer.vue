@@ -96,7 +96,7 @@ function refreshRatio() {
 				<UButton icon="i-heroicons-arrow-down-tray-20-solid" color="white" variant="soft" size="xl"
 				         @click.stop="downloadFile(item)"/>
 				<UButton icon="i-heroicons-pencil-solid" color="white" variant="soft" size="xl"
-				         @click="useRenameItemsModal().value(item)"/>
+				         @click="openRenameModal(item)"/>
 			</div>
 		</div>
 

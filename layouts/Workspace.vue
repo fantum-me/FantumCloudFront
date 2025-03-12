@@ -37,11 +37,6 @@ if (view.value !== View.FILES && view.value !== View.FOLDER && view.value !== Vi
 		<ClientOnly>
 			<ContextMenuItems/>
 			<ContextMenuFolder/>
-			<ModalRenameItem/>
-			<ModalAccessControls/>
-			<ModalNewFolder/>
-			<ModalNewDocument/>
-			<ModalNewDatabase/>
 			<DraggingItems/>
 			<ImageViewer/>
 		</ClientOnly>

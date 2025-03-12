@@ -27,10 +27,6 @@ function onContextMenu() {
 	isOpen.value = true
 }
 
-const newFolder = useNewFolderModal()
-const newDocument = useNewDocumentModal()
-const newDatabase = useNewDatabaseModal()
-
 const contextMenu = useFolderContextMenu()
 contextMenu.value = {
 	open: (target: Folder, isOpeningAfterCreated = false) => {
@@ -52,29 +48,29 @@ contextMenu.value = {
 			<UIcon name="i-heroicons-document-arrow-down-solid" class="h-5 w-5"/>
 			Import File
 		</button>
-		<button @click="newFolder(folder, openAfterCreation) & contextMenu.close()">
+		<button @click="openNewItemModal('folder', folder, openAfterCreation); contextMenu.close()">
 			<UIcon name="i-heroicons-folder-plus-solid" class="h-5 w-5"/>
 			Create Folder
 		</button>
-		<button @click="newDocument(folder, 'text', openAfterCreation) & contextMenu.close()">
+		<button @click="openNewDocumentModal(folder, 'text', openAfterCreation); contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypeDoc/>
 			</span>
 			New Text Document
 		</button>
-		<button @click="newDocument(folder, 'spreadsheet', openAfterCreation) & contextMenu.close()">
+		<button @click="openNewDocumentModal(folder, 'spreadsheet', openAfterCreation); contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypeSpreadsheet/>
 			</span>
 			New Spreadsheet
 		</button>
-		<button @click="newDocument(folder, 'presentation', openAfterCreation) & contextMenu.close()">
+		<button @click="openNewDocumentModal(folder, 'presentation', openAfterCreation); contextMenu.close()">
 			<span class="h-5 w-5">
 				<ItemIconTypePresentation/>
 			</span>
 			New Presentation
 		</button>
-		<button @click="newDatabase(folder, openAfterCreation) & contextMenu.close()">
+		<button @click="openNewItemModal('database', folder, openAfterCreation); contextMenu.close()">
 			<UIcon name="i-heroicons-circle-stack" class="h-5 w-5"/>
 			New Database
 		</button>

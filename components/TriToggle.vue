@@ -17,7 +17,7 @@ const buttonUi = {
 </script>
 
 <template>
-	<span class="inline-flex rounded ring-1 ring-gray-200 dark:ring-gray-700 overflow-hidden">
+	<span class="inline-flex shrink-0 rounded ring-1 ring-gray-200 dark:ring-gray-700 overflow-hidden">
 		<UButton icon="i-heroicons-x-mark-20-solid" color="red" :variant="model === false ? 'solid' : 'ghost'"
 		         :ui="buttonUi" @click="model = false" :disabled="disabled"/>
 

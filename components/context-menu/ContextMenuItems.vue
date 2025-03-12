@@ -4,6 +4,7 @@ import type {Ref} from "vue";
 import type PermissionObject from "~/types/permission/PermissionObject";
 import Permission from "~/types/permission/Permission";
 import type StorageItem from "~/types/filesystem/StorageItem";
+import {ModalAccessControls} from "#components";
 
 type MenuItem = {
 	name: string
@@ -14,6 +15,7 @@ type MenuItem = {
 
 const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
+const modal = useModal()
 
 const itemsSelection = useItemsSelection()
 
@@ -64,7 +66,7 @@ function onContextMenu() {
 	if (permissions[Permission.WRITE] && items.length === 1) menu.value.push({
 		icon: "i-heroicons-pencil",
 		name: "Rename",
-		action: () => useRenameItemsModal().value(items[0])
+		action: () => openRenameModal(items[0])
 	})
 	if (permissions[Permission.TRASH] && in_trash === false) menu.value.push({
 		icon: "i-heroicons-trash",
@@ -87,7 +89,7 @@ function onContextMenu() {
 	if (permissions[Permission.EDIT_PERMISSIONS] && items.length === 1) menu.value.push({
 		icon: "i-heroicons-users",
 		name: "Manage Access",
-		action: () => useAccessControlsModal().value(items[0])
+		action: () => modal.open(ModalAccessControls, {item: items[0]})
 	})
 
 	isOpen.value = true

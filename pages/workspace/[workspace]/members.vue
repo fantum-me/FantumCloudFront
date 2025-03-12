@@ -109,24 +109,9 @@ async function copyCode() {
 		useSuccessToast("Invite code copied !")
 	}
 }
-
-async function openTransferOwnershipModal(target: Member) {
-	isTransferringOwnership.value = true
-	ownershipTransferTarget.value = target
-}
-
-
-async function openKickMemberModal(target: Member) {
-	isKickingMember.value = true
-	kickTarget.value = target
-}
 </script>
 
 <template>
-	<ModalWorkspaceOwnershipTransfer v-model="isTransferringOwnership" :target="ownershipTransferTarget"
-	                                 v-if="ownershipTransferTarget"/>
-	<ModalKickMember v-model="isKickingMember" :target="kickTarget" v-if="kickTarget"/>
-
 	<NuxtLayout name="workspace">
 		<div class="py-6 px-8 space-y-4 w-full">
 			<div class="flex-between">

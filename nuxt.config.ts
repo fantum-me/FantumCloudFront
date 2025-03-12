@@ -2,14 +2,17 @@
 export default defineNuxtConfig({
     devtools: {enabled: true},
     modules: ['@nuxt/image', '@nuxt/ui'],
+
     tailwindcss: {
         cssPath: ["~/assets/css/main.css", {injectPosition: "first"}],
     },
+
     app: {
         head: {
-            link: [{ rel: 'icon', type: 'image/svg+xml', href: "/favicon.svg" }]
+            link: [{rel: 'icon', type: 'image/svg+xml', href: "/favicon.svg"}]
         }
     },
+
     runtimeConfig: {
         baseUrlForOnlyoffice: '',
         oauthEndpoint: '',
@@ -28,5 +31,7 @@ export default defineNuxtConfig({
             userinfoEndpoint: '',
             apiEndpoint: '',
         }
-    }
+    },
+
+    compatibilityDate: '2025-02-04'
 })

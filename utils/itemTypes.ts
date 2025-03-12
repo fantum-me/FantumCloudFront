@@ -9,6 +9,8 @@ export const isDatabase = (item: StorageItem): item is Database => item.type ===
 
 export const isFolder = (item: StorageItem): item is Folder => item.type === 'folder';
 
+export const hasExtension = (item: StorageItem) => item.type === 'file';
+
 export const fileTypes = {
     "image": ["image/*"],
     "word": [
